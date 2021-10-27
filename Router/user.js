@@ -4,10 +4,13 @@ const { wrapAsync } = require("../util/util");
 const User = require("../controller/user_controller");
 
 // sign up
-router.route("/member/signin").post(wrapAsync(User.signUp));
+router.route("/member/signup").post(wrapAsync(User.signUp));
 
-// log in
-router.route("/member/login").post(wrapAsync());
+// native sign in
+router.route("/member/signin").post(wrapAsync(User.signIn));
+
+// fb sign in
+// router.route("/member/fbsignin").post(wrapAsync(User.fbsignIn));
 
 // log out
 router.route("/member/logout").post(wrapAsync());

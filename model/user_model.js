@@ -16,7 +16,15 @@ const insertUserData = async (provider, name, email, hashPassword, picture) => {
   return existingEmail;
 };
 
+const getUserData = async (email) => {
+  const [userData] = await db.query("SELECT * FROM user WHERE email = ?;", [
+    email,
+  ]);
+  return userData;
+};
+
 module.exports = {
   checkExistedEmail,
   insertUserData,
+  getUserData,
 };
