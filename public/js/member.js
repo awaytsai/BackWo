@@ -1,4 +1,3 @@
-// sign in
 const signin = document.querySelector(".signin");
 const signup = document.querySelector(".signup");
 
@@ -41,13 +40,16 @@ async function signUp(body) {
         text: `${result.error}`,
       });
     } else {
+      // redirect to profile page
+      window.localStorage.setItem("access_token", result.access_token);
       Swal.fire({
         position: "top-end",
         icon: "success",
         title: "註冊成功",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 2000,
       });
+      window.location.href = "/profile.html";
     }
   } catch (err) {
     console.log(err);
@@ -96,9 +98,18 @@ async function signIn(body) {
         icon: "success",
         title: "註冊成功",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 2000,
       });
       // redirect to profile page
+      window.localStorage.setItem("access_token", result.access_token);
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "登入成功",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      window.location.href = "/profile.html";
     }
   } catch (err) {
     console.log(err);

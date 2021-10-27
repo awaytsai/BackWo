@@ -17,9 +17,7 @@ const uploadFindOwnersPost = async (req, res) => {
   }
   let person = "owner";
   const status = "lost";
-  // ** need to update after login finish
-  const userId = 1;
-  // const userId = req.decoded.payload.id;
+  const userId = req.decoded.payload.id;
   const photo = req.files.photo[0].key;
 
   // 1. conver address into lat lng

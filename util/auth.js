@@ -27,7 +27,7 @@ async function authMiddleware(req, res, next) {
   }
 }
 
-async function userinfoFormat(token, payload) {
+function userinfoFormat(token, payload) {
   const expiresIn = "1h";
   const registedResponse = {
     access_token: token,

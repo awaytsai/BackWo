@@ -46,6 +46,7 @@ const signUp = async (req, res) => {
   };
   const token = await Auth.jwtTokenGenerater(payload);
   const userResult = Auth.userinfoFormat(token, payload);
+  console.log(userResult);
   res.status(200).json(userResult);
 };
 

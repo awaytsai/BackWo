@@ -1,13 +1,13 @@
 const dog = document.querySelector(".doglabel");
 const cat = document.querySelector(".catlabel");
 const breedSelect = document.getElementById("breedselect");
+const token = localStorage.getItem("access_token");
 let breedList;
 
 loadBreedList();
 async function loadBreedList() {
   const response = await fetch("/api/getBreeds");
   breedList = await response.json();
-  // add dog options(default)
   breedList.dog_breed.forEach((breed) => {
     addOptions(breed, breedSelect);
   });
@@ -15,12 +15,10 @@ async function loadBreedList() {
 
 // show dog options
 dog.addEventListener("click", () => {
-  // remove all options if existed
   const options = document.querySelectorAll("#pets");
   options.forEach((o) => {
     breedSelect.removeChild(o);
   });
-  // add dog options
   breedList.dog_breed.forEach((breed) => {
     addOptions(breed, breedSelect);
   });
@@ -28,12 +26,10 @@ dog.addEventListener("click", () => {
 
 // show cat options
 cat.addEventListener("click", () => {
-  // remove all options if existed
   const options = document.querySelectorAll("#pets");
   options.forEach((o) => {
     breedSelect.removeChild(o);
   });
-  // add cat options
   breedList.cat_breed.forEach((breed) => {
     addOptions(breed, breedSelect);
   });
@@ -54,6 +50,7 @@ async function uploadPost() {
     const county = document.querySelector(".filtercounty");
     const date = document.querySelector("#datepicker");
     const photo = document.querySelector("#formFile");
+    // error handling
     if (county.value == "") {
       Swal.fire({
         icon: "info",
@@ -75,11 +72,12 @@ async function uploadPost() {
         text: "請上傳一張照片，格式限定 .jpg 或 .jpeg",
       });
     } else {
+      // fetch data
       const response = await fetch("/api/findowners/upload", {
         method: "POST",
-        // headers: {
-        //     Authorization: "Bearer " + token,
-        //   },
+        headers: {
+          Authorization: "Bearer " + token,
+        },
         body: new FormData(formData),
       });
       const result = await response.json();
@@ -98,7 +96,7 @@ async function uploadPost() {
             timer: 1500,
           });
           setTimeout(() => {
-            window.location = "/findowners.html";
+            window.location.href = "/findowners.html";
           }, 1700);
         }
       }
