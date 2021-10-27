@@ -10,7 +10,7 @@ router.use(express.urlencoded({ extended: true }));
 // upload find pets post
 router
   .route("/findpets/upload")
-  .post(uploadFindPets, authMiddleware, wrapAsync(findPets.uploadFindPetsPost));
+  .post(authMiddleware, uploadFindPets, wrapAsync(findPets.uploadFindPetsPost));
 
 // google map markers
 router.route("/getFindPetsGeoInfo").get(wrapAsync(findPets.getFindPetsGeoInfo));

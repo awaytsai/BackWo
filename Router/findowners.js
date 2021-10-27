@@ -11,8 +11,8 @@ router.use(express.urlencoded({ extended: true }));
 router
   .route("/findowners/upload")
   .post(
-    uploadFindOwners,
     authMiddleware,
+    uploadFindOwners,
     wrapAsync(findOwners.uploadFindOwnersPost)
   );
 
