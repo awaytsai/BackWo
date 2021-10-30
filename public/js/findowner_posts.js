@@ -49,7 +49,7 @@ function createElement(data) {
     box.className = "box";
     title.className = "title";
     title.innerText = `${pet.county}${pet.district}`;
-    a.href = "/";
+    a.href = `/findowners/detail.html?id=${pet.id}`;
     img.src = `https://d3271x2nhsfyjz.cloudfront.net/findowners/${pet.photo}`;
     postDiv.appendChild(box);
     box.appendChild(a);

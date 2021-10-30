@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { wrapAsync, uploadFindOwners } = require("../util/util");
-const { authMiddleware } = require("../util/auth");
+const { authMiddleware, authMiddlewareforChat } = require("../util/auth");
 const findOwners = require("../controller/findowners_controller");
 
 router.use(express.json());
@@ -25,5 +25,10 @@ router
 router
   .route("/getFindOwnersPosts")
   .get(wrapAsync(findOwners.getFindOwnersPosts));
+
+// find owners posts detail
+router
+  .route("/findowners/detail")
+  .get(authMiddlewareforChat, wrapAsync(findOwners.getFindOwnersDetail));
 
 module.exports = router;

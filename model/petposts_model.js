@@ -78,6 +78,14 @@ const getPetsPosts = async (person) => {
   return PetsPosts;
 };
 
+const getPostDetailById = async (person, id) => {
+  const [PetsPosts] = await db.query(
+    "SELECT p.id, p.user_id, p.breed, p.color, p.county, p.district, p.address, p.date, p.photo, p.note, u.name, u.picture FROM pet_post as p INNER JOIN user as u ON p.user_id = u.id WHERE person= ? and status ='lost' and p.id=? ;",
+    [person, id]
+  );
+  return PetsPosts;
+};
+
 module.exports = {
   createPetsPost,
   updatePetsPost,
@@ -85,4 +93,5 @@ module.exports = {
   getAllBreedsFilterPosts,
   getFilterPosts,
   getPetsPosts,
+  getPostDetailById,
 };

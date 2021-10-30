@@ -202,8 +202,65 @@ const getFindOwnersPosts = async (req, res) => {
   }
 };
 
+const getFindOwnersDetail = async (req, res) => {
+  const person = "owner";
+  const id = req.query.id;
+  // check if user login
+  // no => redirect to login
+  console.log(req.decoded);
+  if (!req.decoded) {
+    const postData = await Pet.getPostDetailById(person, id);
+    const postDetail = postData[0];
+    const date = postDetail.date.toISOString().split("T")[0];
+    const formatData = {
+      id: postDetail.id,
+      breed: postDetail.breed,
+      color: postDetail.color,
+      address: `${postDetail.county}${postDetail.district}${postDetail.address}`,
+      date: date,
+      note: postDetail.note,
+      photo: `${process.env.CLOUDFRONT}/findowners/${postDetail.photo}`,
+      ownerId: postDetail.user_id,
+      ownername: postDetail.name,
+      ownerpic: postDetail.picture,
+    };
+    res.json(formatData);
+  } else {
+    // yes => render with roomid/userid
+    // check if chat to self
+    const userId = req.decoded.payload.id;
+    const postData = await Pet.getPostDetailById(person, id);
+    const postDetail = postData[0];
+    const date = postDetail.date.toISOString().split("T")[0];
+    let roomId = [userId, postDetail.user_id];
+    roomId.sort((a, b) => {
+      return a - b;
+    });
+    const formatData = {
+      id: postDetail.id,
+      userId: userId,
+      breed: postDetail.breed,
+      color: postDetail.color,
+      address: `${postDetail.county}${postDetail.district}${postDetail.address}`,
+      date: date,
+      note: postDetail.note,
+      photo: `${process.env.CLOUDFRONT}/findowners/${postDetail.photo}`,
+      ownerId: postDetail.user_id,
+      ownername: postDetail.name,
+      ownerpic: postDetail.picture,
+      roomId: `${roomId[0]}-${roomId[1]}`,
+    };
+    // self post & need to log in again
+    if (userId == postDetail.user_id || res.locals.message == "loginagain") {
+      formatData.roomId = "null";
+    }
+    res.json(formatData);
+  }
+};
+
 module.exports = {
   uploadFindOwnersPost,
   getFindOwnersGeoInfo,
   getFindOwnersPosts,
+  getFindOwnersDetail,
 };
