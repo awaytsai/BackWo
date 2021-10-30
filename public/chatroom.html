@@ -28,6 +28,8 @@
     />
     <!--css-->
     <link rel="stylesheet" href="./css/chatroom.css" />
+    <!--sweet alert2-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <header>
@@ -44,7 +46,9 @@
             <a class="findpet" href="/findpets.html">找寵物</a>
             <a class="findowner" href="/findowners.html">找主人</a>
           </nav>
-          <a class="member" href="/"><img src="../images/member_icon.png" /></a>
+          <a class="member" href="/member.html"
+            ><img src="../images/member_icon.png"
+          /></a>
         </div>
       </div>
     </header>
@@ -52,13 +56,39 @@
     <main>
       <!--////////////////-->
       <div class="main-wrap">
+        <div class="rooms">
+          <div class="room">
+            <div><img src="images/member_icon.png" width="30px" /></div>
+            <div>last word(receieved)</div>
+          </div>
+          <div class="room">
+            <div><img src="images/member_icon.png" width="30px" /></div>
+            <div>last word(receieved)</div>
+          </div>
+        </div>
+        <div class="chat-area">
+          <!-- <div class="message" id="messages">
+            <div class="receive">
+              <div><img src="images/member_icon.png" width="30px" /></div>
+              <div>hello</div>
+            </div>
+            <div class="send">
+              <div>hihi</div>
+            </div>
+          </div> -->
+          <div class="messages" id="messages"></div>
+          <form id="chatform">
+            <input id="chatinput" placeholder="請輸入" />
+            <button>Send</button>
+          </form>
+        </div>
         <div></div>
-        <div>
+        <!-- <div>
           <ul id="messages"></ul>
           <form id="form" action="">
             <input id="chatinput" autocomplete="off" /><button>Send</button>
           </form>
-        </div>
+        </div> -->
       </div>
       <!--////////////////-->
     </main>
@@ -88,6 +118,20 @@
     <!--socket io-->
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/chatroom.js"></script>
+    <!-- <script>
+      const access_token = localStorage.getItem("access_token");
+      if (!access_token) {
+        Swal.fire({
+          icon: "info",
+          text: "請先登入",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        setTimeout(() => {
+          window.location.href = "/member.html";
+        }, 1700);
+      }
+    </script> -->
   </body>
 </html>
 

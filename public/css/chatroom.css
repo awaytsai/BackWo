@@ -76,6 +76,61 @@ main {
 }
 
 /* chatroom */
+.main-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 400px;
+}
+.rooms {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #777;
+  border-radius: 5px;
+  height: 350px;
+}
+.room {
+  display: flex;
+  border: 1px solid #777;
+  border-radius: 5px;
+}
+
+.messages {
+  border: 1px solid #777;
+  border-radius: 5px;
+  height: 300px;
+  overflow: scroll;
+}
+.receive {
+  display: flex;
+  padding: 10px;
+  background-color: #ccc;
+  border-radius: 5px;
+  margin: 5px;
+}
+.send {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #ccc;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.memberpic {
+  width: 30px;
+}
+.message-sender {
+  display: flex;
+  align-items: center;
+}
+.message-sender span {
+  margin: 0 5px;
+}
+.message-content {
+  margin: 0 5px;
+}
 
 /* footer */
 
