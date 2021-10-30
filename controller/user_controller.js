@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
   const provider = "native";
-  const picture = "";
+  const picture = `${process.env.CLOUDFRONT}member_default.png`;
   if (!name || !email || !password) {
     res.status(400).json({ error: "請輸入名字、email 和密碼" });
     return;
@@ -50,6 +50,7 @@ const signUp = async (req, res) => {
   res.status(200).json(userResult);
 };
 
+//
 const signIn = async (req, res) => {
   console.log(req.body);
   const { email, password } = req.body;
@@ -57,7 +58,7 @@ const signIn = async (req, res) => {
     res.status(400).json({ error: "請輸入 email 和密碼" });
     return;
   }
-  const userData = await User.getUserData(email);
+  const userData = await User.getUserDataByEmail(email);
   console.log(userData);
   if (userData.length == 0) {
     res.status(400).json({ error: "email 不存在" });
