@@ -1,4 +1,3 @@
-const moment = require("moment");
 const Chat = require("../model/chat_model");
 
 const rooms = [];
@@ -14,21 +13,21 @@ const socketController = (io) => {
       }
       if (checkRoom.length != 0) {
         // get history data
-        const limit = 3;
+        const limit = 20;
         const historyMessage = await Chat.getChatMessage(
           usersData.roomId,
           limit
         );
         // emit it to front end
         console.log(historyMessage);
-        socket.emit("historymessage", historyMessage);
+        socket.emit("historymessage", historyMessage, usersData);
       }
       // 1-1. get data from db, send to client to render
       // 2. join room
       socket.join(usersData.roomId);
 
       // someone join room
-      socket.emit("online", `${usersData.senderId} on line`);
+      // socket.emit("online", `${usersData.senderId} on line`);
 
       // 3. listen on chatmessage
       socket.on("chatMessage", async (msg, usersData) => {
@@ -44,12 +43,12 @@ const socketController = (io) => {
       });
 
       // disconnect
-      socket.on("disconnect", () => {
-        io.to(usersData.roomId).emit(
-          "leave",
-          `${usersData.senderName} has left the chat`
-        );
-      });
+      // socket.on("disconnect", () => {
+      //   io.to(usersData.roomId).emit(
+      //     "leave",
+      //     `${usersData.senderName} has left the chat`
+      //   );
+      // });
     });
 
     // // join room
@@ -83,13 +82,7 @@ function checkRoomExisted(roomId) {
 
 // (sender, receiver, message, time, roomid)
 function formatMessage(msg, usersData) {
-  return [
-    usersData.senderId,
-    usersData.receiverId,
-    msg,
-    moment().format(),
-    usersData.roomId,
-  ];
+  return [usersData.senderId, usersData.receiverId, msg, usersData.roomId];
 }
 
 module.exports = { socketController };

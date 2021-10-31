@@ -11,4 +11,6 @@ router
   .route("/chat")
   .get(Auth.authMiddleware, wrapAsync(Chat.getChatroomAccess));
 
+// show existing chatroom record
+router.route("/chatroomrecord").get(wrapAsync(Chat.getChatroomRecord));
 module.exports = router;

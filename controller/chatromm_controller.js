@@ -1,4 +1,5 @@
 const User = require("../model/user_model");
+const Chat = require("../model/chat_model");
 
 const getChatroomAccess = async (req, res) => {
   const room = req.query.room;
@@ -32,6 +33,36 @@ const getChatroomAccess = async (req, res) => {
   res.json(formatUserData);
 };
 
+const getChatroomRecord = async (req, res) => {
+  const userId = req.query.uid;
+  // check existing room_id by uid
+  let existingIds = await Chat.getExistingRoomIds(userId);
+  console.log(existingIds);
+  if (existingIds.length == 0) {
+    res.json({ message: "no existing rooms" });
+    return;
+  }
+
+  // get other users ids
+  existingIds.map((data) => {
+    let ids = data.room_id.split("-");
+    ids.forEach((id) => {
+      if (id != userId) {
+        data.othersId = id;
+      }
+    });
+  });
+  //   console.log(existingIds);
+
+  // get last records by roomids
+  const ids = existingIds.map((data) => Object.values(data));
+  //   console.log(ids);
+  const roomRecords = await Chat.getRoomLastRecord(ids);
+  console.log(roomRecords);
+  res.json(roomRecords);
+};
+
 module.exports = {
   getChatroomAccess,
+  getChatroomRecord,
 };

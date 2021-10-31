@@ -1,8 +1,13 @@
 const token = localStorage.getItem("access_token");
-const chatform = document.getElementById("chatform");
-const input = document.getElementById("chatinput");
-const messages = document.getElementById("messages");
+const chatform = document.querySelector("#chatform");
+const input = document.querySelector("#chatinput");
+const messages = document.querySelector("#messages");
+const rooms = document.querySelector(".rooms");
+
 let self;
+
+// default scroll down
+window.scrollTo(0, document.querySelector(".messages").scrollHeight);
 
 //get query string
 const urlSearchParams = new URLSearchParams(window.location.search);
@@ -72,12 +77,28 @@ async function checkAccess() {
         window.location.href = "/";
       }, 1200);
     } else {
-      self = usersData.senderId;
-      connectToIo(usersData);
+      // get history data by roomid
+      // const historyData = getExistingRooms(usersData);
+      // self = usersData.senderId;
+      // connectToIo(usersData);
+      // if (!historyData.message) {
+      //   createExistingRooms(historyData);
+      // }
+      showandconnect(usersData);
     }
   } catch (err) {
-    // catch error, you dont have access
     console.log(err);
+  }
+}
+
+///////
+async function showandconnect(usersData) {
+  const historyData = await getExistingRooms(usersData);
+  self = usersData.senderId;
+  connectToIo(usersData);
+  //
+  if (!historyData.message) {
+    createExistingRooms(historyData);
   }
 }
 
@@ -95,23 +116,24 @@ function connectToIo(usersData) {
       input.value = "";
     }
   });
-
-  // // on message(connect/disconnect)
-  socket.on("online", (msg) => {
-    statusUpdate(msg);
-  });
-  socket.on("leave", (msg) => {
-    statusUpdate(msg);
-  });
-
   // on chatnessage(chat)
   socket.on("chatMessage", function (msg, usersData) {
     createChatMessage(msg, usersData);
   });
   // history message
-  socket.on("historymessage", function (historyMessage) {
-    createHistoryMessage(historyMessage);
+  socket.on("historymessage", function (historyMessage, usersData) {
+    createHistoryMessage(historyMessage, usersData);
   });
+}
+
+// fetch for render existing rooms
+async function getExistingRooms(usersData) {
+  const historyResponse = await fetch(
+    `/api/chatroomrecord?uid=${usersData.senderId}`
+  );
+  const historyData = await historyResponse.json();
+  console.log(historyData);
+  return historyData;
 }
 
 function createChatMessage(msg, usersData) {
@@ -119,35 +141,88 @@ function createChatMessage(msg, usersData) {
   if (usersData.senderId != self) {
     // item.textContent = `${msg.username} says: ${msg.text} on${msg.time} `;
     item.innerHTML = `
-    <div>
       <div class="message-sender">
         <img class="memberpic" src="${usersData.senderPicture}">
         <span>${usersData.senderName}</span>
       </div>
-      <div class="message-content">${msg}</div>
-    </div>`;
-    item.className = "receive";
+      <div class="message-content">
+        <p>${msg}</p>
+      </div>
+      <div class="message-time">
+        <p></p>
+      </div>`;
+    item.classList.add("receive", "message-box");
     messages.appendChild(item);
     messages.scrollTop = messages.scrollHeight;
   } else {
-    item.textContent = `${msg}`;
-    item.className = "send";
+    // item.textContent = `${msg}`;
+    item.innerHTML = `
+      <div class="message-content">
+        <p>${msg}</p>
+      </div>
+      <div class="message-time">
+        <p></p>
+      </div>`;
+    item.classList.add("send", "message-box");
     messages.appendChild(item);
     messages.scrollTop = messages.scrollHeight;
-    // messages.scrollTo(0, document.body.scrollHeight);
   }
 }
 
-function statusUpdate(msg) {
-  const item = document.createElement("div");
-  item.innerHTML = `<div>${msg}</div>`;
-  messages.appendChild(item);
+function createHistoryMessage(historyMessage, usersData) {
+  historyMessage.reverse().map((message) => {
+    const item = document.createElement("div");
+    item.classList.add("history-message", "message-box");
+    // const time = message.time.toLocaleString("en-US", {
+    //   timezone: "Asia/Taipei",
+    // });
+    const time = message.time.toString().split("T")[1].slice(0, 5);
+    if (message.sender == self) {
+      // print self message(send class)
+      item.innerHTML = `
+      <div class="message-content">
+        <p>${message.message}</p>
+      </div>
+      <div class="message-time">
+        <p>${time}</p>
+      </div>`;
+      item.classList.add("send");
+      messages.appendChild(item);
+    } else {
+      // prinet others message(receive class)
+      item.innerHTML = `
+      <div class="message-sender">
+        <img class="memberpic" src="${usersData.receiverPicture}">
+        <span>${usersData.receiverName}</span>
+      </div>
+      <div class="message-content">
+        <p>${message.message}</p>
+      </div>
+      <div class="message-time">
+        <p>${time}</p>
+      </div>`;
+      item.classList.add("receive");
+      messages.appendChild(item);
+    }
+  });
 }
 
-function createHistoryMessage(historyMessage) {
-  historyMessage.map((message) => {
+function createExistingRooms(historyData) {
+  console.log(historyData);
+  historyData.map((data) => {
+    const time = data[0].time.toString().split("T")[1].slice(0, 5);
     const item = document.createElement("div");
-    item.innerHTML = `<div>${message.message}</div>`;
-    messages.appendChild(item);
+    item.innerHTML = `<div class="room">
+      <div class="room-user">
+        <img src="${data[0].picture}" width="30px" />
+        <p>${data[0].name}</p>
+      </div>
+      <div class="room-content">
+        <p class="room-message">${data[0].message}</p>
+        <p class="room-time">${time}</p>
+      </div>
+      </div>
+    </div>`;
+    rooms.appendChild(item);
   });
 }
