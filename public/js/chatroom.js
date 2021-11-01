@@ -6,9 +6,6 @@ const rooms = document.querySelector(".rooms");
 
 let self;
 
-// default scroll down
-window.scrollTo(0, document.querySelector(".messages").scrollHeight);
-
 //get query string
 const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());
@@ -52,11 +49,13 @@ async function checkAccess() {
       },
     });
     const usersData = await response.json();
+    self = usersData.senderId;
     console.log(usersData);
     if (
       usersData.message == "請重新登入" ||
       usersData.message == "請先登入或註冊"
     ) {
+      // token expire or not login
       Swal.fire({
         icon: "info",
         title: "請先登入或註冊",
@@ -67,6 +66,7 @@ async function checkAccess() {
         window.location.href = "/member.html";
       }, 1600);
     } else if (usersData.message == "noaccess") {
+      // userid not in room ids
       Swal.fire({
         icon: "info",
         title: "no access",
@@ -77,27 +77,25 @@ async function checkAccess() {
         window.location.href = "/";
       }, 1200);
     } else {
-      // get history data by roomid
-      // const historyData = getExistingRooms(usersData);
-      // self = usersData.senderId;
-      // connectToIo(usersData);
-      // if (!historyData.message) {
-      //   createExistingRooms(historyData);
-      // }
-      showandconnect(usersData);
+      // ok
+      showRoomsAndConnectIO(usersData);
     }
   } catch (err) {
     console.log(err);
   }
 }
 
-///////
-async function showandconnect(usersData) {
-  const historyData = await getExistingRooms(usersData);
-  self = usersData.senderId;
+async function showRoomsAndConnectIO(usersData) {
+  // get existing room data
+  const historyData = await getExistingRoomsRecord(usersData);
+  // connect socket io
   connectToIo(usersData);
-  //
-  if (!historyData.message) {
+  // show history room info
+  if (historyData.error) {
+    const item = document.createElement("div");
+    item.innerHTML = `<div>no existing room</div>`;
+    rooms.appendChild(item);
+  } else {
     createExistingRooms(historyData);
   }
 }
@@ -127,7 +125,7 @@ function connectToIo(usersData) {
 }
 
 // fetch for render existing rooms
-async function getExistingRooms(usersData) {
+async function getExistingRoomsRecord(usersData) {
   const historyResponse = await fetch(
     `/api/chatroomrecord?uid=${usersData.senderId}`
   );
@@ -138,8 +136,8 @@ async function getExistingRooms(usersData) {
 
 function createChatMessage(msg, usersData) {
   const item = document.createElement("div");
+  // check who said the message
   if (usersData.senderId != self) {
-    // item.textContent = `${msg.username} says: ${msg.text} on${msg.time} `;
     item.innerHTML = `
       <div class="message-sender">
         <img class="memberpic" src="${usersData.senderPicture}">
@@ -155,7 +153,6 @@ function createChatMessage(msg, usersData) {
     messages.appendChild(item);
     messages.scrollTop = messages.scrollHeight;
   } else {
-    // item.textContent = `${msg}`;
     item.innerHTML = `
       <div class="message-content">
         <p>${msg}</p>
@@ -173,10 +170,11 @@ function createHistoryMessage(historyMessage, usersData) {
   historyMessage.reverse().map((message) => {
     const item = document.createElement("div");
     item.classList.add("history-message", "message-box");
-    // const time = message.time.toLocaleString("en-US", {
-    //   timezone: "Asia/Taipei",
-    // });
-    const time = message.time.toString().split("T")[1].slice(0, 5);
+    let time = new Date(Date.parse(message.time))
+      .toLocaleString("en-US")
+      .split(", ")[1];
+    const ampm = time.slice(-3);
+    time = time.split(" ")[0].slice(0, -3);
     if (message.sender == self) {
       // print self message(send class)
       item.innerHTML = `
@@ -184,10 +182,11 @@ function createHistoryMessage(historyMessage, usersData) {
         <p>${message.message}</p>
       </div>
       <div class="message-time">
-        <p>${time}</p>
+        <p>${time} ${ampm}</p>
       </div>`;
       item.classList.add("send");
       messages.appendChild(item);
+      messages.scrollTop = messages.scrollHeight;
     } else {
       // prinet others message(receive class)
       item.innerHTML = `
@@ -199,30 +198,47 @@ function createHistoryMessage(historyMessage, usersData) {
         <p>${message.message}</p>
       </div>
       <div class="message-time">
-        <p>${time}</p>
+        <p>${time} ${ampm}</p>
       </div>`;
       item.classList.add("receive");
       messages.appendChild(item);
+      messages.scrollTop = messages.scrollHeight;
     }
   });
 }
 
 function createExistingRooms(historyData) {
-  console.log(historyData);
   historyData.map((data) => {
-    const time = data[0].time.toString().split("T")[1].slice(0, 5);
+    let time = new Date(Date.parse(data[0].time))
+      .toLocaleString("en-US")
+      .split(", ");
+    const date = time[0];
+    const ampm = time[1].slice(-3);
+    time = time[1].split(" ")[0].slice(0, -3);
     const item = document.createElement("div");
-    item.innerHTML = `<div class="room">
-      <div class="room-user">
-        <img src="${data[0].picture}" width="30px" />
-        <p>${data[0].name}</p>
-      </div>
-      <div class="room-content">
-        <p class="room-message">${data[0].message}</p>
-        <p class="room-time">${time}</p>
-      </div>
-      </div>
-    </div>`;
+    item.className = "room";
+    item.innerHTML = `
+      <a class="room-a" href="/chatroom.html?room=${data[0].room_id}">
+        <div class="room-user">
+          <img src="${data[0].picture}" width="30px" />
+          <p>${data[0].name}</p>
+        </div>
+        <div class="room-content">
+          <p class="room-message">${data[0].message}</p>
+          <p class="room-time">${date} ${time} ${ampm}</p>
+        </div>
+      </a>`;
     rooms.appendChild(item);
   });
+  checkFocusRoom();
+}
+
+// change room class if selected
+async function checkFocusRoom() {
+  const existingRooms = document.querySelectorAll(".room");
+  for (let i = 0; i < existingRooms.length; i++) {
+    if (existingRooms[i].children[0].href.split("=")[1] == roomId) {
+      existingRooms[i].classList = "room selected";
+    }
+  }
 }

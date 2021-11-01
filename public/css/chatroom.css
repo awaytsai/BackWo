@@ -107,9 +107,18 @@ main {
   border-radius: 5px;
   padding: 2px;
 }
+.room a {
+  text-decoration: none;
+  color: #333;
+}
+
+.selected {
+  border: 3px solid #333;
+}
 
 .room-user {
   display: flex;
+  margin: 3px 5px;
 }
 
 .room-user p,
@@ -121,10 +130,10 @@ main {
 .room-content {
   display: flex;
   justify-content: space-between;
+  margin: 3px 0;
 }
 .room-message {
   color: #666;
-  font-weight: bold;
 }
 
 .messages {
@@ -139,6 +148,7 @@ main {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
 .receive {
   height: 90px;
   padding: 2px;
@@ -172,11 +182,17 @@ main {
 .message-sender {
   display: flex;
   align-items: center;
+  margin: 0 5px;
 }
 
 .message-sender span,
 .message-content {
   margin: 0 5px;
+}
+
+.message-time {
+  margin: 0 5px;
+  color: #777;
 }
 
 #chatform {
