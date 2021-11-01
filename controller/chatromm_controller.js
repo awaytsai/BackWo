@@ -19,6 +19,9 @@ const getChatroomAccess = async (req, res) => {
   // get sender and receiver ids
   const senderData = await User.getUserData(userId);
   const receiverData = await User.getUserData(user2Id);
+  if (senderData.length == 0 || receiverData.length == 0) {
+    res.json({ message: "noaccess" });
+  }
   // format sender/receiver data
   const formatUserData = {
     senderId: senderData[0].id,
