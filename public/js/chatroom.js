@@ -12,29 +12,27 @@ const params = Object.fromEntries(urlSearchParams.entries());
 const roomId = params.room;
 
 // check access (frontent)
-// if (roomId == "null") {
-//   Swal.fire({
-//     icon: "info",
-//     title: "請重新登入",
-//     showConfirmButton: false,
-//     timer: 1500,
-//   });
-//   setTimeout(() => {
-//     window.location.href = "/member.html";
-//   }, 1600);
-// } else if (!roomId) {
-//   Swal.fire({
-//     icon: "info",
-//     title: "請先登入或註冊",
-//     showConfirmButton: false,
-//     timer: 1500,
-//   });
-//   setTimeout(() => {
-//     window.location.href = "/member.html";
-//   }, 1600);
-// } else {
-//
-// }
+if (roomId == "null") {
+  Swal.fire({
+    icon: "info",
+    title: "請重新登入",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  setTimeout(() => {
+    window.location.href = "/member.html";
+  }, 1600);
+} else if (!roomId) {
+  Swal.fire({
+    icon: "info",
+    title: "請先登入或註冊",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  setTimeout(() => {
+    window.location.href = "/member.html";
+  }, 1600);
+}
 
 checkAccess();
 // check access (backend)
@@ -69,13 +67,13 @@ async function checkAccess() {
       // userid not in room ids
       Swal.fire({
         icon: "info",
-        title: "no access",
+        title: "此頁面不存在",
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1500,
       });
       setTimeout(() => {
         window.location.href = "/";
-      }, 1200);
+      }, 1600);
     } else {
       // ok
       showRoomsAndConnectIO(usersData);
