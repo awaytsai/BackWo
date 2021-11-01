@@ -18,7 +18,6 @@ const uploadFindOwnersPost = async (req, res) => {
   if (breed == "其他") {
     breed = req.body.breedName;
   }
-  // let person = "owner";
   const status = "lost";
   const userId = req.decoded.payload.id;
   const photo = req.files.photo[0].key;
@@ -52,8 +51,8 @@ const uploadFindOwnersPost = async (req, res) => {
     lng
   );
   const postId = postResult.insertId;
-  console.log(postResult);
-  console.log(postId);
+  // console.log(postResult);
+  // console.log(postId);
 
   const detectResult = await detectImage();
 
@@ -93,7 +92,7 @@ const uploadFindOwnersPost = async (req, res) => {
       data.Labels.map((lb) => {
         labels.push(lb.Name);
       });
-      console.log(labels);
+      // console.log(labels);
       labels.map((lb) => {
         breedsList.dog_breed_en.map((breed) => {
           // check breed
@@ -128,14 +127,14 @@ const uploadFindOwnersPost = async (req, res) => {
         matchBreedData.map((data) => {
           petPostIds.push(data.id);
         });
-        console.log(petPostIds);
+        // console.log(petPostIds);
 
         // create notification data (fp_id/fo_id/)
         const notificationData = await Notification.insertNotification(
           petPostIds,
           postId
         );
-        console.log(notificationData);
+        // console.log(notificationData);
       }
     });
   }
@@ -143,12 +142,9 @@ const uploadFindOwnersPost = async (req, res) => {
 };
 
 const getFindOwnersGeoInfo = async (req, res) => {
-  const { kind, county, district, date } = req.query;
-  // const person = "owner";
+  const { kind, county, district, date, ne, sw } = req.query;
   const param = req.originalUrl.split("/")[2].split("G")[0].slice(3);
-  console.log(param);
   let person = checkPerson(param);
-
   // check query string w/o filter
   if (kind && county && district && date) {
     if (kind == "全部") {
@@ -158,10 +154,7 @@ const getFindOwnersGeoInfo = async (req, res) => {
         district,
         date
       );
-      geoResult.map(
-        (data) =>
-          (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
-      );
+      getPhotoPath(geoResult, param);
       return res.json(geoResult);
     } else {
       const geoResult = await Geo.getFilterGeo(
@@ -171,20 +164,31 @@ const getFindOwnersGeoInfo = async (req, res) => {
         district,
         date
       );
-      geoResult.map(
-        (data) =>
-          (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
-      );
+      getPhotoPath(geoResult, param);
       return res.json(geoResult);
     }
   } else {
-    // without filter
-    const geoResult = await Geo.getAllGeo(person);
-    geoResult.map(
-      (data) =>
-        (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
-    );
-    res.json(geoResult);
+    if (ne && sw) {
+      // get geoinfo with in bounder
+      const north = ne.split(", ")[0].split("(")[1];
+      const east = ne.split(", ")[1].split(")")[0];
+      const south = sw.split(", ")[0].split("(")[1];
+      const west = sw.split(", ")[1].split(")")[0];
+      const geoResult = await Geo.getGeoByBounder(
+        person,
+        west,
+        east,
+        south,
+        north
+      );
+      getPhotoPath(geoResult, param);
+      res.json(geoResult);
+    } else {
+      // without filter
+      const geoResult = await Geo.getAllGeo(person);
+      getPhotoPath(geoResult, param);
+      res.json(geoResult);
+    }
   }
 };
 
@@ -194,7 +198,6 @@ const getFindOwnersPosts = async (req, res) => {
   // const person = "owner";
   const param = req.originalUrl.split("/")[2].split("P")[0].slice(3);
   let person = checkPerson(param);
-
   if (kind && county && district && date) {
     if (kind == "全部") {
       const postResult = await Pet.getAllBreedsFilterPosts(
@@ -203,7 +206,7 @@ const getFindOwnersPosts = async (req, res) => {
         district,
         date
       );
-      console.log(postResult);
+      getPhotoPath(postResult, param);
       res.json(postResult);
     } else {
       const postResult = await Pet.getFilterPosts(
@@ -213,12 +216,13 @@ const getFindOwnersPosts = async (req, res) => {
         district,
         date
       );
-      console.log(postResult);
+      getPhotoPath(postResult, param);
       res.json(postResult);
     }
   } else {
     // without filter
-    const postResult = await Pet.getPetsPosts(person);
+    let postResult = await Pet.getPetsPosts(person);
+    getPhotoPath(postResult, param);
     res.json(postResult);
   }
 };
@@ -226,11 +230,9 @@ const getFindOwnersPosts = async (req, res) => {
 const getFindOwnersDetail = async (req, res) => {
   // check person
   const param = req.originalUrl.split("/")[2];
-  console.log(param);
   const person = checkPerson(param);
   const id = req.query.id;
   // check if user login
-  console.log(req.decoded);
   if (!req.decoded) {
     const postData = await Pet.getPostDetailById(person, id);
     const postDetail = postData[0];
@@ -277,7 +279,6 @@ const getFindOwnersDetail = async (req, res) => {
     if (userId == postDetail.user_id || res.locals.message == "loginagain") {
       formatData.roomId = "null";
     }
-    console.log(formatData);
     res.json(formatData);
   }
 };
@@ -298,6 +299,12 @@ function switchPerson(param) {
   if (param == "findpets") {
     return "owner";
   }
+}
+
+function getPhotoPath(result, param) {
+  result.map(
+    (data) => (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
+  );
 }
 
 module.exports = {
