@@ -31,7 +31,7 @@ applyBtn.addEventListener("click", (e) => {
 
 // add all markers
 async function addAllMarker() {
-  const response = await fetch("/api/getFindOwnersGeoInfo");
+  const response = await fetch(`/api/getf${person}GeoInfo`);
   const findOwnersGeoData = await response.json();
   addMarker(findOwnersGeoData);
 }
@@ -39,7 +39,7 @@ async function addAllMarker() {
 // add filter markers
 async function filterMapMarker(kind, county, district, date) {
   const response = await fetch(
-    `/api/getFindOwnersGeoInfo?kind=${kind}&county=${county}&district=${district}&date=${date}`
+    `/api/getf${person}GeoInfo?kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterGeoData = await response.json();
   console.log(filterGeoData);
@@ -48,6 +48,8 @@ async function filterMapMarker(kind, county, district, date) {
 }
 
 function addMarker(data) {
+  console.log("add maker");
+  console.log(data);
   data.forEach((pet) => {
     const myLatLng = { lat: pet.lat, lng: pet.lng };
     let image =
@@ -59,10 +61,11 @@ function addMarker(data) {
     }
     const contentString = `
     <div>
-      <div>${pet.kind}</div>
-      <div>${pet.breed}</div>
-      <div>${pet.color}</div>
-      <a href="/?id=${pet.id}"></a>
+      <a href="/f${person}/detail.html?id=${pet.id}">
+        <img src="${pet.photo}" width="150px">
+      </a>
+      <div>品種: ${pet.breed}</div>
+      <div>顏色: ${pet.color}</div>
     </div>`;
     // markers
     marker = new google.maps.Marker({

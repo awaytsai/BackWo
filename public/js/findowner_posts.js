@@ -1,3 +1,5 @@
+const person = location.href.split("/f")[1].split(".")[0];
+console.log(person);
 // show all posts
 showPosts();
 
@@ -18,7 +20,7 @@ applyBtn.addEventListener("click", (e) => {
 });
 
 async function showPosts() {
-  const response = await fetch("/api/getFindOwnersPosts");
+  const response = await fetch(`/api/getf${person}Posts`);
   const findOwnersPostsData = await response.json();
   deleteElement();
   console.log(findOwnersPostsData);
@@ -27,7 +29,7 @@ async function showPosts() {
 
 async function showFilterPosts(kind, county, district, date) {
   const filterResponse = await fetch(
-    `/api/getFindOwnersPosts?kind=${kind}&county=${county}&district=${district}&date=${date}`
+    `/api/getf${person}Posts?kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterData = await filterResponse.json();
   deleteElement();
@@ -49,8 +51,8 @@ function createElement(data) {
     box.className = "box";
     title.className = "title";
     title.innerText = `${pet.county}${pet.district}`;
-    a.href = `/findowners/detail.html?id=${pet.id}`;
-    img.src = `https://d3271x2nhsfyjz.cloudfront.net/findowners/${pet.photo}`;
+    a.href = `/f${person}/detail.html?id=${pet.id}`;
+    img.src = `https://d3271x2nhsfyjz.cloudfront.net/f${person}/${pet.photo}`;
     postDiv.appendChild(box);
     box.appendChild(a);
     box.appendChild(title);

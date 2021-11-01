@@ -8,6 +8,9 @@ const breedsList = require("../public/data/breeds.json");
 
 const uploadFindOwnersPost = async (req, res) => {
   const { kind, color, county, district, address, date, note } = req.body;
+  const param = req.originalUrl.split("/")[2];
+  let person = checkPerson(param);
+
   let breed = req.body.breed;
   if (!(kind && breed && color && county && district && address && date)) {
     return res.json({ message: "請填寫所有欄位" });
@@ -15,7 +18,7 @@ const uploadFindOwnersPost = async (req, res) => {
   if (breed == "其他") {
     breed = req.body.breedName;
   }
-  let person = "owner";
+  // let person = "owner";
   const status = "lost";
   const userId = req.decoded.payload.id;
   const photo = req.files.photo[0].key;
@@ -72,7 +75,7 @@ const uploadFindOwnersPost = async (req, res) => {
       Image: {
         S3Object: {
           Bucket: process.env.AWS_BUCKET_NAME,
-          Name: `findowners/${photo}`,
+          Name: `${param}/${photo}`,
         },
       },
       MaxLabels: 20,
@@ -111,7 +114,8 @@ const uploadFindOwnersPost = async (req, res) => {
         const updatePostResult = await Pet.updatePetsPost(breed, postId);
       }
       // check if owner post (breed/county/time) match
-      person = "finder";
+      // person = "finder";
+      person = switchPerson(param);
       const matchBreedData = await Pet.getMatchBreedPosts(
         person,
         breed,
@@ -140,7 +144,11 @@ const uploadFindOwnersPost = async (req, res) => {
 
 const getFindOwnersGeoInfo = async (req, res) => {
   const { kind, county, district, date } = req.query;
-  const person = "owner";
+  // const person = "owner";
+  const param = req.originalUrl.split("/")[2].split("G")[0].slice(3);
+  console.log(param);
+  let person = checkPerson(param);
+
   // check query string w/o filter
   if (kind && county && district && date) {
     if (kind == "全部") {
@@ -150,7 +158,10 @@ const getFindOwnersGeoInfo = async (req, res) => {
         district,
         date
       );
-      console.log(geoResult);
+      geoResult.map(
+        (data) =>
+          (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
+      );
       return res.json(geoResult);
     } else {
       const geoResult = await Geo.getFilterGeo(
@@ -160,12 +171,19 @@ const getFindOwnersGeoInfo = async (req, res) => {
         district,
         date
       );
-      console.log(geoResult);
+      geoResult.map(
+        (data) =>
+          (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
+      );
       return res.json(geoResult);
     }
   } else {
     // without filter
     const geoResult = await Geo.getAllGeo(person);
+    geoResult.map(
+      (data) =>
+        (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
+    );
     res.json(geoResult);
   }
 };
@@ -173,7 +191,10 @@ const getFindOwnersGeoInfo = async (req, res) => {
 const getFindOwnersPosts = async (req, res) => {
   // check query string w/o filter
   const { kind, county, district, date } = req.query;
-  const person = "owner";
+  // const person = "owner";
+  const param = req.originalUrl.split("/")[2].split("P")[0].slice(3);
+  let person = checkPerson(param);
+
   if (kind && county && district && date) {
     if (kind == "全部") {
       const postResult = await Pet.getAllBreedsFilterPosts(
@@ -203,10 +224,12 @@ const getFindOwnersPosts = async (req, res) => {
 };
 
 const getFindOwnersDetail = async (req, res) => {
-  const person = "owner";
+  // check person
+  const param = req.originalUrl.split("/")[2];
+  console.log(param);
+  const person = checkPerson(param);
   const id = req.query.id;
   // check if user login
-  // no => redirect to login
   console.log(req.decoded);
   if (!req.decoded) {
     const postData = await Pet.getPostDetailById(person, id);
@@ -219,15 +242,14 @@ const getFindOwnersDetail = async (req, res) => {
       address: `${postDetail.county}${postDetail.district}${postDetail.address}`,
       date: date,
       note: postDetail.note,
-      photo: `${process.env.CLOUDFRONT}/findowners/${postDetail.photo}`,
-      ownerId: postDetail.user_id,
-      ownername: postDetail.name,
-      ownerpic: postDetail.picture,
+      photo: `${process.env.CLOUDFRONT}/${param}/${postDetail.photo}`,
+      postUserId: postDetail.user_id,
+      postUserName: postDetail.name,
+      postUserPic: postDetail.picture,
     };
     res.json(formatData);
   } else {
     // yes => render with roomid/userid
-    // check if chat to self
     const userId = req.decoded.payload.id;
     const postData = await Pet.getPostDetailById(person, id);
     const postDetail = postData[0];
@@ -244,19 +266,39 @@ const getFindOwnersDetail = async (req, res) => {
       address: `${postDetail.county}${postDetail.district}${postDetail.address}`,
       date: date,
       note: postDetail.note,
-      photo: `${process.env.CLOUDFRONT}/findowners/${postDetail.photo}`,
-      ownerId: postDetail.user_id,
-      ownername: postDetail.name,
-      ownerpic: postDetail.picture,
+      photo: `${process.env.CLOUDFRONT}/${param}/${postDetail.photo}`,
+      postUserId: postDetail.user_id,
+      postUserName: postDetail.name,
+      postUserPic: postDetail.picture,
       roomId: `${roomId[0]}-${roomId[1]}`,
     };
+    // check if chat to self
     // self post & need to log in again
     if (userId == postDetail.user_id || res.locals.message == "loginagain") {
       formatData.roomId = "null";
     }
+    console.log(formatData);
     res.json(formatData);
   }
 };
+
+function checkPerson(param) {
+  if (param == "findowners") {
+    return "owner";
+  }
+  if (param == "findpets") {
+    return "finder";
+  }
+}
+
+function switchPerson(param) {
+  if (param == "findowners") {
+    return "finder";
+  }
+  if (param == "findpets") {
+    return "owner";
+  }
+}
 
 module.exports = {
   uploadFindOwnersPost,
