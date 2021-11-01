@@ -75,21 +75,65 @@ nav a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px;
+  padding: 20px;
+}
+.photo-info-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+}
+
+.photo-wrap,
+.info-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .photo img {
-  max-width: 80%;
+  min-width: 300px;
+  max-width: 90%;
+  margin: 20px 10px;
+  max-height: 800px;
+}
+
+.chat-button a,
+.photo-wrap a {
+  text-decoration: none;
+  background-color: #777;
+  color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.info {
+  color: #333;
+  margin: 10px 0;
+}
+
+.info span {
+  font-weight: 500;
+  color: #777;
 }
 
 .finderinfo {
   display: flex;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .finderinfo img {
-  width: 50px;
+  width: 35px;
+  margin: 0 10px 0 0;
+}
+
+.finder-name span {
+  font-weight: bold;
 }
 
 /* footer */
