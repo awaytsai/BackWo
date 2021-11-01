@@ -24,8 +24,17 @@ const getAllGeo = async (person) => {
   return findPetsGeo;
 };
 
+const getGeoByBounder = async (person, w, e, s, n) => {
+  const [bounderGeo] = await db.query(
+    "SELECT * FROM pet_post WHERE person = ? AND lng BETWEEN ? AND ? AND lat BETWEEN ? AND ? ORDER BY id DESC;",
+    [person, w, e, s, n]
+  );
+  return bounderGeo;
+};
+
 module.exports = {
   getAllBreedsFilterGeo,
   getFilterGeo,
   getAllGeo,
+  getGeoByBounder,
 };

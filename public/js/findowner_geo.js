@@ -9,6 +9,14 @@ function initMap() {
     zoom: 14,
   });
   addAllMarker();
+  map.addListener("dragend", () => {
+    // get bounds
+    const bounds = map.getBounds();
+    const ne = bounds.getNorthEast();
+    const sw = bounds.getSouthWest();
+    // render by with in new bounds
+    addMarkerByBounds(ne, sw);
+  });
 }
 
 // show filter map
@@ -25,7 +33,6 @@ applyBtn.addEventListener("click", (e) => {
     // add new markers
     filterMapMarker(kind, county, district, date);
   } else {
-    alert("請選擇全部篩選項目");
   }
 });
 
@@ -33,6 +40,7 @@ applyBtn.addEventListener("click", (e) => {
 async function addAllMarker() {
   const response = await fetch(`/api/getf${person}GeoInfo`);
   const findOwnersGeoData = await response.json();
+  console.log(findOwnersGeoData);
   addMarker(findOwnersGeoData);
 }
 
@@ -45,11 +53,23 @@ async function filterMapMarker(kind, county, district, date) {
   console.log(filterGeoData);
   // add new marker
   addMarker(filterGeoData);
+  // map.setCenter(markers.getPosition());
+}
+
+// add markers by bounds
+async function addMarkerByBounds(ne, sw) {
+  const response = await fetch(`/api/getf${person}GeoInfo?ne=${ne}&sw=${sw}`);
+  const findOwnersGeoData = await response.json();
+  console.log(findOwnersGeoData);
+  addMarker(findOwnersGeoData);
+  deleteElement();
+  createElement(findOwnersGeoData);
 }
 
 function addMarker(data) {
   console.log("add maker");
   console.log(data);
+  // update map center
   data.forEach((pet) => {
     const myLatLng = { lat: pet.lat, lng: pet.lng };
     let image =
