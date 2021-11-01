@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
   const provider = "native";
-  const picture = `${process.env.CLOUDFRONT}member_default.png`;
+  const picture = `${process.env.CLOUDFRONT}/member_default.png`;
   if (!name || !email || !password) {
     res.status(400).json({ error: "請輸入名字、email 和密碼" });
     return;
