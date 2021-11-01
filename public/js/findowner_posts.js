@@ -15,7 +15,10 @@ applyBtn.addEventListener("click", (e) => {
   if (kind && county && district && date) {
     showFilterPosts(kind, county, district, date);
   } else {
-    alert("請選擇全部篩選項目");
+    Swal.fire({
+      icon: "info",
+      text: `請選擇全部篩選項目`,
+    });
   }
 });
 
@@ -52,7 +55,7 @@ function createElement(data) {
     title.className = "title";
     title.innerText = `${pet.county}${pet.district}`;
     a.href = `/f${person}/detail.html?id=${pet.id}`;
-    img.src = `https://d3271x2nhsfyjz.cloudfront.net/f${person}/${pet.photo}`;
+    img.src = `${pet.photo}`;
     postDiv.appendChild(box);
     box.appendChild(a);
     box.appendChild(title);
