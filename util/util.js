@@ -70,8 +70,35 @@ const uploadFindOwners = uploadS3_owners.fields([
   { name: "photo", maxCount: 1 },
 ]);
 
+function checkPerson(param) {
+  if (param == "findowners") {
+    return "owner";
+  }
+  if (param == "findpets") {
+    return "finder";
+  }
+}
+
+function switchPerson(param) {
+  if (param == "findowners") {
+    return "finder";
+  }
+  if (param == "findpets") {
+    return "owner";
+  }
+}
+
+function getPhotoPath(result, param) {
+  result.map(
+    (data) => (data.photo = `${process.env.CLOUDFRONT}/${param}/${data.photo}`)
+  );
+}
+
 module.exports = {
   wrapAsync,
   uploadFindPets,
   uploadFindOwners,
+  checkPerson,
+  switchPerson,
+  getPhotoPath,
 };
