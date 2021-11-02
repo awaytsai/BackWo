@@ -27,10 +27,8 @@ const getExistingRoomIds = async (userId) => {
 const getRoomLastRecord = async (ids) => {
   const result = [];
   for (let i = 0; i < ids.length; i++) {
-    console.log("in model");
-    console.log(ids);
     const [roomRecord] = await db.query(
-      "SELECT c.sender, c.receiver, c.message, c.time, c.room_id, u.name, u.picture FROM chat as c INNER JOIN user as u ON c.receiver = u.id WHERE c.room_id = ? and (c.sender or c.receiver = ?) ORDER BY time DESC LIMIT 1;",
+      "SELECT c.sender, c.receiver, c.message, c.time, c.room_id, u.name, u.picture FROM chat as c INNER JOIN user as u ON c.receiver = u.id WHERE c.room_id = ? and c.receiver = ? ORDER BY time DESC LIMIT 1;",
       ids[i]
     );
     result.push(roomRecord);
