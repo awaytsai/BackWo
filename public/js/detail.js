@@ -21,8 +21,9 @@ async function getPostDetail() {
     });
     const data = await fetchData.json();
     console.log(data);
-    // check if user login or not
+    // check person
     if (data.roomId) {
+      // check if user login or not
       if (data.roomId == "null") {
         // element with self post
         createElementSelfPost(data);
@@ -42,15 +43,17 @@ async function getPostDetail() {
 }
 
 function createElement(data, href) {
-  const div = document.createElement("div");
-  div.className = "photo-info-wrap";
-  const parentDiv = document.querySelector(".main-wrap");
-  div.innerHTML = `
+  console.log(data);
+  if (person == "indowners") {
+    const div = document.createElement("div");
+    div.className = "photo-info-wrap";
+    const parentDiv = document.querySelector(".main-wrap");
+    div.innerHTML = `
     <div class="photo-wrap">
       <div class="photo">
         <img src="${data.photo}"/>
       </div>
-      <div><a href="/">這是我的寵物</a></div>
+      <div><a href="/f${person}/match?id=${data.id}">這是我的寵物</a></div>
     </div>
     <div class="info-wrap">
       <div>
@@ -68,7 +71,35 @@ function createElement(data, href) {
         </div>
       </div>
     </div>`;
-  parentDiv.appendChild(div);
+    parentDiv.appendChild(div);
+  } else {
+    const div = document.createElement("div");
+    div.className = "photo-info-wrap";
+    const parentDiv = document.querySelector(".main-wrap");
+    div.innerHTML = `
+    <div class="photo-wrap">
+      <div class="photo">
+        <img src="${data.photo}"/>
+      </div>
+    </div>
+    <div class="info-wrap">
+      <div>
+        <div class="info"><span>品種 : </span>${data.breed}</div>
+        <div class="info"><span>顏色 : </span>${data.color}</div>
+        <div class="info"><span>地點 : </span>${data.address}</div>
+        <div class="info"><span>時間 : </span>${data.date}</div>
+        <div class="info"><span>備註 : </span>${data.note}</div>
+      </div>
+      <div class="finderinfo">
+        <div><img src="${data.postUserPic}"/></div>
+        <div class="finder-name"><span>Finder Name: </span>${data.postUserName}</div>
+        <div class=chat-button>
+          <a href="${href}">傳送訊息</a>
+        </div>
+      </div>
+    </div>`;
+    parentDiv.appendChild(div);
+  }
 }
 
 function createElementSelfPost(data) {
