@@ -18,8 +18,7 @@ const { socketController } = require("./controller/socketio_controller");
 socketController(io);
 
 app.use("/api", [
-  require("./Router/findowners"),
-  require("./Router/findpets"),
+  require("./Router/pets"),
   require("./Router/getData"),
   require("./Router/user"),
   require("./Router/chat"),
