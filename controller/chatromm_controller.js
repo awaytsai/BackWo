@@ -3,6 +3,10 @@ const Chat = require("../model/chat_model");
 
 const getChatroomAccess = async (req, res) => {
   const room = req.query.room;
+  if (room == "0") {
+    res.json({ message: "blankroom" });
+    return;
+  }
   const userId = req.decoded.payload.id;
   // check if user is able to chat in room
   const roomids = room.split("-", 2);
@@ -12,7 +16,6 @@ const getChatroomAccess = async (req, res) => {
     res.json({ message: "noaccess" });
     return;
   }
-
   // ids: [userid(self), user2id]
   const ids = [];
   ids.push(userId, user2Id);
@@ -44,7 +47,8 @@ const getChatroomRecord = async (req, res) => {
     res.json({ error: "no existing rooms" });
     return;
   }
-
+  console.log("existingIds");
+  console.log(existingIds);
   // get other users ids
   existingIds.map((data) => {
     let ids = data.room_id.split("-");
@@ -54,15 +58,28 @@ const getChatroomRecord = async (req, res) => {
       }
     });
   });
-
+  console.log("ids");
+  console.log(existingIds);
   // get last records by roomids
   const ids = existingIds.map((data) => Object.values(data));
   const roomRecords = await Chat.getRoomLastRecord(ids);
-  // console.log(roomRecords);
+  console.log(roomRecords);
   res.json(roomRecords);
+};
+
+// get latest room_id
+const getUserLatestRoomId = async (req, res) => {
+  const userId = req.decoded.payload.id;
+  const latestRoomId = await Chat.getLatestRoomId(userId);
+  if (latestRoomId.length == 0) {
+    res.json({ message: "noExistingRoom" });
+  } else {
+    res.json(latestRoomId[0]);
+  }
 };
 
 module.exports = {
   getChatroomAccess,
   getChatroomRecord,
+  getUserLatestRoomId,
 };

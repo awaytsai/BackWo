@@ -47,8 +47,9 @@
             <a class="findowner" href="/findowners.html">找主人</a>
           </nav>
           <a class="member" href="/member.html"
-            ><img src="../images/member_icon.png"
+            ><img src="/images/member_icon.png"
           /></a>
+          <div class="chat"><img src="/images/chat_icon.png" /></div>
         </div>
       </div>
     </header>
@@ -97,8 +98,8 @@
         <div class="contact-wrap">
           <div class="contact">聯絡我們</div>
           <div class="contact-link">
-            <a href=""><img src="../images/fb_icon.png" /></a>
-            <a href=""><img src="../images/email_icon.png" /></a>
+            <a href=""><img src="/images/fb_icon.png" /></a>
+            <a href=""><img src="/images/email_icon.png" /></a>
           </div>
         </div>
       </div>
@@ -106,25 +107,7 @@
     </footer>
     <!--socket io-->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/chatroom.js"></script>
-    <!-- <script>
-      const access_token = localStorage.getItem("access_token");
-      if (!access_token) {
-        Swal.fire({
-          icon: "info",
-          text: "請先登入",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-        setTimeout(() => {
-          window.location.href = "/member.html";
-        }, 1700);
-      }
-    </script> -->
+    <script src="/js/chatroom.js"></script>
+    <script src="/js/chat.js"></script>
   </body>
 </html>
-
-<!-- 
-  room
-// http://localhost:3000/chat.html?room=dipx2w
--->

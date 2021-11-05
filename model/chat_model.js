@@ -36,9 +36,18 @@ const getRoomLastRecord = async (ids) => {
   return result;
 };
 
+const getLatestRoomId = async (userId) => {
+  const [roomId] = await db.query(
+    "SELECT room_id FROM chat where sender = ? OR receiver = ? ORDER BY time DESC LIMIT 1;",
+    [userId, userId]
+  );
+  return roomId;
+};
+
 module.exports = {
   insertChatMessage,
   getChatMessage,
   getExistingRoomIds,
   getRoomLastRecord,
+  getLatestRoomId,
 };

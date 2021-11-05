@@ -22,7 +22,8 @@ if (roomId == "null") {
   setTimeout(() => {
     window.location.href = "/member.html";
   }, 1600);
-} else if (!roomId) {
+}
+if (!roomId) {
   Swal.fire({
     icon: "info",
     title: "請先登入或註冊",
@@ -33,8 +34,12 @@ if (roomId == "null") {
     window.location.href = "/member.html";
   }, 1600);
 }
+if (roomId == "0") {
+  createBlankElement();
+} else {
+  checkAccess();
+}
 
-checkAccess();
 // check access (backend)
 async function checkAccess() {
   try {
@@ -49,7 +54,10 @@ async function checkAccess() {
     const usersData = await response.json();
     self = usersData.senderId;
     console.log(usersData);
-    if (
+    if (usersData.message == "blankroom") {
+      console.log("blankroom");
+      createBlankElement();
+    } else if (
       usersData.message == "請重新登入" ||
       usersData.message == "請先登入或註冊"
     ) {
@@ -207,6 +215,7 @@ function createHistoryMessage(historyMessage, usersData) {
 
 function createExistingRooms(historyData) {
   historyData.map((data) => {
+    console.log(data);
     let time = new Date(Date.parse(data[0].time))
       .toLocaleString("en-US")
       .split(", ");
@@ -229,6 +238,13 @@ function createExistingRooms(historyData) {
     rooms.appendChild(item);
   });
   checkFocusRoom();
+}
+
+function createBlankElement() {
+  const div = document.querySelector("#messages");
+  div.textContent = "no data";
+  const form = document.querySelector("#chatform");
+  form.remove();
 }
 
 // change room class if selected
