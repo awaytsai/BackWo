@@ -52,8 +52,10 @@ nav a:hover {
   color: #333;
 }
 
-.member img {
+.member img,
+.chat img {
   width: 30px;
+  margin: 0 15px;
 }
 .infobar {
   color: #ff7b1a;
@@ -134,6 +136,17 @@ form label span {
 
 .photo-wrap label {
   margin: 20px 0;
+}
+.photo-preview {
+  margin: 30px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+.photo-preview img {
+  width: 250px;
+  height: 200px;
+  object-fit: cover;
+  margin-top: 10px;
 }
 .photo-reminder {
   display: flex;

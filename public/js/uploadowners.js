@@ -51,7 +51,17 @@ async function uploadPost() {
     const date = document.querySelector("#datepicker");
     const photo = document.querySelector("#formFile");
     // error handling
-    if (county.value == "") {
+    if (token == null) {
+      Swal.fire({
+        icon: "info",
+        text: "請先登入或註冊",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setTimeout(() => {
+        window.location.href = "/member.html";
+      }, 1600);
+    } else if (county.value == "") {
       Swal.fire({
         icon: "info",
         text: "請填寫走失區域",
@@ -159,4 +169,24 @@ function radioChange() {
   console.log("change");
   const input = document.querySelector(".other-breed");
   input.style.display = "none";
+}
+
+// image preview
+function preview() {
+  const preview = document.querySelector(".preview");
+  const file = document.querySelector("input[type=file]").files[0];
+  const reader = new FileReader();
+
+  reader.addEventListener(
+    "load",
+    function () {
+      // convert image file to base64 string
+      preview.src = reader.result;
+    },
+    false
+  );
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
 }

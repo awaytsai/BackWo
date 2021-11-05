@@ -29,7 +29,7 @@
       rel="stylesheet"
     />
     <!--css-->
-    <link rel="stylesheet" href="../css/upload.css" />
+    <link rel="stylesheet" href="/css/upload.css" />
   </head>
   <body>
     <header>
@@ -47,8 +47,9 @@
             <a class="findowner" href="/findowners.html">找主人</a>
           </nav>
           <a class="member" href="/member.html"
-            ><img src="../images/member_icon.png"
+            ><img src="/images/member_icon.png"
           /></a>
+          <div class="chat"><img src="/images/chat_icon.png" /></div>
         </div>
       </div>
     </header>
@@ -132,8 +133,6 @@
                 placeholder="2021-10-10"
                 required
               />
-            </div>
-            <div class="form-wrap-right">
               <label>備註</label>
               <textarea
                 class="note-message"
@@ -141,6 +140,8 @@
                 name="note"
                 placeholder="  戴橘色項圈，有打晶片，右耳上有斑點"
               ></textarea>
+            </div>
+            <div class="form-wrap-right">
               <div class="photo-wrap">
                 <div class="photo-upload" class="mb-3">
                   <label for="formFile" class="form-label"
@@ -153,7 +154,12 @@
                     class="form-control"
                     id="formFile"
                     required
+                    onchange="preview()"
                   />
+                </div>
+                <div class="photo-preview">
+                  <p>圖片預覽</p>
+                  <img class="preview" src="/images/preview_icon.png" />
                 </div>
                 <div class="photo-reminder">
                   <div>
@@ -191,8 +197,8 @@
         <div class="contact-wrap">
           <div class="contact">聯絡我們</div>
           <div class="contact-link">
-            <a href=""><img src="../images/fb_icon.png" /></a>
-            <a href=""><img src="../images/email_icon.png" /></a>
+            <a href=""><img src="/images/fb_icon.png" /></a>
+            <a href=""><img src="/images/email_icon.png" /></a>
           </div>
         </div>
       </div>
@@ -211,6 +217,7 @@
         });
       });
     </script>
-    <script src="../js/uploadpets.js"></script>
+    <script src="/js/uploadpets.js"></script>
+    <script src="/js/chat.js"></script>
   </body>
 </html>
