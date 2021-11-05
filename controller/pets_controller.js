@@ -285,29 +285,25 @@ const getFindPostDetail = async (req, res) => {
   }
 };
 
-const getMatchPost = async (req, res) => {
-  // req.query for pet post id => render detail and map
-  const postId = req.query.id;
-  console.log(postId);
-  // token for render user's existing post (if existing, force to check one?)
-  // const userId = req.decoded.payload.id;
-
-  // store thank you message
-  // update post for owner to check(update) status
+const getAllPostsByUser = async (req, res) => {
+  const userId = req.decoded.payload.id;
+  const userPosts = await Pet.getAllPostsByUser(userId);
+  userPosts.map((data) => {
+    if (data.person == "owner") {
+      data.photo = `${process.env.CLOUDFRONT}/findowners/${data.photo}`;
+    }
+    if (data.person == "finder") {
+      data.photo = `${process.env.CLOUDFRONT}/findpets/${data.photo}`;
+    }
+  });
+  console.log(userPosts);
+  res.json(userPosts);
 };
-
-//// profile page ////
-// get notification
-// show existing post
-// show confirm post
-
-// update/delete existing post
-// update confirm post status
 
 module.exports = {
   uploadFindPost,
   getPetsGeoInfo,
   getFindPosts,
   getFindPostDetail,
-  getMatchPost,
+  getAllPostsByUser,
 };

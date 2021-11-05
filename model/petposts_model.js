@@ -86,6 +86,22 @@ const getPostDetailById = async (person, id) => {
   return PetsPosts;
 };
 
+const getAllPostsByUser = async (id) => {
+  const [PetsPosts] = await db.query(
+    "SELECT * FROM pet_post WHERE user_id = ? ORDER BY id DESC;",
+    [id]
+  );
+  return PetsPosts;
+};
+
+const getFindPetPostByUser = async (userId) => {
+  const [PetsPosts] = await db.query(
+    "SELECT * FROM pet_post WHERE user_id = ? AND person='finder' AND status = 'lost' ORDER BY id DESC;",
+    [userId]
+  );
+  return PetsPosts;
+};
+
 module.exports = {
   createPetsPost,
   updatePetsPost,
@@ -94,4 +110,6 @@ module.exports = {
   getFilterPosts,
   getPetsPosts,
   getPostDetailById,
+  getAllPostsByUser,
+  getFindPetPostByUser,
 };
