@@ -53,7 +53,7 @@ function createElement(data, href) {
       <div class="photo">
         <img src="${data.photo}"/>
       </div>
-      <div><a href="/f${person}/match?id=${data.id}">這是我的寵物</a></div>
+      <div><a href="/checkmatch.html?id=${data.id}">這是我的寵物</a></div>
     </div>
     <div class="info-wrap">
       <div>

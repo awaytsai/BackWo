@@ -57,8 +57,10 @@ nav a:hover {
   color: #333;
 }
 
-.member img {
+.member img,
+.chat img {
   width: 30px;
+  margin: 0 15px;
 }
 .infobar {
   color: #ff7b1a;
