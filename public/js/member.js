@@ -47,9 +47,11 @@ async function signUp(body) {
         icon: "success",
         title: "註冊成功",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1500,
       });
-      window.location.href = "/profile.html";
+      setTimeout(() => {
+        window.location.href = "/profile.html";
+      }, 1600);
     }
   } catch (err) {
     console.log(err);
@@ -107,9 +109,11 @@ async function signIn(body) {
         icon: "success",
         title: "登入成功",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 1500,
       });
-      window.location.href = "/profile.html";
+      setTimeout(() => {
+        window.location.href = "/profile.html";
+      }, 1600);
     }
   } catch (err) {
     console.log(err);
