@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BackWo-會員登入</title>
+    <script>
+      const access_token = localStorage.getItem("access_token");
+      if (!access_token) {
+        window.location.href = "/member.html";
+      }
+    </script>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js"></script>
+    <!--datepicker-->
+    <link
+      rel="stylesheet"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--sweet alert2-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nanum+Pen+Script&display=swap"
+      rel="stylesheet"
+    />
+    <!--css-->
+    <link rel="stylesheet" href="/css/profile.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-wrap">
+        <div class="logo-wrap">
+          <a class="logo" href="/"
+            ><img
+              src="https://media.istockphoto.com/vectors/cat-dog-yin-yang-vector-id1157833047?k=20&m=1157833047&s=612x612&w=0&h=0NbXpgif_tjPpbXrLedyl7gA94xW2Y_DNNdv-WgS9MY="
+          /></a>
+          <a href="/"><div class="logo-message">Back Wo</div></a>
+        </div>
+        <div class="nav-wrap">
+          <nav>
+            <a class="findpet" href="/findpets.html">找寵物</a>
+            <a class="findowner" href="/findowners.html">找主人</a>
+          </nav>
+          <a class="member" href="/member.html"
+            ><img src="/images/member_icon.png"
+          /></a>
+          <div class="chat"><img src="/images/chat_icon.png" /></div>
+        </div>
+      </div>
+    </header>
+    <div class="infobar">Back Wo，讓毛小孩們回到自己的窩</div>
+    <main>
+      <div class="main-wrap">
+        <div class="welcome-message">
+          <p>歡迎回來, xxxx</p>
+        </div>
+        <div class="notification-wrap">
+          <div class="notificatoin-title">
+            <img src="/images/notification_icon.png" />
+            <p>比對通知</p>
+          </div>
+          <div class="notifications">
+            <div class="notification">
+              <!-- <a href="">
+                <div class="noti-text-time">
+                  <p>
+                    <span class="highlight">！通知：</span
+                    >這可能是你走失的寵物，快來查看
+                    <span class="link"> 詳細資訊</span>。
+                  </p>
+                  <p class="notification-time">2021/11/3</p>
+                </div>
+              </a> -->
+            </div>
+          </div>
+        </div>
+        <div class="history-post">
+          <div class="history-post-title">
+            <img src="/images/post_icon.png" />
+            <p>貼文紀錄</p>
+          </div>
+          <div class="posts">
+            <!-- <div class="post">
+              <div>找寵物</div>
+              <img
+                src="https://d3271x2nhsfyjz.cloudfront.net/findowners/%E9%82%8A%E5%A2%83.jpeg-1635761244537"
+              />
+              <div class="post-content">
+                <div>品種: 狗</div>
+                <div>地點: 台北市信義區松仁路100號</div>
+                <div>日期: 2021/11/3</div>
+                <div>狀態: Lost</div>
+              </div>
+              <div class="edit">EDIT</div>
+              <div class="delete">
+                <img src="./images/delete_icon.png" />
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <div class="confirm-post-wrap">
+          <div class="confirm-post-title">
+            <img src="/images/check_icon.png" />
+            <p>待確認貼文</p>
+          </div>
+          <div class="confrim-posts">
+            <div class="confirm-post">
+              <a href="/findpets/detail?id=${id}">
+                <img
+                  src="https://d3271x2nhsfyjz.cloudfront.net/findowners/Corgi-at-home.jpeg-1635577469729"
+                />
+              </a>
+              <div class="confirm-post-content">
+                <div class="user">
+                  <div>user pic</div>
+                  <div>username</div>
+                </div>
+                <div>
+                  留言: 感謝的話 Thank you so much. Thank you so much. Thank you
+                  so much. Thank you so much. Thank you so much. Thank you so
+                  much.
+                </div>
+              </div>
+              <input
+                type="radio"
+                class="btn-check"
+                name="options"
+                id="option1"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-secondary" for="option1"
+                >確認</label
+              >
+              <input
+                type="radio"
+                class="btn-check"
+                name="options"
+                id="option2"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-secondary" for="option2"
+                >取消</label
+              >
+              <div class="save">Save</div>
+            </div>
+            <div class="confirm-post">
+              <a href="/findpets/detail?id=${id}">
+                <img
+                  src="https://d3271x2nhsfyjz.cloudfront.net/findowners/Golden_Retriever_Brother.jpeg-1635321260519"
+                />
+              </a>
+              <div class="confirm-post-content">
+                <div class="user">
+                  <div>user pic</div>
+                  <div>username</div>
+                </div>
+                <div>品種: 狗</div>
+                <div>地點: 台北市信義區松仁路100號</div>
+                <div>日期: 2021/11/3</div>
+              </div>
+              <input
+                type="radio"
+                class="btn-check"
+                name="option"
+                id="option3"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-secondary" for="option3"
+                >確認</label
+              >
+              <input
+                type="radio"
+                class="btn-check"
+                name="option"
+                id="option4"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-secondary" for="option4"
+                >取消</label
+              >
+              <div class="save">Save</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="footer-wrap">
+        <div class="recommend-wrap">
+          <div class="recommend">推薦相關資訊</div>
+          <div class="recommend-link">
+            <a href="https://www.pet.gov.tw/web/o201.aspx"
+              >寵物登記管理資訊網</a
+            >
+            <a href="https://asms.coa.gov.tw/Amlapp/App/AnnounceMent.aspx"
+              >全國動物收容系統</a
+            >
+          </div>
+        </div>
+        <div class="contact-wrap">
+          <div class="contact">聯絡我們</div>
+          <div class="contact-link">
+            <a href=""><img src="/images/fb_icon.png" /></a>
+            <a href=""><img src="/images/email_icon.png" /></a>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">Copyright © 2021 BackWo</div>
+    </footer>
+    <script src="/js/profile.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>
