@@ -1,4 +1,5 @@
 const person = location.href.split("/f")[1].split(".")[0];
+const token = localStorage.getItem("access_token");
 console.log(person);
 // show all posts
 showPosts();

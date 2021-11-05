@@ -24,9 +24,16 @@ router
   .route("/findowners/detail")
   .get(authMiddlewareforChat, wrapAsync(Pets.getFindPostDetail));
 
-// match
-router.route("/findowners/match").get(wrapAsync(Pets.getMatchPost));
-// .get(authMiddleware, wrapAsync(Pets.getMatchPost));
+// get existing posts
+router
+  .route("/getAllPostsByUser")
+  .get(authMiddleware, wrapAsync(Pets.getAllPostsByUser));
+
+// for this is my pet button -match
+// router.route("/findowners/match").get(wrapAsync(Pets.getMatchPost));
+// // .get(authMiddleware, wrapAsync(Pets.getMatchPost));
+
+///////////////////////////////////////////////////////////////////////
 
 // * findpets //
 // upload
@@ -44,9 +51,5 @@ router.route("/getfindpetsPosts").get(wrapAsync(Pets.getFindPosts));
 router
   .route("/findpets/detail")
   .get(authMiddlewareforChat, wrapAsync(Pets.getFindPostDetail));
-
-// match
-router.route("/findpets/match").get(wrapAsync(Pets.getMatchPost));
-// .get(authMiddleware, wrapAsync(Pets.getMatchPost));
 
 module.exports = router;
