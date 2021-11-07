@@ -3,9 +3,7 @@ const router = express.Router();
 const { wrapAsync, uploadFindOwners, uploadFindPets } = require("../util/util");
 const { authMiddleware, authMiddlewareforChat } = require("../util/auth");
 const Pets = require("../controller/pets_controller");
-
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+const multer = require("multer");
 
 // * findowners //
 // upload
@@ -24,10 +22,20 @@ router
   .route("/findowners/detail")
   .get(authMiddlewareforChat, wrapAsync(Pets.getFindPostDetail));
 
-// get existing posts
+// get edit detail
 router
-  .route("/getAllPostsByUser")
-  .get(authMiddleware, wrapAsync(Pets.getAllPostsByUser));
+  .route("/findowners/edit/detail")
+  .get(authMiddleware, wrapAsync(Pets.getPostEditDetail));
+
+// update post data
+router
+  .route("/findowners/updatePostdata")
+  .put(authMiddleware, multer().none(), wrapAsync(Pets.updatePostdata));
+
+// update post data with image
+router
+  .route("/findowners/updateWithImage")
+  .put(authMiddleware, uploadFindOwners, wrapAsync(Pets.updatePostdata));
 
 // for this is my pet button -match
 // router.route("/findowners/match").get(wrapAsync(Pets.getMatchPost));
@@ -51,5 +59,28 @@ router.route("/getfindpetsPosts").get(wrapAsync(Pets.getFindPosts));
 router
   .route("/findpets/detail")
   .get(authMiddlewareforChat, wrapAsync(Pets.getFindPostDetail));
+
+// get edit detail
+router
+  .route("/findpets/edit/detail")
+  .get(authMiddleware, wrapAsync(Pets.getPostEditDetail));
+
+// update post data
+router
+  .route("/findpets/updatePostdata")
+  .put(authMiddleware, multer().none(), wrapAsync(Pets.updatePostdata));
+
+// update post data with image
+router
+  .route("/findpets/updateWithImage")
+  .put(authMiddleware, uploadFindPets, wrapAsync(Pets.updatePostdata));
+
+// *all //
+// get existing posts
+router
+  .route("/getAllPostsByUser")
+  .get(authMiddleware, wrapAsync(Pets.getExistingPostsByUser));
+
+router.route("/deletePost").delete(authMiddleware, wrapAsync(Pets.deletePost));
 
 module.exports = router;

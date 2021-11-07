@@ -1,6 +1,7 @@
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const S3 = require("aws-sdk/clients/s3");
+const fetch = require("node-fetch");
 
 // error catching
 const wrapAsync = (fn) => {
@@ -94,6 +95,39 @@ function getPhotoPath(result, param) {
   );
 }
 
+async function formatPostData(data, userId, param) {
+  return (formatData = {
+    id: data.id,
+    userId: userId,
+    kind: data.kind,
+    breed: data.breed,
+    color: data.color,
+    county: data.county,
+    district: data.district,
+    address: data.address,
+    fullAddress: `${data.county}${data.district}${data.address}`,
+    date: data.date,
+    note: data.note,
+    photo: `${process.env.CLOUDFRONT}/${param}/${data.photo}`,
+    postUserId: data.user_id,
+    postUserName: data.name,
+    postUserPic: data.picture,
+  });
+}
+
+async function convertGeoCoding(county, district, address) {
+  const fullAddress = encodeURIComponent(
+    `${county}${district}${address}`.replace(/\s/g, "")
+  );
+  const key = "AIzaSyDJNv7tNr1GMnFgRulEBksMdwlL0Jewigc";
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${fullAddress}&key=${key}`;
+  const response = await fetch(url);
+  const geoData = await response.json();
+  const lat = geoData.results[0].geometry.location.lat;
+  const lng = geoData.results[0].geometry.location.lng;
+  return { lat, lng };
+}
+
 module.exports = {
   wrapAsync,
   uploadFindPets,
@@ -101,4 +135,6 @@ module.exports = {
   checkPerson,
   switchPerson,
   getPhotoPath,
+  formatPostData,
+  convertGeoCoding,
 };
