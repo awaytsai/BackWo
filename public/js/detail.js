@@ -14,13 +14,16 @@ async function getPostDetail() {
     const fetchData = await fetch(`/api/f${person}/detail?id=${id}`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     });
     const data = await fetchData.json();
     console.log(data);
+    let time = new Date(Date.parse(data.date))
+      .toLocaleString("en-US")
+      .split(", ")[0];
+    data.date = time;
+    console.log(time);
     // check person
     if (data.roomId) {
       // check if user login or not
