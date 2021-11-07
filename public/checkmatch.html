@@ -59,26 +59,25 @@
           </div>
           <div class="post-detail"></div>
         </div>
-        <h5>請選擇你的貼文</h5>
-        <div class="existing-post">
-          <div class="post">
+        <!-- <h5>請選擇你的貼文</h5> -->
+        <!-- <div class="existing-post">
+          <label class="check-label">
             <img
               src="https://d3271x2nhsfyjz.cloudfront.net/findpets/Golden_Retriever_Brother.jpeg-1635321017023"
             />
             <div class="post-info">
               <div>找寵物</div>
-              <div>品種: 狗</div>
-              <div>地點: 臺北市松山區南京東路五段</div>
-              <div>日期: 2021-11-01</div>
-              <div>狀態: lost</div>
+              <div>品種: ${post.breed}</div>
+              <div>地點: ${post.address}</div>
+              <div>日期: ${post.date}</div>
+              <div>狀態: ${post.status}</div>
             </div>
-            <div class="check">
-              <img src="/images/checked_icon.png" />
-            </div>
-          </div>
-        </div>
-        <button class="submit">Submit</button>
+            <div class="check ${post.id}"></div>
+            <input type="radio" name="post" value="${post.id}" />
+          </label>
+        </div> -->
       </div>
+      <button class="submit">Submit</button>
     </main>
     <footer>
       <div class="footer-wrap">

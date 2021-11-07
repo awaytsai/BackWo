@@ -5,29 +5,31 @@ const token = localStorage.getItem("access_token");
 
 getPostDetail();
 
-// store thank you message
-// update post for owner to check(update) status
-
 // render by id
 async function getPostDetail() {
   try {
     const fetchData = await fetch(`/api/match/detail?id=${id}`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
         Authorization: "Bearer " + token,
       },
     });
     const matchPostData = await fetchData.json();
+    console.log(matchPostData);
     createDetail(matchPostData.formatData);
-    // createHistoryPost(matchPostData.historyPost);
+    if (matchPostData.historyData !== "nodata") {
+      createHistoryPost(matchPostData.historyData);
+    }
   } catch (err) {
     console.log(err);
   }
 }
 
 function createDetail(data) {
+  let time = new Date(Date.parse(data.date))
+    .toLocaleString("en-US")
+    .split(", ")[0];
+  data.date = time;
   const div = document.createElement("div");
   div.className = "photo-info-wrap";
   const parentDiv = document.querySelector(".post-detail");
@@ -45,13 +47,139 @@ function createDetail(data) {
         </div>
         <div class="finderinfo">
           <div><img src="${data.postUserPic}"/></div>
-          <div class="finder-name"><span>Finder Name: </span>${data.postUserName}</div>
+          <div class="finder-name"><span>協尋者: </span>${data.postUserName}</div>
         </div>
       </div>`;
   parentDiv.appendChild(div);
 }
 
-function createHistoryPost() {}
-// rendering match post by user id
-// get existing post by userid
-// render with thank you message and toggle list
+function createHistoryPost(data) {
+  const h5 = document.createElement("h5");
+  const div = document.createElement("div");
+  // const button = document.createElement("button");
+  const wrapDiv = document.querySelector(".main-wrap");
+  h5.textContent = "請選擇對應的找寵物貼文";
+  div.className = "existing-post";
+  // button.className = "submit";
+  // button.textContent = "Submit";
+  wrapDiv.appendChild(h5);
+  wrapDiv.appendChild(div);
+  data.map((post) => {
+    console.log(post);
+    let time = new Date(Date.parse(post.date))
+      .toLocaleString("en-US")
+      .split(", ")[0];
+    post.date = time;
+    const div = document.createElement("div");
+    const parentDiv = document.querySelector(".existing-post");
+    div.classList = `post ${post.id}`;
+    div.innerHTML = `
+    <label class="check-label">
+    <img
+      src="${post.photo}"
+    />
+    <div class="post-info">
+      <div>找寵物</div>
+      <div>品種: ${post.breed}</div>
+      <div>地點: ${post.address}</div>
+      <div>日期: ${post.date}</div>
+      <div>狀態: ${post.status}</div>
+    </div>
+    <div class="check ${post.id}"></div>
+    <input type="radio" name="post" value="${post.id}" />
+  </label>
+    `;
+    parentDiv.appendChild(div);
+  });
+  // wrapDiv.appendChild(button);
+}
+
+let fpid;
+// store thank you message
+// update post for owner to check(update) status
+const submitBtn = document.querySelector(".submit");
+submitBtn.addEventListener("click", () => {
+  const radios = document.querySelectorAll('input[type="radio"]:checked');
+  console.log(radios);
+  if (radios.length > 0) {
+    console.log("checked");
+    const message = "待協尋者確認後，會協助您將找寵物的貼文移除";
+    fpid = radios[0].value;
+    alertAndSave(message, fpid);
+  } else {
+    console.log("no checked or no post");
+    const message = "將傳送感謝訊息給協尋者";
+    fpid = 0;
+    alertAndSave(message, fpid);
+  }
+});
+
+function alertAndSave(message, fpid) {
+  Swal.fire({
+    title: "確認送出",
+    text: message,
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonText: "確認",
+    denyButtonText: `取消`,
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      console.log("確認");
+      // call api
+      storeMatchList(fpid);
+    }
+  });
+}
+
+async function storeMatchList(fpid) {
+  const thankmessage = document.querySelector(".thankyou-message").value;
+  const body = {
+    thankmessage: thankmessage,
+  };
+  // call api
+  const response = await fetch(`/api/storeMatchList?foid=${id}&fpid=${fpid}`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const result = await response.json();
+  if (result.message == "請重新登入" || result.message == "請先登入或註冊") {
+    localStorage.clear();
+    Swal.fire({
+      icon: "info",
+      text: "請先登入或註冊",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/member.html";
+    }, 1600);
+  }
+  if (result.message == "noaccess") {
+    Swal.fire({
+      icon: "warning",
+      text: "頁面不存在",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/findowners.html";
+    }, 1600);
+  }
+  if (result.status == "updated") {
+    Swal.fire({
+      icon: "success",
+      text: "已成功送出",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/findowners.html";
+    }, 1600);
+  }
+}
