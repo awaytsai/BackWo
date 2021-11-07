@@ -124,6 +124,9 @@ form label span {
   margin: 5px;
 }
 
+.form-wrap-left {
+  margin: 13px 0;
+}
 .note-message {
   height: 100px;
   width: 400px;

@@ -96,8 +96,7 @@ nav a:hover {
 }
 
 .photo img {
-  min-width: 300px;
-  max-width: 90%;
+  max-width: 500px;
   margin: 20px 10px;
   max-height: 800px;
 }
