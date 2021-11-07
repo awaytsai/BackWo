@@ -80,7 +80,7 @@ const getPetsPosts = async (person) => {
 
 const getPostDetailById = async (person, id) => {
   const [PetsPosts] = await db.query(
-    "SELECT p.id, p.user_id, p.breed, p.color, p.county, p.district, p.address, p.date, p.photo, p.note, u.name, u.picture FROM pet_post as p INNER JOIN user as u ON p.user_id = u.id WHERE person= ? and status ='lost' and p.id=? ;",
+    "SELECT p.id, p.user_id, p.kind, p.breed, p.color, p.county, p.district, p.address, p.date, p.photo, p.note, u.name, u.picture FROM pet_post as p INNER JOIN user as u ON p.user_id = u.id WHERE person= ? and status ='lost' and p.id=? ;",
     [person, id]
   );
   return PetsPosts;
@@ -88,7 +88,7 @@ const getPostDetailById = async (person, id) => {
 
 const getAllPostsByUser = async (id) => {
   const [PetsPosts] = await db.query(
-    "SELECT * FROM pet_post WHERE user_id = ? ORDER BY id DESC;",
+    "SELECT * FROM pet_post WHERE user_id = ? and status = 'lost' ORDER BY id DESC;",
     [id]
   );
   return PetsPosts;
@@ -98,6 +98,92 @@ const getFindPetPostByUser = async (userId) => {
   const [PetsPosts] = await db.query(
     "SELECT * FROM pet_post WHERE user_id = ? AND person='finder' AND status = 'lost' ORDER BY id DESC;",
     [userId]
+  );
+  return PetsPosts;
+};
+
+const getPostByUser = async (userId, person, status) => {
+  const [PetsPosts] = await db.query(
+    "SELECT * FROM pet_post WHERE user_id = ? AND person= ? AND status = ? ORDER BY id DESC;",
+    [userId, person, status]
+  );
+  return PetsPosts;
+};
+
+const getFindPostById = async (id) => {
+  const [PetsPosts] = await db.query(
+    "SELECT * FROM pet_post WHERE id in (?) ;",
+    [id]
+  );
+  return PetsPosts;
+};
+
+const getPostByUserAndId = async (userId, postId) => {
+  const [PetsPosts] = await db.query(
+    "SELECT * FROM pet_post WHERE user_id = ? and id = ?;",
+    [userId, postId]
+  );
+  return PetsPosts;
+};
+
+const updateFindPost = async (
+  kind,
+  breed,
+  color,
+  county,
+  district,
+  address,
+  date,
+  note,
+  lat,
+  lng,
+  id
+) => {
+  const [PetsPosts] = await db.query(
+    "UPDATE pet_post SET kind = ?,  breed=?, color=?, county=?, district=?, address=?, date=?, note=?, lat=?, lng=? WHERE id = ? ;",
+    [kind, breed, color, county, district, address, date, note, lat, lng, id]
+  );
+  return PetsPosts;
+};
+
+const updatePostWithImage = async (
+  kind,
+  breed,
+  color,
+  county,
+  district,
+  address,
+  date,
+  photo,
+  note,
+  lat,
+  lng,
+  id
+) => {
+  const [PetsPosts] = await db.query(
+    "UPDATE pet_post SET kind = ?,  breed=?, color=?, county=?, district=?, address=?, date=?, photo=?, note=?, lat=?, lng=? WHERE id = ? ;",
+    [
+      kind,
+      breed,
+      color,
+      county,
+      district,
+      address,
+      date,
+      photo,
+      note,
+      lat,
+      lng,
+      id,
+    ]
+  );
+  return PetsPosts;
+};
+
+const deletePost = async (postId) => {
+  const [PetsPosts] = await db.query(
+    "UPDATE pet_post SET status='delete' WHERE id = ?;",
+    postId
   );
   return PetsPosts;
 };
@@ -112,4 +198,10 @@ module.exports = {
   getPostDetailById,
   getAllPostsByUser,
   getFindPetPostByUser,
+  getPostByUser,
+  getFindPostById,
+  updateFindPost,
+  updatePostWithImage,
+  getPostByUserAndId,
+  deletePost,
 };

@@ -28,9 +28,24 @@ const getUserData = async (id) => {
   return userData;
 };
 
+const getPendingUserData = async (id) => {
+  const [userData] = await db.query(
+    `SELECT u.id, u.name, u.picture, m.id as mid ,m.sender, m.find_pet_id, m.thank_message
+    FROM user as u 
+    INNER JOIN match_list as m 
+    ON u.id = m.sender 
+    WHERE m.status='pending' and m.find_owner_id in (?) 
+    and u.id in 
+    (SELECT sender FROM match_list WHERE status ='pending' and find_owner_id in (?));`,
+    [id, id]
+  );
+  return userData;
+};
+
 module.exports = {
   checkExistedEmail,
   insertUserData,
   getUserDataByEmail,
   getUserData,
+  getPendingUserData,
 };
