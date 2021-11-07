@@ -35,7 +35,7 @@ const signUp = async (req, res) => {
     picture
   );
   const userId = userData.insertId;
-  console.log(userId);
+  // console.log(userId);
   // format response
   const payload = {
     id: userId,
@@ -46,20 +46,18 @@ const signUp = async (req, res) => {
   };
   const token = await Auth.jwtTokenGenerater(payload);
   const userResult = Auth.userinfoFormat(token, payload);
-  console.log(userResult);
+  // console.log(userResult);
   res.status(200).json(userResult);
 };
 
 //
 const signIn = async (req, res) => {
-  console.log(req.body);
   const { email, password } = req.body;
   if (!email || !password) {
     res.status(400).json({ error: "請輸入 email 和密碼" });
     return;
   }
   const userData = await User.getUserDataByEmail(email);
-  console.log(userData);
   if (userData.length == 0) {
     res.status(400).json({ error: "email 不存在" });
     return;

@@ -12,7 +12,4 @@ router.route("/member/signin").post(wrapAsync(User.signIn));
 // fb sign in
 // router.route("/member/fbsignin").post(wrapAsync(User.fbsignIn));
 
-// log out
-router.route("/member/logout").post(wrapAsync());
-
 module.exports = router;

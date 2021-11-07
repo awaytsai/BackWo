@@ -19,7 +19,7 @@ const socketController = (io) => {
           limit
         );
         // emit it to front end
-        console.log(historyMessage);
+        // console.log(historyMessage);
         socket.emit("historymessage", historyMessage, usersData);
       }
       // 1-1. get data from db, send to client to render
@@ -34,10 +34,10 @@ const socketController = (io) => {
         // format messages(roomid, sender, receiver, time, message)
         // store into global (sender, receiver, message, time, roomid)
         const message = formatMessage(msg, usersData);
-        console.log(message);
+        // console.log(message);
         // messageContent.push(message);
         const result = await Chat.insertChatMessage(message);
-        console.log(result);
+        // console.log(result);
         // send message to client
         io.to(usersData.roomId).emit("chatMessage", msg, usersData);
       });
