@@ -19,9 +19,10 @@ socketController(io);
 
 app.use("/api", [
   require("./Router/pets"),
-  require("./Router/getData"),
+  require("./Router/breedData"),
   require("./Router/user"),
   require("./Router/chat"),
+  require("./Router/match"),
 ]);
 
 // page not found 404
