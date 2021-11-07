@@ -156,7 +156,7 @@ main {
   display: flex;
   flex-direction: column;
   min-height: 200px;
-  max-height: 250px;
+  max-height: 500px;
   overflow: scroll;
 }
 
@@ -166,8 +166,7 @@ main {
   align-items: center;
   justify-content: center;
 }
-.post img,
-.confirm-post img {
+.post img {
   /* width: 200px;
   max-height: 150px; */
   margin: 20px;
@@ -196,14 +195,24 @@ main {
   margin: 0 20px;
   border-radius: 10px;
 }
+.edit:hover {
+  color: #fff;
+  background-color: #333;
+}
 .delete img {
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
 
 /* confirm-post */
-
-.confirm-post img {
+.nopost {
+  margin: 20px;
+}
+.confirm-post {
+  max-height: 190px;
+}
+.confirm-post a img {
   max-width: 200px;
   max-height: 200px;
   margin: 20px;
@@ -211,19 +220,41 @@ main {
 
 .confirm-post-content {
   width: 250px;
+  max-height: 150px;
   margin: 10px 20px 10px 10px;
+  overflow: scroll;
 }
+.confirm-post label {
+  margin: 0 5px 0 0;
+}
+.user {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.user img {
+  width: 35px;
+  height: 35px;
+  margin: 0 10px 5px 0;
+}
+
+.thankyou-message {
+  width: 250px;
+  word-wrap: break-word;
+  overflow: scroll;
+}
+
 .save {
   padding: 10px 15px;
-  background-color: #333;
+  background-color: #6c757d;
   color: #f0f0f0;
   cursor: pointer;
   border-radius: 10px;
 }
-
-.checkbox,
-.save {
-  margin: 0 20px;
+.save:hover {
+  color: #fff;
+  background-color: #333;
 }
 
 /* footer */
