@@ -111,18 +111,34 @@ main {
 
 /* notification */
 .notifications {
-  height: 150px;
+  height: 300px;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
 }
 
 .notification {
   box-sizing: content-box;
-  margin: 10px 0;
+  margin: 10px 0 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px 50px;
 }
 .noti-text-time {
   display: flex;
   justify-content: space-between;
-  margin: 0 50px;
+  align-items: center;
+  /* margin: 0 50px; */
+}
+.noti-text-time p {
+  margin-bottom: 0;
+}
+.notification-time {
+  /* margin-left: 30px; */
 }
 .notification a {
   text-decoration: none;
@@ -136,6 +152,14 @@ main {
 .link {
   font-weight: 500;
   text-decoration: underline;
+}
+.noti-icon,
+.cancel {
+  width: 24px;
+  height: 24px;
+}
+.cancel {
+  cursor: pointer;
 }
 
 /* posts */

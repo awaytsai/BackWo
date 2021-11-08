@@ -34,9 +34,10 @@ async function getNotification() {
     if (notificationData.length > 0) {
       createNotification(notificationData);
     } else {
-      const p = document.createElement("p");
-      p.textContent = `沒有資料`;
-      notification.appendChild(p);
+      const div = document.createElement("div");
+      div.textContent = `沒有已比對的通知`;
+      div.className = "nopost";
+      notification.appendChild(div);
     }
   }
 }
@@ -52,6 +53,13 @@ async function getPosts() {
   const postsData = await response.json();
   console.log("post history");
   console.log(postsData);
+  if (postsData.length == 0) {
+    const div = document.querySelector(".posts");
+    const nopost = document.createElement("div");
+    nopost.textContent = "沒有已發佈的貼文";
+    nopost.className = "nopost";
+    div.appendChild(nopost);
+  }
   createExistingPosts(postsData);
 
   // delete existing posts
@@ -242,13 +250,17 @@ function createNotification(findownerid) {
     div.className = "notification";
     div.innerHTML = `
     <a href="/findowners/detail.html?id=${id.find_owners_id}">
-      <div class="noti-text-time">
-          <p>
-          <span class="highlight">！通知 </span>：這可能是你走失的寵物，快來查看 <span class="link"> 詳細資訊</span>。
-          </p>
-          <p class="notification-time">2021/11/3</p>
-      </div>
-      </a>
+    <div class="noti-text-time">
+      <img class="noti-icon" src="/images/notification.png" />
+      <p>
+        <span class="highlight">通知：</span
+        >這可能是你走失的寵物，快來查看
+        <span class="link"> 詳細資訊</span>。
+      </p>
+      <p class="notification-time">2021/11/3</p>
+    </div>
+  </a>
+  <img class="cancel" src="/images/cancel_icon.png" />
       `;
     notification.appendChild(div);
   });
