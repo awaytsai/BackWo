@@ -3,25 +3,47 @@ const currentUrl = location.href;
 const id = currentUrl.split("?id=")[1];
 const token = localStorage.getItem("access_token");
 
-getPostDetail();
+if (!token) {
+  Swal.fire({
+    icon: "info",
+    text: "請先登入或註冊",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  setTimeout(() => {
+    window.location.href = "/member.html";
+  }, 1600);
+}
+if (token) {
+  getPostDetail();
+}
 
 // render by id
 async function getPostDetail() {
-  try {
-    const fetchData = await fetch(`/api/match/detail?id=${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+  const fetchData = await fetch(`/api/match/detail?id=${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+  const matchPostData = await fetchData.json();
+  if (
+    matchPostData.message == "請重新登入" ||
+    matchPostData.message == "請先登入或註冊"
+  ) {
+    Swal.fire({
+      icon: "info",
+      text: "請先登入或註冊",
+      showConfirmButton: false,
+      timer: 1500,
     });
-    const matchPostData = await fetchData.json();
-    console.log(matchPostData);
-    createDetail(matchPostData.formatData);
-    if (matchPostData.historyData !== "nodata") {
-      createHistoryPost(matchPostData.historyData);
-    }
-  } catch (err) {
-    console.log(err);
+    setTimeout(() => {
+      window.location.href = "/member.html";
+    }, 1600);
+  }
+  createDetail(matchPostData.formatData);
+  if (matchPostData.historyData !== "nodata") {
+    createHistoryPost(matchPostData.historyData);
   }
 }
 
