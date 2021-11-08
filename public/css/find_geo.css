@@ -61,6 +61,7 @@ nav a:hover {
 .chat img {
   width: 30px;
   margin: 0 20px;
+  cursor: pointer;
 }
 .infobar {
   color: #ff7b1a;
