@@ -41,7 +41,7 @@ function createDetail(data) {
         <div>
           <div class="info"><span>品種 : </span>${data.breed}</div>
           <div class="info"><span>顏色 : </span>${data.color}</div>
-          <div class="info"><span>地點 : </span>${data.address}</div>
+          <div class="info"><span>地點 : </span>${data.fullAddress}</div>
           <div class="info"><span>時間 : </span>${data.date}</div>
           <div class="info"><span>備註 : </span>${data.note}</div>
         </div>
@@ -81,7 +81,7 @@ function createHistoryPost(data) {
     <div class="post-info">
       <div>找寵物</div>
       <div>品種: ${post.breed}</div>
-      <div>地點: ${post.address}</div>
+      <div>地點: ${post.fullAddress}</div>
       <div>日期: ${post.date}</div>
       <div>狀態: ${post.status}</div>
     </div>

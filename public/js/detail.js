@@ -62,7 +62,7 @@ function createElement(data, href) {
       <div>
         <div class="info"><span>品種 : </span>${data.breed}</div>
         <div class="info"><span>顏色 : </span>${data.color}</div>
-        <div class="info"><span>地點 : </span>${data.address}</div>
+        <div class="info"><span>地點 : </span>${data.fullAddress}</div>
         <div class="info"><span>時間 : </span>${data.date}</div>
         <div class="info"><span>備註 : </span>${data.note}</div>
       </div>
@@ -89,7 +89,7 @@ function createElement(data, href) {
       <div>
         <div class="info"><span>品種 : </span>${data.breed}</div>
         <div class="info"><span>顏色 : </span>${data.color}</div>
-        <div class="info"><span>地點 : </span>${data.address}</div>
+        <div class="info"><span>地點 : </span>${data.fullAddress}</div>
         <div class="info"><span>時間 : </span>${data.date}</div>
         <div class="info"><span>備註 : </span>${data.note}</div>
       </div>
@@ -119,7 +119,7 @@ function createElementSelfPost(data) {
   <div>
     <div class="info"><span>品種 : </span>${data.breed}</div>
     <div class="info"><span>顏色 : </span>${data.color}</div>
-    <div class="info"><span>地點 : </span>${data.address}</div>
+    <div class="info"><span>地點 : </span>${data.fullAddress}</div>
     <div class="info"><span>時間 : </span>${data.date}</div>
     <div class="info"><span>備註 : </span>${data.note}</div>
   </div>
