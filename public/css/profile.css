@@ -137,9 +137,7 @@ main {
 .noti-text-time p {
   margin-bottom: 0;
 }
-.notification-time {
-  /* margin-left: 30px; */
-}
+
 .notification a {
   text-decoration: none;
 }
