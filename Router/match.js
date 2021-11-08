@@ -10,6 +10,11 @@ router
   .route("/notification")
   .get(authMiddleware, wrapAsync(Noti.getNotification));
 
+// get notification  by user
+router
+  .route("/deletenotification")
+  .delete(authMiddleware, wrapAsync(Noti.deleteNotification));
+
 // get match post
 router
   .route("/match/detail")

@@ -66,7 +66,10 @@ async function getPosts() {
   const deleteBtn = [...document.querySelectorAll(".delete")];
   deleteBtn.map((del) => {
     del.addEventListener("click", (e) => {
-      e.preventDefault();
+      console.log(e.target);
+      const person = e.target.className.split(" ")[1];
+      const id = e.target.className.split(" ")[2];
+      console.log(person, id);
       // alert to confirm delete
       Swal.fire({
         title: "確定要刪除此篇貼文嗎?",
@@ -76,15 +79,15 @@ async function getPosts() {
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          deletePost(e.target.id);
+          deletePost(person, id);
         }
       });
     });
   });
 }
 
-async function deletePost(id) {
-  const response = await fetch(`/api/deletePost?id=${id}`, {
+async function deletePost(person, id) {
+  const response = await fetch(`/api/deletePost?id=${id}&person=${person}`, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + token,
@@ -244,12 +247,16 @@ function createConfirmPost(result) {
   });
 }
 
-function createNotification(findownerid) {
-  findownerid.map((id) => {
+function createNotification(notificationData) {
+  notificationData.map((data) => {
+    let time = new Date(Date.parse(data.time))
+      .toLocaleString("en-US")
+      .split(", ")[0];
+    data.time = time;
     const div = document.createElement("div");
     div.className = "notification";
     div.innerHTML = `
-    <a href="/findowners/detail.html?id=${id.find_owners_id}">
+    <a href="/findowners/detail.html?id=${data.find_owners_id}">
     <div class="noti-text-time">
       <img class="noti-icon" src="/images/notification.png" />
       <p>
@@ -257,13 +264,56 @@ function createNotification(findownerid) {
         >這可能是你走失的寵物，快來查看
         <span class="link"> 詳細資訊</span>。
       </p>
-      <p class="notification-time">2021/11/3</p>
+      <p class="notification-time">${time}</p>
     </div>
   </a>
-  <img class="cancel" src="/images/cancel_icon.png" />
+  <img class="cancel ${data.id}" src="/images/cancel_icon.png" />
       `;
     notification.appendChild(div);
   });
+  const cancel = [...document.querySelectorAll(".cancel")];
+  cancel.map((data) => {
+    data.addEventListener("click", (e) => {
+      const id = e.target.className.split(" ")[1];
+      const data = { id: id };
+      /////
+      Swal.fire({
+        title: "",
+        text: "這則通知將不會再顯示",
+        showCancelButton: true,
+        confirmButtonText: "確認",
+        denyButtonText: `取消`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteNotification(data);
+        }
+      });
+    });
+  });
+}
+
+async function deleteNotification(data) {
+  const response = await fetch("/api/deletenotification", {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  const deleteNoti = await response.json();
+  if (deleteNoti.status == "updated") {
+    Swal.fire({
+      icon: "success",
+      text: "成功刪除通知",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/profile.html";
+    }, 1600);
+  }
 }
 
 function createExistingPosts(postsData) {
@@ -295,8 +345,8 @@ function createExistingPosts(postsData) {
                 <div>狀態: ${post.status}</div>
               </div>
               <a class="edit" href="${edit}${post.id}">編輯</a>
-              <div class="delete" id="${post.id}">
-                <img id="${post.id}" src="/images/delete_icon.png">
+              <div class="delete ${post.person} ${post.id}" id="${post.id}">
+                <img class="delete ${post.person} ${post.id}" src="/images/delete_icon.png">
               </div>
     `;
     posts.appendChild(div);

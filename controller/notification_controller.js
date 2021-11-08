@@ -7,6 +7,15 @@ const getNotification = async (req, res) => {
   res.json(notificationData);
 };
 
+const deleteNotification = async (req, res) => {
+  const id = req.body.id;
+  console.log(id);
+  const deleteResult = await Noti.deleteNotification(id);
+  console.log(deleteResult);
+  res.json({ status: "updated" });
+};
+
 module.exports = {
   getNotification,
+  deleteNotification,
 };
