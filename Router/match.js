@@ -35,4 +35,7 @@ router
   .route("/updateConfirmPost")
   .put(authMiddleware, wrapAsync(Match.updateConfirmPost));
 
+// show successful cases
+router.route("/getSuccessCase").get(wrapAsync(Match.getSuccessCase));
+
 module.exports = router;

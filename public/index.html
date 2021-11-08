@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BackWo-找寵物</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <!---->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-twzipcode@1.7.14/jquery.twzipcode.min.js"></script>
+    <!--datepicker-->
+    <link
+      rel="stylesheet"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--sweet alert2-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nanum+Pen+Script&display=swap"
+      rel="stylesheet"
+    />
+    <!--css-->
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-wrap">
+        <div class="logo-wrap">
+          <a class="logo" href="/"
+            ><img
+              src="https://media.istockphoto.com/vectors/cat-dog-yin-yang-vector-id1157833047?k=20&m=1157833047&s=612x612&w=0&h=0NbXpgif_tjPpbXrLedyl7gA94xW2Y_DNNdv-WgS9MY="
+          /></a>
+          <a href="/"><div class="logo-message">Back Wo</div></a>
+        </div>
+        <div class="nav-wrap">
+          <nav>
+            <a class="findpet" href="/findpets.html">找寵物</a>
+            <a class="findowner" href="/findowners.html">找主人</a>
+          </nav>
+          <a class="member" href="/member.html"
+            ><img src="/images/member_icon.png"
+          /></a>
+          <div class="chat"><img src="/images/chat_icon.png" /></div>
+        </div>
+      </div>
+    </header>
+    <div class="infobar">Back Wo，讓毛小孩們回到自己的窩</div>
+    <main>
+      <div class="main-wrap">
+        <!--main-->
+        <div class="campaign">
+          <div
+            id="carouselExampleCaptions"
+            class="carousel slide"
+            data-bs-ride="carousel"
+          >
+            <div class="carousel-indicators">
+              <button
+                type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+              ></button>
+              <button
+                type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide-to="1"
+                aria-label="Slide 2"
+              ></button>
+              <button
+                type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide-to="2"
+                aria-label="Slide 3"
+              ></button>
+            </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img
+                  src="https://images.unsplash.com/photo-1526578104837-a626bd580062?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8Mnw5NjIxNTd8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60"
+                  class="d-block w-100 photo"
+                  alt="..."
+                />
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>《 Back Wo 》</h5>
+                  <p>幫助毛小孩們回到自己的窩</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img
+                  src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1460&q=80"
+                  class="d-block w-100 photo"
+                  alt="..."
+                />
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>《 毛孩回家計畫 》</h5>
+                  <p>透過社群、AI科技，帶領毛孩回窩</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img
+                  src="https://images.unsplash.com/photo-1551928692-6954104dee5a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80"
+                  class="d-block w-100 photo"
+                  alt="..."
+                />
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>《 領養最帥 》</h5>
+                  <p>乾爹乾媽招募中！！</p>
+                </div>
+              </div>
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleCaptions"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <div class="success-title">成功回窩的毛孩們</div>
+        <div class="successful-cases">
+          <div class="case">
+            <img
+              src="https://images.unsplash.com/photo-1530201029781-9ea4233e7ae4?ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MjV8OTYyMTU3fHxlbnwwfHx8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+            />
+            <div class="finder">
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png"
+              />
+              <div class="finder-name">王小明</div>
+            </div>
+            <div class="thankyou-message">
+              感謝平台和其他協尋者幫我找到我的狗狗，Thank you so much!
+            </div>
+          </div>
+          <div class="case">
+            <img
+              src="https://images.unsplash.com/photo-1530126483408-aa533e55bdb2?ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8Mjh8OTYyMTU3fHxlbnwwfHx8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+            />
+            <div class="finder">
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png"
+              />
+              <div class="finder-name">王小明</div>
+            </div>
+            <div class="thankyou-message">
+              感謝平台和其他協尋者幫我找到我的狗狗，Thank you so much!Thank you
+              so much!Thank you so much!Thank you so much!Thank you so much!
+            </div>
+          </div>
+          <div class="case">
+            <img
+              src="https://images.unsplash.com/photo-1497910091122-9f8a7746eb33?ixid=MnwxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8Mzd8OTYyMTU3fHxlbnwwfHx8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+            />
+            <div class="finder">
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/vector-icons-6/96/256-512.png"
+              />
+              <div class="finder-name">王小明</div>
+            </div>
+            <div class="thankyou-message">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              Repudiandae inventore ex non ipsum temporibus aliquid odit,
+              eveniet possimus, rerum laborum perferendis magni officiis nam
+              pariatur repellendus nulla doloribus facere quasi?Lorem ipsum
+              dolor, sit amet consectetur adipisicing elit. Error fuga tenetur
+              quas aut distinctio voluptatem minima esse odio corporis, dolore
+              consequuntur tempora corrupti vero quos nisi non repellendus
+              quisquam necessitatibus!
+            </div>
+          </div>
+        </div>
+        <div class="cta">
+          <button class="findBtn">
+            <a href="/findpets.html">尋找我的寵物</a>
+          </button>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="footer-wrap">
+        <div class="recommend-wrap">
+          <div class="recommend">推薦相關資訊</div>
+          <div class="recommend-link">
+            <a href="https://www.pet.gov.tw/web/o201.aspx"
+              >寵物登記管理資訊網</a
+            >
+            <a href="https://asms.coa.gov.tw/Amlapp/App/AnnounceMent.aspx"
+              >全國動物收容系統</a
+            >
+          </div>
+        </div>
+        <div class="contact-wrap">
+          <div class="contact">聯絡我們</div>
+          <div class="contact-link">
+            <a href=""><img src="/images/fb_icon.png" /></a>
+            <a href=""><img src="/images/email_icon.png" /></a>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">Copyright © 2021 BackWo</div>
+    </footer>
+    <script src="/js/index.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>

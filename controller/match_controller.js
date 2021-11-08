@@ -123,9 +123,24 @@ const updateConfirmPost = async (req, res) => {
   return res.json({ status: "updated" });
 };
 
+const getSuccessCase = async (req, res) => {
+  const limit = 3;
+  const MatchData = await Match.getSuccessCase(limit);
+  console.log(MatchData);
+  let postIds = [];
+  let userIds = [];
+  MatchData.map((data) => {
+    postIds.push(data.find_owner_id);
+    userIds.push(data.sender);
+  });
+  console.log(postIds, userIds);
+  res.json(MatchData);
+};
+
 module.exports = {
   getMatchPostDetail,
   storeMatchList,
   getConfirmPost,
   updateConfirmPost,
+  getSuccessCase,
 };

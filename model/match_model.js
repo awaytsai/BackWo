@@ -32,9 +32,18 @@ const updateMatchList = async (status, id) => {
   return matchResult;
 };
 
+const getSuccessCase = async (limit) => {
+  const [matchResult] = await db.query(
+    "SELECT * FROM match_list WHERE status ='match' ORDER BY id DESC LIMIT ? ;",
+    [limit]
+  );
+  return matchResult;
+};
+
 module.exports = {
   storeMatchList,
   storeMatchListNoFP,
   getMatchList,
   updateMatchList,
+  getSuccessCase,
 };
