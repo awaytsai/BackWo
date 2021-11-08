@@ -1,5 +1,6 @@
 const signin = document.querySelector(".signin");
 const signup = document.querySelector(".signup");
+const token = localStorage.getItem("access_token");
 
 // sign up
 signup.addEventListener("submit", (e) => {
