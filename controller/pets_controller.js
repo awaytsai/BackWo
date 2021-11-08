@@ -32,18 +32,6 @@ const uploadFindPost = async (req, res) => {
   const userId = req.decoded.payload.id;
   const photo = req.files.photo[0].key;
 
-  // 1. conver address into lat lng
-  // const fullAddress = encodeURIComponent(
-  //   `${county}${district}${address}`.replace(/\s/g, "")
-  // );
-  // const key = "AIzaSyDJNv7tNr1GMnFgRulEBksMdwlL0Jewigc";
-  // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${fullAddress}&key=${key}`;
-  // const response = await fetch(url);
-  // const geoData = await response.json();
-
-  // // 2. store geo data in db
-  // const lat = geoData.results[0].geometry.location.lat;
-  // const lng = geoData.results[0].geometry.location.lng;
   const geoCoding = await convertGeoCoding(county, district, address);
   const postResult = await Pet.createPetsPost(
     person,
@@ -70,86 +58,43 @@ const uploadFindPost = async (req, res) => {
   async function detectImage() {
     if (breed == "未知") {
       // aws reko
-      await awsReko.awsReko(param, photo, postId, breed, person, county, date);
-      // awsReko();
+      const awsData = await awsReko.awsReko(
+        param,
+        photo,
+        postId,
+        breed,
+        person,
+        county,
+        date
+      );
+      return;
     }
   }
-
-  // 3. detect labels by aws-rekognition
-  // async function awsReko() {
-  //   aws.config.update({
-  //     region: process.env.AWS_BUCKET_REGION,
-  //     accessKeyId: process.env.AWS_ACCESS_KEY,
-  //     secretAccessKey: process.env.AWS_SECRET_KEY,
-  //   });
-  //   const params = {
-  //     Image: {
-  //       S3Object: {
-  //         Bucket: process.env.AWS_BUCKET_NAME,
-  //         Name: `${param}/${photo}`,
-  //       },
-  //     },
-  //     MaxLabels: 20,
-  //     MinConfidence: 80,
-  //   };
-
-  //   const labels = [];
-  //   let detectBreed;
-
-  //   const rekognition = new aws.Rekognition();
-  //   rekognition.detectLabels(params, async (err, data) => {
-  //     if (err) console.log(err, err.stack);
-  //     else console.log(data);
-  //     // 4. AI detect and store labels
-  //     data.Labels.map((lb) => {
-  //       labels.push(lb.Name);
-  //     });
-  //     // console.log(labels);
-  //     labels.map((lb) => {
-  //       breedsList.dog_breed_en.map((breed) => {
-  //         // check breed
-  //         if (lb == breed) {
-  //           detectBreed =
-  //             breedsList.dog_breed[breedsList.dog_breed_en.indexOf(breed)];
-  //         }
-  //       });
-  //     });
-  //     // store label data
-  //     const labelResult = await Lables.storeLable(
-  //       JSON.stringify(labels),
-  //       postId
-  //     );
-  //     // update pet_post breed
-  //     if (detectBreed) {
-  //       breed = detectBreed;
-  //       const updatePostResult = await Pet.updatePetsPost(breed, postId);
-  //     }
-  //     // check if owner post (breed/county/time) match
-  //     // person = "finder";
-  //     person = switchPerson(param);
-  //     const matchBreedData = await Pet.getMatchBreedPosts(
-  //       person,
-  //       breed,
-  //       county,
-  //       date
-  //     );
-
-  //     if (matchBreedData.length > 0) {
-  //       const petPostIds = [];
-  //       matchBreedData.map((data) => {
-  //         petPostIds.push(data.id);
-  //       });
-  //       // console.log(petPostIds);
-
-  //       // create notification data (fp_id/fo_id/)
-  //       const notificationData = await Notification.insertNotification(
-  //         petPostIds,
-  //         postId
-  //       );
-  //       // console.log(notificationData);
-  //     }
-  //   });
-  // }
+  // check if owner post (breed/county/time) match
+  person = switchPerson(param);
+  const matchBreedData = await Pet.getMatchBreedPosts(
+    person,
+    breed,
+    county,
+    date
+  );
+  console.log("match done");
+  if (matchBreedData.length > 0) {
+    const petPostIds = [];
+    matchBreedData.map((data) => {
+      petPostIds.push(data.id);
+    });
+    // console.log(petPostIds);
+    const notiStauts = "exist";
+    // create notification data (fp_id/fo_id/)
+    const notificationData = await Notification.insertNotification(
+      petPostIds,
+      postId,
+      notiStauts
+    );
+    // console.log(notificationData);
+    console.log("NOTIFICATION DONE");
+  }
   res.json({ status: "updated" });
 };
 
@@ -380,6 +325,7 @@ const deletePost = async (req, res) => {
   // check token for deledt access
   const userId = req.decoded.payload.id;
   const postId = req.query.id;
+  let person = req.query.person;
   const postData = await Pet.getPostByUserAndId(userId, postId);
   console.log(postData);
   if (postData.length == 0) {
@@ -388,6 +334,13 @@ const deletePost = async (req, res) => {
   }
   const deleteData = await Pet.deletePost(postId);
   console.log(deleteData);
+  // delete notification
+  if (person == "finder") {
+    const deleteNoti = await Notification.updateFindPetsNoti(postId);
+  }
+  if (person == "owner") {
+    const deleteNoti = await Notification.updateFindOwnersNoti(postId);
+  }
   res.json({ status: "deleted" });
 };
 
