@@ -86,14 +86,14 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 400px;
+  height: 500px;
 }
 
 .rooms {
   width: 30%;
   display: flex;
   flex-direction: column;
-  height: 350px;
+  height: 400px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   border: 1px solid #777;
@@ -117,7 +117,7 @@ main {
   border: 1px solid #777;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-  height: 350px;
+  height: 400px;
 }
 
 .room {
@@ -164,7 +164,7 @@ main {
 }
 
 .messages {
-  height: 300px;
+  height: 350px;
   overflow: scroll;
 }
 
