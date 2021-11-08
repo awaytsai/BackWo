@@ -99,7 +99,8 @@ async function showRoomsAndConnectIO(usersData) {
   // show history room info
   if (historyData.error) {
     const item = document.createElement("div");
-    item.innerHTML = `<div>no existing room</div>`;
+    item.textContent = `沒有聊天記錄`;
+    item.className = "nochat";
     rooms.appendChild(item);
   } else {
     createExistingRooms(historyData);

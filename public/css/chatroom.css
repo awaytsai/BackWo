@@ -237,6 +237,9 @@ main {
   padding: 5px;
 }
 
+.nochat {
+  margin: auto;
+}
 /* footer */
 
 footer {
