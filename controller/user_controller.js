@@ -6,7 +6,8 @@ const crypto = require("crypto");
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
   const provider = "native";
-  const picture = `${process.env.CLOUDFRONT}/member_default.png`;
+  // const picture = `${process.env.CLOUDFRONT}/member_default.png`;
+  const picture = `https://cdn2.iconfinder.com/data/icons/veterinary-solid/96/paw_vet_pet_animal-512.png`;
   if (!name || !email || !password) {
     res.status(400).json({ error: "請輸入名字、email 和密碼" });
     return;
@@ -84,4 +85,15 @@ const signIn = async (req, res) => {
   res.status(200).json(userResult);
 };
 
-module.exports = { signUp, signIn };
+const getUserData = async (req, res) => {
+  const payload = req.decoded.payload;
+  const userData = {
+    id: payload.id,
+    name: payload.name,
+    picture: payload.picture,
+  };
+  console.log(userData);
+  res.json({ userData });
+};
+
+module.exports = { signUp, signIn, getUserData };

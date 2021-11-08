@@ -2,10 +2,51 @@ const token = localStorage.getItem("access_token");
 const notification = document.querySelector(".notifications");
 const posts = document.querySelector(".posts");
 
-if (token) {
-  getNotification();
-  getPosts();
-  getConfirmPosts();
+if (!token) {
+}
+welcomeMessage(token);
+getNotification();
+getPosts();
+getConfirmPosts();
+
+async function welcomeMessage(token) {
+  const response = await fetch("/api/getUserData", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+  const result = await response.json();
+  if (result.message) {
+    Swal.fire({
+      icon: "info",
+      text: "請先登入或註冊",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/member.html";
+    }, 1600);
+  }
+  if (result.userData) {
+    welmessageAndLogout(result.userData);
+  }
+}
+
+function welmessageAndLogout(data) {
+  const parentDiv = document.querySelector(".welcome-message");
+  const p = document.createElement("p");
+  const div = document.createElement("div");
+  p.textContent = `歡迎回來，${data.name}`;
+  div.textContent = "登出";
+  div.className = "logout";
+  parentDiv.appendChild(p);
+  parentDiv.appendChild(div);
+  const logout = document.querySelector(".logout");
+  logout.addEventListener("click", (e) => {
+    localStorage.clear();
+    window.location.href = "/member.html";
+  });
 }
 
 // show notification
@@ -26,7 +67,6 @@ async function getNotification() {
       showConfirmButton: false,
       timer: 1500,
     });
-    localStorage.clear();
     setTimeout(() => {
       window.location.href = "/member.html";
     }, 1600);
@@ -146,7 +186,8 @@ function createConfirmPost(result) {
       let noPost = "";
       let href = `/findpets/detail.html?id=${post.find_pet_id}`;
       if (!post.petPhoto) {
-        photo = "/images/member_icon.png";
+        photo =
+          "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
       }
       if (post.find_pet_id == null) {
         href = "/findpets.html";
