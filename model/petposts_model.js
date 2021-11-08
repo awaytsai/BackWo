@@ -188,6 +188,14 @@ const deletePost = async (postId) => {
   return PetsPosts;
 };
 
+const updatePostStatus = async (ids) => {
+  const [PetsPosts] = await db.query(
+    "UPDATE pet_post SET status='match' WHERE id in (?);",
+    [ids]
+  );
+  return PetsPosts;
+};
+
 module.exports = {
   createPetsPost,
   updatePetsPost,
@@ -204,4 +212,5 @@ module.exports = {
   updatePostWithImage,
   getPostByUserAndId,
   deletePost,
+  updatePostStatus,
 };

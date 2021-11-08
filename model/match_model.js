@@ -40,10 +40,19 @@ const getSuccessCase = async (limit) => {
   return matchResult;
 };
 
+const getMatchById = async (id) => {
+  const [matchResult] = await db.query(
+    "SELECT * FROM match_list WHERE id = ? AND status = 'match' ;",
+    [id]
+  );
+  return matchResult;
+};
+
 module.exports = {
   storeMatchList,
   storeMatchListNoFP,
   getMatchList,
   updateMatchList,
   getSuccessCase,
+  getMatchById,
 };

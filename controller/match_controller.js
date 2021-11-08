@@ -119,7 +119,20 @@ const updateConfirmPost = async (req, res) => {
   // check access
   const { status, id } = req.body;
   const updateConfirm = await Match.updateMatchList(status, id);
+  console.log("updateConfirm");
   console.log(updateConfirm);
+
+  const matchResult = await Match.getMatchById(id);
+  console.log("matchResult");
+  console.log(matchResult);
+  if (matchResult.length > 0) {
+    // update pet posts
+    const ids = [matchResult[0].find_pet_id, matchResult[0].find_owner_id];
+    const updateResult = await Pet.updatePostStatus(ids);
+    console.log("updateResult");
+    console.log(updateResult);
+  }
+
   return res.json({ status: "updated" });
 };
 
