@@ -25,6 +25,14 @@ const deleteNotification = async (id) => {
   return notification;
 };
 
+const updateNotification = async (status, foid, fpid) => {
+  const [notification] = await db.query(
+    `UPDATE notification SET status = ? WHERE find_owners_id = ? and find_pets_id = ?`,
+    [status, foid, fpid]
+  );
+  return notification;
+};
+
 const updateFindOwnersNoti = async (id) => {
   const [notification] = await db.query(
     `UPDATE notification SET status = 'delete' WHERE find_owners_id = ?`,
@@ -47,4 +55,5 @@ module.exports = {
   deleteNotification,
   updateFindOwnersNoti,
   updateFindPetsNoti,
+  updateNotification,
 };

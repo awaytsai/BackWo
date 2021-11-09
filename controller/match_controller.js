@@ -2,6 +2,7 @@ const Pet = require("../model/petposts_model");
 const { formatPostData } = require("../util/util");
 const Match = require("../model/match_model");
 const User = require("../model/user_model");
+const Noti = require("../model/notification_model");
 
 const getMatchPostDetail = async (req, res) => {
   const userId = req.decoded.payload.id;
@@ -126,11 +127,18 @@ const updateConfirmPost = async (req, res) => {
   console.log("matchResult");
   console.log(matchResult);
   if (matchResult.length > 0) {
-    // update pet posts
+    // update pet posts to match
     const ids = [matchResult[0].find_pet_id, matchResult[0].find_owner_id];
     const updateResult = await Pet.updatePostStatus(ids);
     console.log("updateResult");
     console.log(updateResult);
+    // update notification to match
+    const status = "match";
+    const updateNoti = await Noti.updateNotification(
+      status,
+      matchResult[0].find_owner_id,
+      matchResult[0].find_pet_id
+    );
   }
 
   return res.json({ status: "updated" });

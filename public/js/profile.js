@@ -4,12 +4,12 @@ const posts = document.querySelector(".posts");
 
 if (!token) {
 }
-welcomeMessage(token);
+welcomeMessage();
 getNotification();
 getPosts();
 getConfirmPosts();
 
-async function welcomeMessage(token) {
+async function welcomeMessage() {
   const response = await fetch("/api/getUserData", {
     method: "GET",
     headers: {

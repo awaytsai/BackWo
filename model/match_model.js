@@ -32,6 +32,22 @@ const updateMatchList = async (status, id) => {
   return matchResult;
 };
 
+const deleteMatchListByFindPet = async (status, id) => {
+  const [matchResult] = await db.query(
+    "UPDATE match_list SET status = ? WHERE find_pet_id = ? ;",
+    [status, id]
+  );
+  return matchResult;
+};
+
+const deleteMatchListByFindOwner = async (status, id) => {
+  const [matchResult] = await db.query(
+    "UPDATE match_list SET status = ? WHERE find_owner_id = ? ;",
+    [status, id]
+  );
+  return matchResult;
+};
+
 const getSuccessCase = async (limit) => {
   const [matchResult] = await db.query(
     "SELECT * FROM match_list WHERE status ='match' ORDER BY id DESC LIMIT ? ;",
@@ -53,6 +69,8 @@ module.exports = {
   storeMatchListNoFP,
   getMatchList,
   updateMatchList,
+  deleteMatchListByFindPet,
+  deleteMatchListByFindOwner,
   getSuccessCase,
   getMatchById,
 };

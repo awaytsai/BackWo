@@ -6,6 +6,7 @@ const Pet = require("../model/petposts_model");
 const Lables = require("../model/labels_model");
 const Notification = require("../model/notification_model");
 const Geo = require("../model/geo_model");
+const Match = require("../model/match_model");
 
 const awsReko = require("../util/aws_reko");
 const {
@@ -322,7 +323,7 @@ const updatePostdata = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-  // check token for deledt access
+  // check token for delete access
   const userId = req.decoded.payload.id;
   const postId = req.query.id;
   let person = req.query.person;
@@ -334,13 +335,20 @@ const deletePost = async (req, res) => {
   }
   const deleteData = await Pet.deletePost(postId);
   console.log(deleteData);
-  // delete notification
+  // delete notification and confirm post
   if (person == "finder") {
     const deleteNoti = await Notification.updateFindPetsNoti(postId);
+    // update match list status to delete with fpid
+    const status = "delete";
+    const deleteMatch = await Match.deleteMatchListByFindPet(status, postId);
   }
   if (person == "owner") {
     const deleteNoti = await Notification.updateFindOwnersNoti(postId);
+    // update match list status to delete with foid
+    const status = "delete";
+    const deleteMatch = await Match.deleteMatchListByFindOwner(status, postId);
   }
+
   res.json({ status: "deleted" });
 };
 
