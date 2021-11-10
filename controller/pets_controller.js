@@ -72,6 +72,9 @@ const uploadFindPost = async (req, res) => {
     }
   }
   // check if owner post (breed/county/time) match
+  if (param == "findpets") {
+    return res.json({ status: "updated" });
+  }
   person = switchPerson(param);
   const matchBreedData = await Pet.getMatchBreedPosts(
     person,
@@ -86,7 +89,7 @@ const uploadFindPost = async (req, res) => {
       petPostIds.push(data.id);
     });
     // console.log(petPostIds);
-    const notiStauts = "exist";
+    const notiStauts = "created";
     // create notification data (fp_id/fo_id/)
     const notificationData = await Notification.insertNotification(
       petPostIds,
