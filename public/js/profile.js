@@ -3,11 +3,19 @@ const notification = document.querySelector(".notifications");
 const posts = document.querySelector(".posts");
 
 if (!token) {
+  Swal.fire({
+    icon: "info",
+    text: "請先登入或註冊",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  setTimeout(() => {
+    window.location.href = "/member.html";
+  }, 1600);
 }
-welcomeMessage();
-getNotification();
-getPosts();
-getConfirmPosts();
+if (token) {
+  welcomeMessage();
+}
 
 async function welcomeMessage() {
   const response = await fetch("/api/getUserData", {
@@ -17,7 +25,8 @@ async function welcomeMessage() {
     },
   });
   const result = await response.json();
-  if (result.message) {
+
+  if (result.message == "請先登入或註冊") {
     Swal.fire({
       icon: "info",
       text: "請先登入或註冊",
@@ -28,8 +37,23 @@ async function welcomeMessage() {
       window.location.href = "/member.html";
     }, 1600);
   }
+  if (result.message == "請重新登入") {
+    Swal.fire({
+      icon: "info",
+      text: "請重新登入",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      localStorage.clear();
+      window.location.href = "/member.html";
+    }, 1600);
+  }
   if (result.userData) {
     welmessageAndLogout(result.userData);
+    getNotification();
+    getPosts();
+    getConfirmPosts();
   }
 }
 
@@ -100,7 +124,7 @@ async function getPosts() {
     nopost.className = "nopost";
     div.appendChild(nopost);
   }
-  createExistingPosts(postsData);
+  await createExistingPosts(postsData);
 
   // delete existing posts
   const deleteBtn = [...document.querySelectorAll(".delete")];
@@ -152,19 +176,15 @@ async function deletePost(person, id) {
 
 // show confirm post
 async function getConfirmPosts() {
-  try {
-    const response = await fetch("/api/getConfirmPost", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-    const result = await response.json();
-    console.log("confirm post");
-    console.log(result);
-    createConfirmPost(result);
-  } catch (err) {
-    console.log(err);
-  }
+  const response = await fetch("/api/getConfirmPost", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+  const result = await response.json();
+  console.log("confirm post");
+  console.log(result);
+  createConfirmPost(result);
 }
 
 function createConfirmPost(result) {
@@ -357,7 +377,7 @@ async function deleteNotification(data) {
   }
 }
 
-function createExistingPosts(postsData) {
+async function createExistingPosts(postsData) {
   postsData.map((post) => {
     const div = document.createElement("div");
     div.classList = "post";
