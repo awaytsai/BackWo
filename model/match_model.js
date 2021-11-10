@@ -1,40 +1,53 @@
 const db = require("../db");
 
-const storeMatchList = async (message, userId, foid, status, fpid) => {
+const storeMatchList = async (
+  message,
+  userId,
+  foid,
+  status,
+  fpid,
+  updateTime
+) => {
   const [matchResult] = await db.query(
-    "INSERT INTO match_list (thank_message, sender, find_owner_id, status, find_pet_id) VALUES (?,?,?,?,?);",
-    [message, userId, foid, status, fpid]
+    "INSERT INTO match_list (thank_message, sender, find_owner_id, status, find_pet_id, update_time) VALUES (?,?,?,?,?,?);",
+    [message, userId, foid, status, fpid, updateTime]
   );
   return matchResult;
 };
 
-const storeMatchListNoFP = async (message, userId, foid, status) => {
+const storeMatchListNoFP = async (
+  message,
+  userId,
+  foid,
+  status,
+  updateTime
+) => {
   const [matchResult] = await db.query(
-    "INSERT INTO match_list (thank_message, sender, find_owner_id, status) VALUES (?,?,?,?);",
-    [message, userId, foid, status]
+    "INSERT INTO match_list (thank_message, sender, find_owner_id, status, update_time) VALUES (?,?,?,?,?);",
+    [message, userId, foid, status, updateTime]
   );
   return matchResult;
 };
 
 const getMatchList = async (id, status) => {
   const [matchResult] = await db.query(
-    "SELECT * FROM match_list WHERE find_owner_id = ? AND status = ? ;",
+    `SELECT * FROM match_list WHERE find_owner_id = ? AND status = ? ;`,
     [id, status]
   );
   return matchResult;
 };
 
-const updateMatchList = async (status, id) => {
+const updateMatchList = async (status, updateTime, id) => {
   const [matchResult] = await db.query(
-    "UPDATE match_list SET status = ? WHERE id = ? ;",
-    [status, id]
+    `UPDATE match_list SET status = ? , update_time=? WHERE id = ? ;`,
+    [status, updateTime, id]
   );
   return matchResult;
 };
 
 const deleteMatchListByFindPet = async (status, id) => {
   const [matchResult] = await db.query(
-    "UPDATE match_list SET status = ? WHERE find_pet_id = ? ;",
+    `UPDATE match_list SET status = ? WHERE find_pet_id = ? ;`,
     [status, id]
   );
   return matchResult;
@@ -50,7 +63,7 @@ const deleteMatchListByFindOwner = async (status, id) => {
 
 const getSuccessCase = async (limit) => {
   const [matchResult] = await db.query(
-    "SELECT * FROM match_list WHERE status ='match' ORDER BY id DESC LIMIT ? ;",
+    "SELECT * FROM match_list WHERE status ='match' ORDER BY update_time DESC LIMIT ? ;",
     [limit]
   );
   return matchResult;

@@ -49,22 +49,28 @@ const storeMatchList = async (req, res) => {
         return res.json({ message: "noaccess" });
       }
       if (result.length > 0) {
+        // update time null
+        const updateTime = null;
         const storeResult = await Match.storeMatchList(
           message,
           senderId,
           foid,
           status,
-          fpid
+          fpid,
+          updateTime
         );
       }
     }
   }
   if (fpid == 0) {
+    // update time null
+    const updateTime = null;
     const storeResult = await Match.storeMatchListNoFP(
       message,
       senderId,
       foid,
-      status
+      status,
+      updateTime
     );
     console.log(storeResult);
   }
@@ -87,7 +93,7 @@ const getConfirmPost = async (req, res) => {
   if (userData.length == 0) {
     return res.json({ message: "nodata" });
   }
-
+  // filter find pet id and get find pet post
   const findPetIds = [];
   userData.map((data) => {
     findPetIds.push(data.find_pet_id);
@@ -99,7 +105,6 @@ const getConfirmPost = async (req, res) => {
       return res.json({ userData });
     }
   }
-
   const petData = await Pet.getFindPostById(filterId);
   // combine user & match & post data
   petData.map((data) => {
@@ -118,8 +123,10 @@ const getConfirmPost = async (req, res) => {
 const updateConfirmPost = async (req, res) => {
   console.log(req.body);
   // check access
+  // add update time
+  const updateTime = new Date();
   const { status, id } = req.body;
-  const updateConfirm = await Match.updateMatchList(status, id);
+  const updateConfirm = await Match.updateMatchList(status, updateTime, id);
   console.log("updateConfirm");
   console.log(updateConfirm);
 
@@ -147,15 +154,31 @@ const updateConfirmPost = async (req, res) => {
 const getSuccessCase = async (req, res) => {
   const limit = 3;
   const MatchData = await Match.getSuccessCase(limit);
-  console.log(MatchData);
   let postIds = [];
   let userIds = [];
   MatchData.map((data) => {
     postIds.push(data.find_owner_id);
     userIds.push(data.sender);
   });
-  console.log(postIds, userIds);
-  res.json(MatchData);
+  const SuccessPosts = await Pet.getFindPostById(postIds);
+  const usersData = [];
+  for (let i = 0; i < userIds.length; i++) {
+    const userResult = await User.getUserData(userIds[i]);
+    usersData.push(userResult[0]);
+  }
+  // format match/user/post data
+  const formatResponse = [];
+  for (let i = 0; i < limit; i++) {
+    const formatData = {};
+    formatData.postPic = `${process.env.CLOUDFRONT}/findowners/${SuccessPosts[i].photo}`;
+    formatData.userName = usersData[i].name;
+    formatData.userPic = usersData[i].picture;
+    formatData.message = MatchData[i].thank_message;
+    formatData.matchTime = MatchData[i].update_time;
+    formatResponse.push(formatData);
+  }
+  // console.log(formatResponse);
+  res.json(formatResponse);
 };
 
 module.exports = {

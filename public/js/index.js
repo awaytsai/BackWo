@@ -7,25 +7,29 @@ getMatchCase();
 async function getMatchCase() {
   const response = await fetch("/api/getSuccessCase");
   const matchData = await response.json();
-  //   createCase(matchData);
+  console.log(matchData);
+  createCase(matchData);
 }
 
 function createCase(data) {
   data.map((post) => {
-    let name = post.name;
-    // find owner photo
-    if (!post.name || !post.photo) {
-      name = "";
-    }
+    let time = new Date(Date.parse(post.matchTime))
+      .toLocaleString("en-US")
+      .split(", ")[0];
+    post.matchTime = time;
     const div = document.createElement("div");
     div.className = "case";
     div.innerHTML = `
-    <img src="${post.photo}"/>
-    <div class="finder">
-        <img src="${post.finderPic}"/>
-        <div class="finder-name">${post.name}</div>
+    <img src="${post.postPic}"/>
+    <div class="finder-wrap">
+        <div class="finder">
+            <img src="${post.userPic}"/>
+            <div class="finder-name">${post.userName}</div>
+        </div>
+        <div>${time}</div>
     </div>
-    <div class="thankyou-message">${post.thankyou}</div>`;
+    <div> 感謝留言：</div>
+    <div class="thankyou-message">${post.message}</div>`;
     parentDiv.appendChild(div);
   });
 }
