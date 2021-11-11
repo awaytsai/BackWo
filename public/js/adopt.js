@@ -85,6 +85,9 @@ function createPost(adoptData) {
     a.appendChild(img);
     div.appendChild(title);
   });
+  const updateTime = document.querySelector(".update-time");
+  const time = adoptData[0].animal_update;
+  updateTime.textContent = `更新時間: ${time}`;
 }
 
 function deleteElement() {

@@ -149,7 +149,16 @@ main {
   width: 30px;
   background-color: none;
 }
-
+.update-time-wrap {
+  width: 75%;
+  display: flex;
+  justify-content: space-between;
+}
+.update-time {
+  margin: 8px 20px;
+  color: #777;
+  font-size: 14px;
+}
 .adopt-posts {
   background-color: rgb(249, 249, 249);
   display: flex;
