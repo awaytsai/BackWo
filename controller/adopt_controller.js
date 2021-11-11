@@ -1,8 +1,16 @@
+const schedule = require("node-schedule");
 const fetch = require("node-fetch");
 const Adopt = require("../model/adopt_model");
 const shelterList = require("../public/data/adopt_shelter.json");
 
-const fetchAdoptData = async (req, res) => {
+const rule = new schedule.RecurrenceRule();
+rule.hour = 12;
+rule.minute = 00;
+rule.tz = "Asia/Taipei";
+
+const job = schedule.scheduleJob(rule, async function () {
+  console.log("crontab");
+  const truncateResult = await Adopt.truncateAdoptData();
   const url =
     "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL";
   const response = await fetch(url);
@@ -45,8 +53,7 @@ const fetchAdoptData = async (req, res) => {
     }
   });
   const adoptResult = await Adopt.updateAdoptData(adoptData);
-  res.json({ status: "updated" });
-};
+});
 
 const getShelters = async (req, res) => {
   return res.json(shelterList);
@@ -114,4 +121,4 @@ const getAdoptData = async (req, res) => {
   }
 };
 
-module.exports = { fetchAdoptData, getShelters, getAdoptData };
+module.exports = { getShelters, getAdoptData };

@@ -1,5 +1,10 @@
 const db = require("../db");
 
+const truncateAdoptData = async () => {
+  const [adoptResult] = await db.query("TRUNCATE TABLE adopt ;");
+  return adoptResult;
+};
+
 const updateAdoptData = async (adoptData) => {
   const data = adoptData.map((p) => [
     p.animal_id,
@@ -73,6 +78,7 @@ const countAdoptDataByRegion = async (kind, region, shelter) => {
 };
 
 module.exports = {
+  truncateAdoptData,
   updateAdoptData,
   getAllAdoptData,
   countAdoptData,
