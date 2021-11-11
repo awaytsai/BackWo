@@ -160,10 +160,12 @@ const getSuccessCase = async (req, res) => {
     postIds.push(data.find_owner_id);
     userIds.push(data.sender);
   });
-  const SuccessPosts = await Pet.getFindPostById(postIds);
+  const SuccessPosts = [];
   const usersData = [];
-  for (let i = 0; i < userIds.length; i++) {
+  for (let i = 0; i < limit; i++) {
+    const SuccessPost = await Pet.getFindPostById(postIds[i]);
     const userResult = await User.getUserData(userIds[i]);
+    SuccessPosts.push(SuccessPost[0]);
     usersData.push(userResult[0]);
   }
   // format match/user/post data
