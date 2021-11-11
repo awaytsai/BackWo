@@ -82,6 +82,21 @@ async function uploadPost() {
         text: "請上傳一張照片，格式限定 .jpg 或 .jpeg",
       });
     } else {
+      Swal.fire({
+        html: "Loading...",
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          const b = Swal.getHtmlContainer().querySelector("b");
+          timerInterval = setInterval(() => {
+            b.textContent = Swal.getTimerLeft();
+          }, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      });
       // fetch data
       const response = await fetch("/api/findowners/upload", {
         method: "POST",
