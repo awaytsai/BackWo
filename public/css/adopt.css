@@ -1,0 +1,253 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-shadow: 0px 0px 0px transparent;
+  border: 0px solid transparent;
+  text-shadow: 0px 0px 0px transparent;
+}
+
+/* header */
+.header-wrap {
+  width: 100%;
+  height: 60px;
+  background-color: #f0f0f0;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 1px 2px rgba(50, 50, 50, 0.1),
+    0px 2px 4px rgba(60, 60, 60, 0.1);
+  position: relative;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  margin: 0 50px 0 100px;
+}
+.logo-wrap a {
+  text-decoration: none;
+}
+.logo img {
+  width: 60px;
+  border-radius: 50%;
+}
+.memebr {
+  margin: 0 50px;
+}
+.logo-message {
+  font-family: "Nanum Pen Script", cursive;
+  font-size: 60px;
+  color: #777;
+}
+
+.nav-wrap {
+  display: flex;
+  margin: 0 100px;
+}
+nav a {
+  margin: 0 60px 0 0;
+  text-decoration: none;
+  color: rgb(140, 136, 136);
+  font-weight: 500;
+}
+nav a:hover {
+  color: #333;
+}
+
+.member img,
+.chat img {
+  width: 30px;
+  margin: 0 20px;
+  cursor: pointer;
+}
+.infobar {
+  color: #ff7b1a;
+  font-size: 14px;
+  padding: 5px 0 5px 0;
+  margin-top: 5px;
+  text-align: center;
+  box-shadow: 0px 1px 5px rgba(50, 50, 50, 0.1),
+    1px 1px 2px rgba(60, 60, 60, 0.1);
+}
+
+/* main */
+main {
+  width: 100%;
+}
+
+.main-wrap {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.region-category {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.region-icon img {
+  width: 120px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.region-title {
+  text-align: center;
+}
+
+.adopt-filter {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  width: 90%;
+}
+.filter {
+  width: 780px;
+}
+
+.filter form {
+  border: #ccc;
+  border-radius: 50px;
+  box-shadow: 3px 3px 10px rgba(50, 50, 50, 0.1),
+    2px 2px 4px rgba(60, 60, 60, 0.1);
+  margin: 30px 0;
+}
+
+.filter form {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  position: relative;
+}
+.filter form label {
+  margin: 0 10px;
+}
+
+.filter select {
+  color: #777;
+}
+.filter-breed {
+  padding: 0 0 0 30px;
+}
+.filter-breed,
+.filter-region,
+.filter-shelter {
+  margin: 0 10px;
+}
+
+.shelter {
+  width: 288px;
+}
+.apply {
+  background-color: white;
+}
+.apply img {
+  width: 30px;
+  background-color: none;
+}
+
+.adopt-posts {
+  background-color: rgb(249, 249, 249);
+  display: flex;
+  flex-wrap: wrap;
+  width: 75%;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  overflow: scroll;
+  margin: 0 10px 10px 10px;
+}
+
+.box {
+  width: 300px;
+  margin: 10px 10px;
+  box-shadow: 0px 1px 2px rgba(50, 50, 50, 0.1),
+    0px 2px 4px rgba(60, 60, 60, 0.1);
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.box img {
+  width: 300px;
+  height: 250px;
+  object-fit: cover;
+}
+
+.post-title {
+  text-align: center;
+}
+
+.map-wrap {
+  width: 45%;
+  margin: 0 10px;
+}
+#map {
+  height: 400px;
+}
+.uploadPost {
+  display: inline-block;
+  border: 1px solid #333;
+  border-radius: 5px;
+  margin: 50px 0 20px;
+  padding: 15px;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+}
+.uploadPost:hover {
+  background-color: #333;
+  color: #f0f0f0;
+}
+
+/* footer */
+
+footer {
+  width: 100%;
+  background-color: #333;
+  color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.footer-wrap {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+.recommend-wrap,
+.contact-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.recommend-link a {
+  text-decoration: none;
+  color: #f0f0f0;
+  margin: 0 10px;
+}
+
+.recommend,
+.contact {
+  margin: 10px 0;
+  color: #ccc;
+}
+
+.recommend-link,
+.contact-link {
+  color: #ccc;
+}
+.recommend-link a:hover {
+  color: white;
+}
+
+.contact-link img {
+  width: 40px;
+  margin: 0 10px;
+}

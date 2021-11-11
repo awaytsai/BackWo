@@ -23,6 +23,7 @@ app.use("/api", [
   require("./Router/user"),
   require("./Router/chat"),
   require("./Router/match"),
+  require("./Router/adopt"),
 ]);
 
 // page not found 404
