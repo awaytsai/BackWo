@@ -27,7 +27,7 @@ function createCase(data) {
         </div>
         <div>${time}</div>
     </div>
-    <div> 感謝留言：</div>
+    <div class="thank-title"> 感謝留言：</div>
     <div class="thankyou-message">${post.thank_message}</div>`;
     parentDiv.appendChild(div);
   });

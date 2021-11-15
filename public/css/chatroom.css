@@ -147,7 +147,7 @@ main {
   border-bottom: 1px solid #f0f0f0;
 }
 .room .room-time {
-  color: #777;
+  color: #bbb;
 }
 .room a {
   text-decoration: none;
@@ -155,13 +155,13 @@ main {
 }
 
 .selected {
-  background-color: #666;
-  color: #fff;
+  background-color: #bbb;
+  color: #ccc;
 }
 .selected .room-user p,
 .selected .room-content p,
 .selected .room-time p {
-  color: #f0f0f0;
+  color: #fff;
 }
 
 .room-user {
@@ -292,7 +292,7 @@ main {
 .message-time-send p,
 .message-time-receive p {
   font-size: 14px;
-  color: #777;
+  color: #bbb;
   margin: 0 10px;
 }
 

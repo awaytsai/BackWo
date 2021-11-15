@@ -143,6 +143,11 @@ main {
   margin: 0 10px;
   overflow: scroll;
 }
+.thank-title {
+  color: #777;
+  font-weight: 500;
+  margin: 10px 0;
+}
 .cta {
   margin-bottom: 50px;
   display: flex;
