@@ -26,7 +26,7 @@ const getAllGeo = async (person) => {
 
 const getGeoByBounder = async (person, w, e, s, n) => {
   const [bounderGeo] = await db.query(
-    "SELECT * FROM pet_post WHERE person = ? AND lng BETWEEN ? AND ? AND lat BETWEEN ? AND ? ORDER BY id DESC;",
+    "SELECT * FROM pet_post WHERE person = ? AND status ='lost' AND lng BETWEEN ? AND ? AND lat BETWEEN ? AND ? ORDER BY id DESC;",
     [person, w, e, s, n]
   );
   return bounderGeo;
