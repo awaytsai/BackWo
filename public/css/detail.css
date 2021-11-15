@@ -75,13 +75,13 @@ nav a:hover {
 
 /* main */
 main {
-  min-height: 400px;
+  min-height: 500px;
 }
 .main-wrap {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin: 100px 10px 100px 250px;
+  margin: 100px 0;
 }
 
 #carouselExampleControls {
@@ -103,7 +103,7 @@ main {
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
-  width: 40%;
+  width: 30%;
   margin: 0 30px;
 }
 
@@ -158,7 +158,8 @@ main {
 }
 
 .finder-name span {
-  font-weight: bold;
+  font-weight: 500;
+  color: #777;
 }
 .check-desc {
   margin: 20px 10px;

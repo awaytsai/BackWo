@@ -60,7 +60,7 @@ function createElement(data, href) {
     </div>
     <div class="finderinfo">
       <div><img src="${data.formatData.postUserPic}"/></div>
-      <div class="finder-name"><span>Finder Name: </span>${data.formatData.postUserName}</div>
+      <div class="finder-name"><span>協尋者: </span>${data.formatData.postUserName}</div>
       <div class=chat-button>
         <a href="${href}">傳送訊息</a>
       </div>
@@ -85,7 +85,7 @@ function createElement(data, href) {
       </div>
       <div class="finderinfo">
         <div><img src="${data.formatData.postUserPic}"/></div>
-        <div class="finder-name"><span>Finder Name: </span>${data.formatData.postUserName}</div>
+        <div class="finder-name"><span>飼主: </span>${data.formatData.postUserName}</div>
         <div class=chat-button>
           <a href="${href}">傳送訊息</a>
         </div>
@@ -110,7 +110,7 @@ function createElementSelfPost(data) {
     </div>
     <div class="finderinfo">
       <div><img src="${data.formatData.postUserPic}"/></div>
-      <div class="finder-name"><span>Finder Name: </span>${data.formatData.postUserName}</div>
+      <div class="finder-name"><span>飼主: </span>${data.formatData.postUserName}</div>
     </div>`;
   parentDiv.appendChild(div);
   createCarousel(data.photoData);
