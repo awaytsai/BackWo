@@ -84,6 +84,16 @@ main {
   flex-direction: column;
   align-items: center;
 }
+.main-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 30px 0 20px;
+  color: #444;
+}
+.sub-title {
+  margin: 0 0 15px 0;
+  color: #777;
+}
 .region-category {
   display: flex;
   justify-content: center;
@@ -94,6 +104,7 @@ main {
   width: 120px;
   border-radius: 50%;
   cursor: pointer;
+  margin: -18px -10px;
 }
 .region-title {
   text-align: center;
@@ -102,7 +113,7 @@ main {
 .adopt-filter {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 10px;
   width: 90%;
 }
 .filter {
@@ -185,6 +196,11 @@ main {
   width: 300px;
   height: 250px;
   object-fit: cover;
+}
+
+.box .default {
+  width: 250px;
+  margin-left: 25px;
 }
 
 .post-title {

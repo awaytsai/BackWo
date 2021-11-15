@@ -8,7 +8,7 @@ rule.hour = 12;
 rule.minute = 00;
 rule.tz = "Asia/Taipei";
 
-const job = schedule.scheduleJob(rule, async function () {
+const job = schedule.scheduleJob(rule, async () => {
   console.log("crontab");
   const truncateResult = await Adopt.truncateAdoptData();
   const url =

@@ -55,13 +55,17 @@ function changeRegion(region) {
 getAdoptData(paging);
 
 async function getAdoptData() {
-  const response = await fetch(`/api/getAdoptData?paging=${paging}`);
-  const adoptData = await response.json();
-  console.log(adoptData);
-  createPost(adoptData.adoptData);
-  action.pop();
-  action.push("all");
-  console.log(action);
+  try {
+    const response = await fetch(`/api/getAdoptData?paging=${paging}`);
+    const adoptData = await response.json();
+    console.log(adoptData);
+    createPost(adoptData.adoptData);
+    action.pop();
+    action.push("all");
+    console.log(action);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 function createPost(adoptData) {
@@ -77,6 +81,7 @@ function createPost(adoptData) {
     if (!data.album_file) {
       img.src =
         "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
+      img.className = "default";
     }
     title.className = "post-title";
     title.textContent = data.animal_place;
@@ -86,7 +91,10 @@ function createPost(adoptData) {
     div.appendChild(title);
   });
   const updateTime = document.querySelector(".update-time");
-  const time = adoptData[0].animal_update;
+  console.log(adoptData[0].animal_update);
+  let time = new Date(Date.parse(adoptData[0].update_time))
+    .toLocaleString("en-US")
+    .split(", ")[0];
   updateTime.textContent = `更新時間: ${time}`;
 }
 
