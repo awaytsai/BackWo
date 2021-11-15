@@ -4,6 +4,7 @@ const { wrapAsync } = require("../util/util");
 const { authMiddleware } = require("../util/auth");
 const Noti = require("../controller/notification_controller");
 const Match = require("../controller/match_controller");
+const mail = require("../controller/mail_controller");
 
 // get notification  by user
 router
@@ -37,5 +38,9 @@ router
 
 // show successful cases
 router.route("/getSuccessCase").get(wrapAsync(Match.getSuccessCase));
+
+// send email
+// router.route("/mail").get(mail.getmail);
+// router.route("/matchmail").get(mail.getMatchmail);
 
 module.exports = router;

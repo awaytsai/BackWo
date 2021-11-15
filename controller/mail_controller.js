@@ -13,8 +13,8 @@ const { getPhotoPath } = require("../util/util");
 // │    └──────────────────── minute (0 - 59)
 // └───────────────────────── second (0 - 59, OPTIONAL)
 
-// const rule = "*/1 * * * *";
-const rule = "1 * * * *";
+const rule = "*/1 * * * *";
+// const rule = "1 * * * *";
 // scheduling for monute is 1;
 
 const job = schedule.scheduleJob(rule, async () => {
@@ -39,8 +39,8 @@ const job = schedule.scheduleJob(rule, async () => {
   console.log(updateMailStatus);
 });
 
-// const ruleMatch = "*/1 * * * *";
-const ruleMatch = "2 * * * *";
+const ruleMatch = "*/1 * * * *";
+// const ruleMatch = "2 * * * *";
 // scheduling for monute is 2;
 
 const jobMatch = schedule.scheduleJob(ruleMatch, async () => {
