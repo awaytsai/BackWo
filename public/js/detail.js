@@ -19,20 +19,20 @@ async function getPostDetail() {
     });
     const data = await fetchData.json();
     console.log(data);
-    let time = new Date(Date.parse(data.date))
+    let time = new Date(Date.parse(data.formatData.date))
       .toLocaleString("en-US")
       .split(", ")[0];
-    data.date = time;
+    data.formatData.date = time;
     console.log(time);
     // check person
-    if (data.roomId) {
+    if (data.formatData.roomId) {
       // check if user login or not
-      if (data.roomId == "null") {
+      if (data.formatData.roomId == "null") {
         // element with self post
         createElementSelfPost(data);
       } else {
         // element with roomid
-        const roomIdHref = `/chatroom.html?room=${data.roomId}`;
+        const roomIdHref = `/chatroom.html?room=${data.formatData.roomId}`;
         createElement(data, roomIdHref);
       }
     } else {
@@ -48,85 +48,95 @@ async function getPostDetail() {
 function createElement(data, href) {
   console.log(data);
   if (person == "indowners") {
+    const parentDiv = document.querySelector(".info-wrap");
     const div = document.createElement("div");
-    div.className = "photo-info-wrap";
-    const parentDiv = document.querySelector(".main-wrap");
     div.innerHTML = `
-    <div class="photo-wrap">
-      <div class="photo">
-        <img src="${data.photo}"/>
-      </div>
-      <div><a href="/checkmatch.html?id=${data.id}">這是我的寵物</a></div>
-    </div>
-    <div class="info-wrap">
       <div>
-        <div class="info"><span>品種 : </span>${data.breed}</div>
-        <div class="info"><span>顏色 : </span>${data.color}</div>
-        <div class="info"><span>地點 : </span>${data.fullAddress}</div>
-        <div class="info"><span>時間 : </span>${data.date}</div>
-        <div class="info"><span>備註 : </span>${data.note}</div>
+      <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
+      <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
+      <div class="info"><span>地點 : </span>${data.formatData.fullAddress}</div>
+      <div class="info"><span>時間 : </span>${data.formatData.date}</div>
+      <div class="info"><span>備註 : </span>${data.formatData.note}</div>
+    </div>
+    <div class="finderinfo">
+      <div><img src="${data.formatData.postUserPic}"/></div>
+      <div class="finder-name"><span>Finder Name: </span>${data.formatData.postUserName}</div>
+      <div class=chat-button>
+        <a href="${href}">傳送訊息</a>
       </div>
-      <div class="finderinfo">
-        <div><img src="${data.postUserPic}"/></div>
-        <div class="finder-name"><span>Finder Name: </span>${data.postUserName}</div>
-        <div class=chat-button>
-          <a href="${href}">傳送訊息</a>
-        </div>
-      </div>
-    </div>`;
+    </div>
+    <div class="match-button">
+      <a href="/checkmatch.html?id=${data.formatData.id}">送出比對</a>
+      <p class="check-desc">請先和協尋者聯絡，確認為自己的寵物後，再請按下送出比對。</p>
+    </div>
+    `;
     parentDiv.appendChild(div);
+    createCarousel(data.photoData);
   } else {
+    const parentDiv = document.querySelector(".info-wrap");
     const div = document.createElement("div");
-    div.className = "photo-info-wrap";
-    const parentDiv = document.querySelector(".main-wrap");
     div.innerHTML = `
-    <div class="photo-wrap">
-      <div class="photo">
-        <img src="${data.photo}"/>
-      </div>
-    </div>
-    <div class="info-wrap">
       <div>
-        <div class="info"><span>品種 : </span>${data.breed}</div>
-        <div class="info"><span>顏色 : </span>${data.color}</div>
-        <div class="info"><span>地點 : </span>${data.fullAddress}</div>
-        <div class="info"><span>時間 : </span>${data.date}</div>
-        <div class="info"><span>備註 : </span>${data.note}</div>
+        <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
+        <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
+        <div class="info"><span>地點 : </span>${data.formatData.fullAddress}</div>
+        <div class="info"><span>時間 : </span>${data.formatData.date}</div>
+        <div class="info"><span>備註 : </span>${data.formatData.note}</div>
       </div>
       <div class="finderinfo">
-        <div><img src="${data.postUserPic}"/></div>
-        <div class="finder-name"><span>Finder Name: </span>${data.postUserName}</div>
+        <div><img src="${data.formatData.postUserPic}"/></div>
+        <div class="finder-name"><span>Finder Name: </span>${data.formatData.postUserName}</div>
         <div class=chat-button>
           <a href="${href}">傳送訊息</a>
         </div>
       </div>
-    </div>`;
+    `;
     parentDiv.appendChild(div);
+    createCarousel(data.photoData);
   }
 }
 
 function createElementSelfPost(data) {
   const div = document.createElement("div");
   div.className = "photo-info-wrap";
-  const parentDiv = document.querySelector(".main-wrap");
+  const parentDiv = document.querySelector(".info-wrap");
   div.innerHTML = `
-  <div class="photo-wrap">
-  <div class="photo">
-    <img src="${data.photo}"/>
-  </div>
-</div>
-<div class="info-wrap">
-  <div>
-    <div class="info"><span>品種 : </span>${data.breed}</div>
-    <div class="info"><span>顏色 : </span>${data.color}</div>
-    <div class="info"><span>地點 : </span>${data.fullAddress}</div>
-    <div class="info"><span>時間 : </span>${data.date}</div>
-    <div class="info"><span>備註 : </span>${data.note}</div>
-  </div>
-  <div class="finderinfo">
-    <div><img src="${data.postUserPic}"/></div>
-    <div class="finder-name"><span>Finder Name: </span>${data.postUserName}</div>
-  </div>
-</div>`;
+    <div>
+      <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
+      <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
+      <div class="info"><span>地點 : </span>${data.formatData.fullAddress}</div>
+      <div class="info"><span>時間 : </span>${data.formatData.date}</div>
+      <div class="info"><span>備註 : </span>${data.formatData.note}</div>
+    </div>
+    <div class="finderinfo">
+      <div><img src="${data.formatData.postUserPic}"/></div>
+      <div class="finder-name"><span>Finder Name: </span>${data.formatData.postUserName}</div>
+    </div>`;
   parentDiv.appendChild(div);
+  createCarousel(data.photoData);
+}
+
+function createCarousel(data) {
+  const carousel = document.querySelector("#carouselExampleControls");
+  if (data.length < 2) {
+    carousel.innerHTML = "";
+    const img = document.createElement("img");
+    img.className = "detail-img";
+    img.src = data;
+    carousel.prepend(img);
+  } else {
+    console.log(data);
+    const div = document.createElement("div");
+    div.className = "carousel-inner";
+    carousel.prepend(div);
+    const innerCarousel = document.querySelector(".carousel-inner");
+    data.map((p) => {
+      const div = document.createElement("div");
+      div.className = "carousel-item";
+      div.innerHTML = `<img src="${p}" class="d-block w-100"/>`;
+      innerCarousel.appendChild(div);
+    });
+    const firstCard = document.querySelectorAll(".carousel-item");
+    firstCard[0].classList.add("active");
+  }
 }

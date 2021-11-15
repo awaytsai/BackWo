@@ -303,3 +303,32 @@ async function updateWithImage() {
     }, 1700);
   }
 }
+
+function validateNum(input) {
+  const fileNum = input.files.length;
+  const file1Size = input.files[0].size / 1024 / 1024;
+  let file2Size;
+  if (fileNum > 1) {
+    file2Size = input.files[1].size / 1024 / 1024;
+  }
+  if (fileNum > 2) {
+    Swal.fire({
+      icon: "info",
+      text: "圖片僅限兩張",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFileMore");
+    uploadInput.value = "";
+  }
+  if (file1Size > 3 || file2Size > 3) {
+    Swal.fire({
+      icon: "info",
+      text: "檔案大小請勿超過3MB",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFileMore");
+    uploadInput.value = "";
+  }
+}

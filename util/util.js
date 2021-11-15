@@ -66,9 +66,13 @@ const uploadS3_owners = multer({
     fileSize: 3000000,
   },
 });
-const uploadFindPets = uploadS3_pets.fields([{ name: "photo", maxCount: 1 }]);
+const uploadFindPets = uploadS3_pets.fields([
+  { name: "photo", maxCount: 1 },
+  { name: "more_photo", maxCount: 2 },
+]);
 const uploadFindOwners = uploadS3_owners.fields([
   { name: "photo", maxCount: 1 },
+  { name: "more_photo", maxCount: 2 },
 ]);
 
 function checkPerson(param) {

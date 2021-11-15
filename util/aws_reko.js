@@ -53,8 +53,10 @@ async function awsReko(param, photo, postId, breed, person, county, date) {
       const updatePostResult = await Pet.updatePetsPost(breed, postId);
     }
     // check if owner post (breed/county/time) match
-    person = "finder";
+    // person = "finder";
     person = switchPerson(param);
+    console.log("breed");
+    console.log(breed);
     const matchBreedData = await Pet.getMatchBreedPosts(
       person,
       breed,
@@ -67,15 +69,15 @@ async function awsReko(param, photo, postId, breed, person, county, date) {
       matchBreedData.map((data) => {
         petPostIds.push(data.id);
       });
-      // console.log(petPostIds);
-      const notiStauts = "exist";
+      console.log(petPostIds);
+      const notiStauts = "created";
       // create notification data (fp_id/fo_id/)
       const notificationData = await Notification.insertNotification(
         petPostIds,
         postId,
         notiStauts
       );
-      // console.log(notificationData);
+      console.log(notificationData);
       const response = { status: "updated" };
       return response;
     }

@@ -53,26 +53,30 @@ const uploadFindPost = async (req, res) => {
   const postId = postResult.insertId;
   // console.log(postResult);
   // console.log(postId);
-
-  const detectResult = await detectImage();
-
-  async function detectImage() {
-    if (breed == "未知") {
-      // aws reko
-      const awsData = await awsReko.awsReko(
-        param,
-        photo,
-        postId,
-        breed,
-        person,
-        county,
-        date
-      );
-      return;
-    }
+  let morePhoto;
+  if (req.files.more_photo) {
+    morePhoto = req.files.more_photo.map((p) => p.key);
+    // morePhoto = [req.files.more_photo[0].key, req.files.more_photo[1].key];
+    const storePhotos = await Pet.storeMorePhoto(postId, morePhoto);
   }
+
+  if (breed == "未知") {
+    // aws reko
+    const awsData = await awsReko.awsReko(
+      param,
+      photo,
+      postId,
+      breed,
+      person,
+      county,
+      date
+    );
+    return res.json({ status: "updated" });
+  }
+
   // check if owner post (breed/county/time) match
   if (param == "findpets") {
+    console.log("findpets");
     return res.json({ status: "updated" });
   }
   person = switchPerson(param);
@@ -90,11 +94,13 @@ const uploadFindPost = async (req, res) => {
     });
     // console.log(petPostIds);
     const notiStauts = "created";
+    const mailStatus = null;
     // create notification data (fp_id/fo_id/)
     const notificationData = await Notification.insertNotification(
       petPostIds,
       postId,
-      notiStauts
+      notiStauts,
+      mailStatus
     );
     // console.log(notificationData);
     console.log("NOTIFICATION DONE");
@@ -195,11 +201,18 @@ const getFindPostDetail = async (req, res) => {
   const id = req.query.id;
   let userId;
   const postData = await Pet.getPostDetailById(person, id);
+  const morePhoto = await Pet.getPhotosById(id);
+  getPhotoPath(morePhoto, param);
+  console.log(morePhoto);
+
   const postDetail = postData[0];
   // check if user login
   if (!req.decoded) {
     const formatData = await formatPostData(postDetail, userId, param);
-    res.json(formatData);
+    const photoData = [];
+    photoData.push(formatData.photo);
+    morePhoto.map((p) => photoData.push(p.photo));
+    res.json({ formatData, photoData });
   } else {
     // yes => render with roomid/userid
     userId = req.decoded.payload.id;
@@ -215,7 +228,10 @@ const getFindPostDetail = async (req, res) => {
     if (userId == formatData.postUserId || res.locals.message == "loginagain") {
       formatData.roomId = "null";
     }
-    res.json(formatData);
+    const photoData = [];
+    photoData.push(formatData.photo);
+    morePhoto.map((p) => photoData.push(p.photo));
+    res.json({ formatData, photoData });
   }
 };
 
@@ -258,6 +274,7 @@ const updatePostdata = async (req, res) => {
   const { kind, color, county, district, address, date, note } = req.body;
   let breed = req.body.breed;
   let photo;
+  let morePhoto;
   if (!(kind && breed && color && county && district && address && date)) {
     return res.json({ message: "請填寫所有欄位" });
   }
@@ -297,14 +314,28 @@ const updatePostdata = async (req, res) => {
     // upload with image
     photo = req.files.photo[0].key;
     // aws reko
-    const detectResult = await detectImage();
-    async function detectImage() {
-      if (breed == "未知") {
-        // aws reko
-        await awsReko.awsReko(param, photo, id, breed, person, county, date);
-      }
+    if (breed == "未知") {
+      const detectResult = await awsReko.awsReko(
+        param,
+        photo,
+        id,
+        breed,
+        person,
+        county,
+        date
+      );
+    }
+    if (req.files.more_photo) {
+      morePhoto = req.files.more_photo.map((p) => p.key);
+      // morePhoto = [req.files.more_photo[0].key, req.files.more_photo[1].key];
+      const removePhotos = await Pet.removeMorePhoto(id);
+      const storePhotos = await Pet.storeMorePhoto(id, morePhoto);
+    }
+    if (!req.files.more_photo) {
+      const removePhotos = await Pet.removeMorePhoto(id);
     }
   }
+
   if (!req.files) {
     photo = postData[0].photo;
   }

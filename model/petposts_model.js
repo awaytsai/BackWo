@@ -38,6 +38,35 @@ const createPetsPost = async (
   return findOwnerPost;
 };
 
+const storeMorePhoto = async (postId, morePhoto) => {
+  const data = morePhoto.map((p) => [postId, p]);
+  const [storePhotos] = await db.query(
+    `INSERT INTO photos(pet_post_id, photo) VALUES ?;`,
+    [data]
+  );
+  return storePhotos;
+};
+
+const getPhotosById = async (id) => {
+  const [matchBreedPosts] = await db.query(
+    `SELECT pp.id, pp.person, p.photo FROM photos as p 
+    INNER JOIN pet_post as pp 
+    ON pp.id = p.pet_post_id
+    WHERE p.pet_post_id in (?) ;
+    `,
+    [id]
+  );
+  return matchBreedPosts;
+};
+
+const removeMorePhoto = async (postId) => {
+  const [removePhotos] = await db.query(
+    `DELETE FROM photos WHERE pet_post_id = ?;`,
+    [postId]
+  );
+  return removePhotos;
+};
+
 const updatePetsPost = async (breed, postId) => {
   const [updatePetsPost] = await db.query(
     `UPDATE pet_post SET breed= ? WHERE id = ?;`,
@@ -198,6 +227,9 @@ const updatePostStatus = async (ids) => {
 
 module.exports = {
   createPetsPost,
+  storeMorePhoto,
+  removeMorePhoto,
+  getPhotosById,
   updatePetsPost,
   getMatchBreedPosts,
   getAllBreedsFilterPosts,

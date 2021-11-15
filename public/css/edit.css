@@ -99,6 +99,9 @@ main {
 /* .post-title span {
     color: #ff7b1a;
   } */
+.preview-title p {
+  margin: 0 15px;
+}
 
 /* form */
 .uploadform {

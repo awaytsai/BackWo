@@ -74,40 +74,63 @@ nav a:hover {
 }
 
 /* main */
+main {
+  min-height: 400px;
+}
 .main-wrap {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
+  align-items: flex-start;
+  margin: 100px 10px 100px 250px;
 }
-.photo-info-wrap {
+
+#carouselExampleControls {
+  width: 40%;
+}
+.detail-img {
+  width: 100%;
+}
+/* .photo-info-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 500px;
-}
+} */
 
-.photo-wrap,
+/* .photo-wrap, */
 .info-wrap {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: flex-start;
-  width: 100%;
+  width: 40%;
+  margin: 0 30px;
 }
 
-.photo img {
+/* .photo img {
   max-width: 500px;
   margin: 20px 10px;
   max-height: 800px;
+} */
+.match-button {
+  margin: 50px 0 0 0;
+}
+.chat-button a {
+  text-decoration: none;
+  /* background-color: #f0f0f0; */
+  border: #777 1px solid;
+  color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
 }
 
-.chat-button a,
-.photo-wrap a {
+.match-button a {
   text-decoration: none;
   background-color: #777;
   color: #f0f0f0;
-  padding: 10px;
+  padding: 10px 30px;
   border-radius: 5px;
   cursor: pointer;
   margin: 10px;
@@ -136,6 +159,11 @@ nav a:hover {
 
 .finder-name span {
   font-weight: bold;
+}
+.check-desc {
+  margin: 20px 10px;
+  font-size: 14px;
+  color: #777;
 }
 
 /* footer */

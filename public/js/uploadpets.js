@@ -83,21 +83,7 @@ async function uploadPost() {
         text: "請上傳一張照片，格式限定 .jpg 或 .jpeg",
       });
     } else {
-      Swal.fire({
-        html: "Loading...",
-        timer: 1000,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          const b = Swal.getHtmlContainer().querySelector("b");
-          timerInterval = setInterval(() => {
-            b.textContent = Swal.getTimerLeft();
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      });
+      alertLoading();
       // fetch data
       const response = await fetch("/api/findpets/upload", {
         method: "POST",
@@ -130,6 +116,24 @@ async function uploadPost() {
   } catch (err) {
     console.log(err);
   }
+}
+
+function alertLoading() {
+  Swal.fire({
+    html: "Loading...",
+    timer: 1000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  });
 }
 
 function toggle(option) {
@@ -192,7 +196,6 @@ function preview() {
   const preview = document.querySelector(".preview");
   const file = document.querySelector("input[type=file]").files[0];
   const reader = new FileReader();
-
   reader.addEventListener(
     "load",
     function () {
@@ -201,8 +204,36 @@ function preview() {
     },
     false
   );
-
   if (file) {
     reader.readAsDataURL(file);
+  }
+}
+
+function validateNum(input) {
+  const fileNum = input.files.length;
+  const file1Size = input.files[0].size / 1024 / 1024;
+  let file2Size;
+  if (fileNum > 1) {
+    file2Size = input.files[1].size / 1024 / 1024;
+  }
+  if (fileNum > 2) {
+    Swal.fire({
+      icon: "info",
+      text: "圖片僅限兩張",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFileMore");
+    uploadInput.value = "";
+  }
+  if (file1Size > 3 || file2Size > 3) {
+    Swal.fire({
+      icon: "info",
+      text: "檔案大小請勿超過3MB",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFileMore");
+    uploadInput.value = "";
   }
 }

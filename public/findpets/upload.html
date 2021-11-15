@@ -146,7 +146,7 @@
               <div class="photo-wrap">
                 <div class="photo-upload" class="mb-3">
                   <label for="formFile" class="form-label"
-                    >上傳照片<span>*</span></label
+                    >上傳封面照片<span>*</span></label
                   >
                   <input
                     type="file"
@@ -158,8 +158,23 @@
                     onchange="preview()"
                   />
                 </div>
+                <div class="photo-upload" class="mb-3">
+                  <label for="formFileMore" class="form-label"
+                    >上傳更多照片 ( 僅限兩張 )</label
+                  >
+                  <input
+                    type="file"
+                    name="more_photo"
+                    accept="image/jpeg, image/jpg"
+                    class="form-control"
+                    id="formFileMore"
+                    multiple="multiple"
+                    required
+                    onchange="validateNum(this)"
+                  />
+                </div>
                 <div class="photo-preview">
-                  <p>圖片預覽</p>
+                  <p>封面圖片預覽</p>
                   <img class="preview" src="/images/preview_icon.png" />
                 </div>
                 <div class="photo-reminder">
@@ -169,8 +184,8 @@
                     />
                   </div>
                   <div class="photo-reminder-text">
-                    <p>1. 圖片僅限一張， 格式僅限 .jpeg 或 .jpg 檔</p>
-                    <p>2. 建議放置清晰正面照</p>
+                    <p>1. 封面圖片僅限一張，更多圖片僅限兩張</p>
+                    <p>2. 格式僅限 .jpeg 或 .jpg 檔</p>
                     <p>3. 若品種未知，AI 會協助與此照片進行圖片比對</p>
                     <p>4. 檔案須小於 3 MB</p>
                   </div>
