@@ -6,8 +6,8 @@ const crypto = require("crypto");
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
   const provider = "native";
-  // const picture = `${process.env.CLOUDFRONT}/member_default.png`;
-  const picture = `https://cdn2.iconfinder.com/data/icons/veterinary-solid/96/paw_vet_pet_animal-512.png`;
+  const picture = `${process.env.CLOUDFRONT}/member_default_image.png`;
+  // const picture = `https://cdn2.iconfinder.com/data/icons/veterinary-solid/96/paw_vet_pet_animal-512.png`;
   if (!name || !email || !password) {
     res.status(400).json({ error: "請輸入名字、email 和密碼" });
     return;
@@ -15,6 +15,9 @@ const signUp = async (req, res) => {
   if (!validator.isEmail(email)) {
     res.status(400).json({ error: "請輸入正確的 email" });
     return;
+  }
+  if (password.length < 6) {
+    res.status(400).json({ error: "請輸入至少6位數密碼" });
   }
   // check existing email
   const checkExistEmail = await User.checkExistedEmail(email);
