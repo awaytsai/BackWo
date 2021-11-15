@@ -91,9 +91,10 @@ function createPost(adoptData) {
     div.appendChild(title);
   });
   const updateTime = document.querySelector(".update-time");
-  console.log(adoptData[0].animal_update);
+  console.log(adoptData[0].update_time);
   let time = new Date(Date.parse(adoptData[0].update_time))
     .toLocaleString("en-US")
+    .split("T")[0]
     .split(", ")[0];
   updateTime.textContent = `更新時間: ${time}`;
 }
