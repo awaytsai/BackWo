@@ -8,18 +8,25 @@ signup.addEventListener("submit", (e) => {
   const name = document.querySelector("#signupname").value;
   const email = document.querySelector("#signupemail").value;
   const password = document.querySelector("#signuppassword").value;
-  if (!email || !password) {
+  if (!name || !email || !password) {
     Swal.fire({
       icon: "info",
       text: "請輸入名字、email 和密碼",
     });
   } else {
-    const body = {
-      name: name,
-      email: email,
-      password: password,
-    };
-    signUp(body);
+    if (password.length < 6) {
+      Swal.fire({
+        icon: "info",
+        text: "請輸入至少6位數密碼",
+      });
+    } else {
+      const body = {
+        name: name,
+        email: email,
+        password: password,
+      };
+      signUp(body);
+    }
   }
 });
 
