@@ -96,6 +96,7 @@ async function showRoomsAndConnectIO(usersData) {
   const historyData = await getExistingRoomsRecord(usersData);
   // connect socket io
   connectToIo(usersData);
+  console.log(historyData);
   // show history room info
   if (historyData.error) {
     const item = document.createElement("div");
@@ -142,74 +143,124 @@ async function getExistingRoomsRecord(usersData) {
 }
 
 function createChatMessage(msg, usersData) {
+  let time = new Date();
+  time = time.toLocaleString("en-US").split(", ")[1];
+  const ampm = time.slice(-3);
+  time = time.split(" ")[0].slice(0, -3);
+  console.log(time);
   const item = document.createElement("div");
   // check who said the message
   if (usersData.senderId != self) {
     item.innerHTML = `
-      <div class="message-sender">
-        <img class="memberpic" src="${usersData.senderPicture}">
-        <span>${usersData.senderName}</span>
-      </div>
-      <div class="message-content">
+      <div class="message-content receive">
         <p>${msg}</p>
       </div>
-      <div class="message-time">
-        <p></p>
+      <div class="message-time-receive">
+        <p>${time} ${ampm}</p>
       </div>`;
-    item.classList.add("receive", "message-box");
+    item.classList.add("message-box");
     messages.appendChild(item);
     messages.scrollTop = messages.scrollHeight;
   } else {
     item.innerHTML = `
-      <div class="message-content">
+      <div class="message-content send">
         <p>${msg}</p>
       </div>
-      <div class="message-time">
-        <p></p>
+      <div class="message-time-send">
+        <p>${time} ${ampm}</p>
       </div>`;
-    item.classList.add("send", "message-box");
+    item.classList.add("message-box");
     messages.appendChild(item);
     messages.scrollTop = messages.scrollHeight;
   }
 }
 
 function createHistoryMessage(historyMessage, usersData) {
+  console.log(historyMessage);
+  createReceiverInfo(usersData);
+  if (historyMessage.length == 0) {
+  }
   historyMessage.reverse().map((message) => {
-    const item = document.createElement("div");
-    item.classList.add("history-message", "message-box");
+    const wrapitem = document.createElement("div");
+    wrapitem.classList.add("history-message");
+    const messageBox = document.createElement("div");
+    messageBox.classList.add("message-box");
+    const messageTime = document.createElement("div");
+
     let time = new Date(Date.parse(message.time))
       .toLocaleString("en-US")
       .split(", ")[1];
     const ampm = time.slice(-3);
     time = time.split(" ")[0].slice(0, -3);
+
     if (message.sender == self) {
       // print self message(send class)
-      item.innerHTML = `
-      <div class="message-content">
+      messageBox.innerHTML = `
+      <div class="message-content send">
         <p>${message.message}</p>
-      </div>
-      <div class="message-time">
-        <p>${time} ${ampm}</p>
       </div>`;
-      item.classList.add("send");
-      messages.appendChild(item);
+      messageTime.className = "message-time-send";
+      messageTime.innerHTML = `<p>${time} ${ampm}</p>`;
+      // messageBox.classList.add("send");
+
+      messages.appendChild(wrapitem);
+      wrapitem.appendChild(messageBox);
+      wrapitem.appendChild(messageTime);
       messages.scrollTop = messages.scrollHeight;
+
+      // const item = document.createElement("div");
+      // item.classList.add("history-message", "message-box");
+      // let time = new Date(Date.parse(message.time))
+      //   .toLocaleString("en-US")
+      //   .split(", ")[1];
+      // const ampm = time.slice(-3);
+      // time = time.split(" ")[0].slice(0, -3);
+      // if (message.sender == self) {
+      //   // print self message(send class)
+      //   item.innerHTML = `
+      //   <div class="message-content">
+      //     <p>${message.message}</p>
+      //   </div>
+      //   <div class="message-time">
+      //     <p>${time} ${ampm}</p>
+      //   </div>`;
+      //   item.classList.add("send");
+      //   messages.appendChild(item);
+      //   messages.scrollTop = messages.scrollHeight;
     } else {
-      // prinet others message(receive class)
-      item.innerHTML = `
-      <div class="message-sender">
-        <img class="memberpic" src="${usersData.receiverPicture}">
-        <span>${usersData.receiverName}</span>
-      </div>
-      <div class="message-content">
-        <p>${message.message}</p>
-      </div>
-      <div class="message-time">
-        <p>${time} ${ampm}</p>
+      // const userBox = document.createElement("div");
+      // userBox.className = "message-sender receive";
+      // userBox.innerHTML = `
+      // <img class="memberpic" src="${usersData.receiverPicture}">
+      // <div>${usersData.receiverName}</div>`;
+      messageBox.innerHTML = `
+      <div class="message-content receive">
+      <p>${message.message}</p>
       </div>`;
-      item.classList.add("receive");
-      messages.appendChild(item);
+      messageTime.innerHTML = `<p>${time} ${ampm}</p>`;
+      messageTime.className = "message-time-receive";
+
+      messages.appendChild(wrapitem);
+      // wrapitem.appendChild(userBox);
+      wrapitem.appendChild(messageBox);
+      wrapitem.appendChild(messageTime);
       messages.scrollTop = messages.scrollHeight;
+
+      // prinet others message(receive class)
+      // item.innerHTML = `
+      // <div class="message-sender">
+      //   <img class="memberpic" src="${usersData.receiverPicture}">
+      //   <span>${usersData.receiverName}</span>
+      // </div>
+      // <div class="message-content">
+      //   <p>${message.message}</p>
+      // </div>
+      // <div class="message-time">
+      //   <p>${time} ${ampm}</p>
+      // </div>`;
+      // item.classList.add("receive");
+      // messages.appendChild(item);
+      // messages.scrollTop = messages.scrollHeight;
     }
   });
 }
@@ -239,6 +290,25 @@ function createExistingRooms(historyData) {
     rooms.appendChild(item);
   });
   checkFocusRoom();
+}
+
+const chatArea = document.querySelector(".chat-area");
+
+function createReceiverInfo(usersData) {
+  console.log("no history");
+  const div = document.createElement("div");
+  const wrapdiv = document.createElement("div");
+  const img = document.createElement("img");
+  const p = document.createElement("p");
+  div.className = "user-info";
+  wrapdiv.className = "user-wrap";
+  img.src = usersData.receiverPicture;
+  p.textContent = usersData.receiverName;
+  p.className = "username";
+  chatArea.prepend(div, chatArea.firstChild);
+  div.appendChild(wrapdiv);
+  wrapdiv.appendChild(img);
+  wrapdiv.appendChild(p);
 }
 
 function createBlankElement() {
