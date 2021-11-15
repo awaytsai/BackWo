@@ -58,6 +58,7 @@
     <main>
       <div class="main-wrap">
         <div class="main-title">找主人專區</div>
+        <div class="sub-title">如果您找到別人的毛小孩，請在下方上傳貼文</div>
         <div class="filter">
           <!--filter-->
           <form method="post" action="/api/getFindOwnersPosts">
@@ -93,10 +94,16 @@
           <div class="posts"></div>
           <div class="map-wrap">
             <div id="map"></div>
-            <div>
+            <div class="upload">
               <a class="uploadPost" href="/findowners/upload.html"
                 >上傳找主人貼文</a
               >
+              <div class="sub-title">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/OOjs_UI_icon_alert-yellow.svg/480px-OOjs_UI_icon_alert-yellow.svg.png"
+                />若有飼主針對您的貼文按下「送出比對」，系統會發送 email
+                請您確認
+              </div>
             </div>
           </div>
         </div>

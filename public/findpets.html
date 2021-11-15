@@ -58,6 +58,7 @@
     <main>
       <div class="main-wrap">
         <div class="main-title">找寵物專區</div>
+        <div class="sub-title">如果您的毛小孩走失，請在下方上傳貼文</div>
         <div class="filter">
           <!--filter-->
           <form method="post" action="/api/getFindPetsPosts">
@@ -93,10 +94,15 @@
           <div class="posts"></div>
           <div class="map-wrap">
             <div id="map"></div>
-            <div>
+            <div class="upload">
               <a class="uploadPost" href="/findpets/upload.html"
                 >上傳找寵物貼文</a
               >
+              <div class="sub-title">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/OOjs_UI_icon_alert-yellow.svg/480px-OOjs_UI_icon_alert-yellow.svg.png"
+                />上傳貼文後，系統會幫忙比對協尋，主動發送 email 通知飼主
+              </div>
             </div>
           </div>
         </div>

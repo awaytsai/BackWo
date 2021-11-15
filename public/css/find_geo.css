@@ -90,6 +90,14 @@ main {
   margin: 30px 0 20px;
   color: #444;
 }
+.sub-title {
+  color: #777;
+}
+.sub-title img {
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+}
 .posts-map-wrap {
   display: flex;
   justify-content: center;
@@ -178,6 +186,9 @@ main {
 }
 #map {
   height: 400px;
+}
+.upload {
+  margin: 0 0 30px 0;
 }
 .uploadPost {
   display: inline-block;
