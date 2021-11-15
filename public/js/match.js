@@ -69,7 +69,7 @@ function createDetail(data) {
         </div>
         <div class="finderinfo">
           <div><img src="${data.postUserPic}"/></div>
-          <div class="finder-name"><span>協尋者: </span>${data.postUserName}</div>
+          <div class="finder-name"><span>協尋者 : </span>${data.postUserName}</div>
         </div>
       </div>`;
   parentDiv.appendChild(div);
@@ -78,13 +78,17 @@ function createDetail(data) {
 function createHistoryPost(data) {
   const h5 = document.createElement("h5");
   const div = document.createElement("div");
+  const p = document.createElement("p");
   // const button = document.createElement("button");
   const wrapDiv = document.querySelector(".main-wrap");
   h5.textContent = "請選擇對應的找寵物貼文";
+  p.textContent = `系統會將您的貼文，傳送給協尋者做比對確認`;
+  p.className = "match-desc";
   div.className = "existing-post";
   // button.className = "submit";
   // button.textContent = "Submit";
   wrapDiv.appendChild(h5);
+  wrapDiv.appendChild(p);
   wrapDiv.appendChild(div);
   data.map((post) => {
     console.log(post);
@@ -101,11 +105,11 @@ function createHistoryPost(data) {
       src="${post.photo}"
     />
     <div class="post-info">
-      <div>找寵物</div>
-      <div>品種: ${post.breed}</div>
-      <div>地點: ${post.fullAddress}</div>
-      <div>日期: ${post.date}</div>
-      <div>狀態: ${post.status}</div>
+      <div class="post-info-title">找寵物</div>
+      <div><span>品種: </span>${post.breed}</div>
+      <div><span>地點: </span>${post.fullAddress}</div>
+      <div><span>日期: </span>${post.date}</div>
+      <div><span>狀態: </span>${post.status}</div>
     </div>
     <div class="check ${post.id}"></div>
     <input type="radio" name="post" value="${post.id}" />

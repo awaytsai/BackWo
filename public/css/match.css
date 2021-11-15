@@ -108,8 +108,12 @@ main {
 .info-wrap {
   margin: 10px;
 }
+
 .finderinfo {
   margin: 10px 0;
+}
+.info span {
+  margin: 0 10px;
 }
 
 .post-detail {
@@ -123,12 +127,16 @@ main {
 
 .finderinfo {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
 }
 .finderinfo img {
   width: 35px;
 }
+.finder-name span {
+  margin: 0 10px;
+}
+
 .submit {
   padding: 10px;
   border-radius: 10px;
@@ -140,6 +148,9 @@ main {
 
 .existing-post {
   margin: 20px;
+}
+.match-desc {
+  color: #777;
 }
 .check-label {
   display: flex;
@@ -153,6 +164,13 @@ main {
 }
 .post-info {
   width: 400px;
+}
+.post-info-title {
+  margin: 0 10px;
+  font-weight: 500;
+}
+.post-info span {
+  margin: 0 10px;
 }
 .check-label img {
   width: 200px;
