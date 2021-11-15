@@ -154,33 +154,11 @@ const updateConfirmPost = async (req, res) => {
 const getSuccessCase = async (req, res) => {
   const limit = 3;
   const MatchData = await Match.getSuccessCase(limit);
-  let postIds = [];
-  let userIds = [];
+  console.log(MatchData);
   MatchData.map((data) => {
-    postIds.push(data.find_owner_id);
-    userIds.push(data.sender);
+    data.photo = `${process.env.CLOUDFRONT}/findowners/${data.photo}`;
   });
-  const SuccessPosts = [];
-  const usersData = [];
-  for (let i = 0; i < limit; i++) {
-    const SuccessPost = await Pet.getFindPostById(postIds[i]);
-    const userResult = await User.getUserData(userIds[i]);
-    SuccessPosts.push(SuccessPost[0]);
-    usersData.push(userResult[0]);
-  }
-  // format match/user/post data
-  const formatResponse = [];
-  for (let i = 0; i < limit; i++) {
-    const formatData = {};
-    formatData.postPic = `${process.env.CLOUDFRONT}/findowners/${SuccessPosts[i].photo}`;
-    formatData.userName = usersData[i].name;
-    formatData.userPic = usersData[i].picture;
-    formatData.message = MatchData[i].thank_message;
-    formatData.matchTime = MatchData[i].update_time;
-    formatResponse.push(formatData);
-  }
-  // console.log(formatResponse);
-  res.json(formatResponse);
+  res.json(MatchData);
 };
 
 module.exports = {

@@ -77,11 +77,26 @@ nav a:hover {
 main {
   width: 100%;
 }
+.desc-img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.desc-img-title {
+  margin: 50px 0 10px 0;
+  font-size: 26px;
+}
+.desc-img img {
+  margin-top: 30px;
+  width: 600px;
+  height: 300px;
+}
 
 .photo {
   max-height: 400px;
   object-fit: cover;
-  margin: 20px 0;
+  /* margin: 20px 0; */
 }
 .success-title {
   padding: 50px 0 0 0;
@@ -95,7 +110,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 50px 0;
+  margin: 50px 0 20px 0;
 }
 .case {
   margin: 20px;
@@ -134,18 +149,17 @@ main {
   align-items: center;
   justify-content: center;
 }
-.findBtn {
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: #777;
-  color: #fff;
-}
-.findBtn:hover {
+
+.findBtn a:hover {
   background-color: #333;
 }
 .findBtn a {
   text-decoration: none;
+  color: #fff;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #777;
   color: #fff;
 }
 /* footer */

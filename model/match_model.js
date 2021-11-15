@@ -63,7 +63,14 @@ const deleteMatchListByFindOwner = async (status, id) => {
 
 const getSuccessCase = async (limit) => {
   const [matchResult] = await db.query(
-    "SELECT * FROM match_list WHERE status ='match' ORDER BY update_time DESC LIMIT ? ;",
+    `SELECT m.thank_message, m.sender, m.find_owner_id, m.update_time, u.name, u.picture, p.photo FROM 
+    (SELECT thank_message, sender, find_owner_id, update_time FROM match_list 
+    WHERE status ='match' ORDER BY update_time DESC LIMIT ? ) AS m 
+    INNER JOIN user AS u 
+    ON m.sender = u.id
+    INNER JOIN pet_post AS p
+    ON m.find_owner_id= p.id 
+    ;`,
     [limit]
   );
   return matchResult;
