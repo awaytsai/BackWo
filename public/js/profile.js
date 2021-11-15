@@ -400,10 +400,10 @@ async function createExistingPosts(postsData) {
               />
               <div class="post-content">
               <div class="post-title">${title}</div>
-                <div>品種: ${post.breed}</div>
-                <div>地點: ${post.county}${post.district}${post.address}</div>
-                <div>日期: ${time}</div>
-                <div>狀態: ${post.status}</div>
+                <div><span>品種 : </span>${post.breed}</div>
+                <div><span>地點 : </span>${post.county}${post.district}${post.address}</div>
+                <div><span>日期 : </span>${time}</div>
+                <div><span>狀態 : </span>${post.status}</div>
               </div>
               <a class="edit" href="${edit}${post.id}">編輯</a>
               <div class="delete ${post.person} ${post.id}" id="${post.id}">

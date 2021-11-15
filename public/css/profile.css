@@ -143,6 +143,14 @@ main {
   border-radius: 10px;
   padding: 20px 50px;
 }
+
+.sub-title {
+  margin: 0 10px;
+  color: #777;
+  font-weight: 400;
+  font-size: 14px;
+  padding: 10px 0;
+}
 .noti-text-time {
   display: flex;
   justify-content: space-between;
@@ -170,6 +178,9 @@ main {
 .cancel {
   width: 24px;
   height: 24px;
+}
+.noti-icon {
+  margin: 0 10px;
 }
 .cancel {
   cursor: pointer;
@@ -218,6 +229,9 @@ main {
   margin: 20px;
   width: 250px;
   color: #777;
+}
+.post-content span {
+  margin: 0 10px 0 0;
 }
 .user {
   display: flex;
