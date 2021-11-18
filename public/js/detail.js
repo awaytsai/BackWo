@@ -48,6 +48,7 @@ async function getPostDetail() {
 function createElement(data, href) {
   console.log(data);
   if (person == "indowners") {
+    const name = "協尋者: ";
     const parentDiv = document.querySelector(".info-wrap");
     const div = document.createElement("div");
     div.innerHTML = `
@@ -60,7 +61,7 @@ function createElement(data, href) {
     </div>
     <div class="finderinfo">
       <div><img src="${data.formatData.postUserPic}"/></div>
-      <div class="finder-name"><span>協尋者: </span>${data.formatData.postUserName}</div>
+      <div class="finder-name"><span>${name}</span>${data.formatData.postUserName}</div>
       <div class=chat-button>
         <a href="${href}">傳送訊息</a>
       </div>
@@ -97,6 +98,10 @@ function createElement(data, href) {
 }
 
 function createElementSelfPost(data) {
+  let name = "飼主: ";
+  if (person == "indowners") {
+    name = "協尋者: ";
+  }
   const div = document.createElement("div");
   div.className = "photo-info-wrap";
   const parentDiv = document.querySelector(".info-wrap");
@@ -110,7 +115,7 @@ function createElementSelfPost(data) {
     </div>
     <div class="finderinfo">
       <div><img src="${data.formatData.postUserPic}"/></div>
-      <div class="finder-name"><span>飼主: </span>${data.formatData.postUserName}</div>
+      <div class="finder-name"><span>${name} </span>${data.formatData.postUserName}</div>
     </div>`;
   parentDiv.appendChild(div);
   createCarousel(data.photoData);
