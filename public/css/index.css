@@ -141,7 +141,7 @@ main {
   width: 300px;
   height: 100px;
   margin: 0 10px;
-  overflow: scroll;
+  overflow: auto;
 }
 .thank-title {
   color: #777;
@@ -213,4 +213,30 @@ footer {
 .contact-link img {
   width: 40px;
   margin: 0 10px;
+}
+
+/* over flow*/
+.thankyou-message {
+  overflow: hidden;
+}
+
+.thankyou-message:hover {
+  overflow-y: scroll;
+}
+
+.thankyou-message::-webkit-scrollbar {
+  width: 5px;
+  background-color: white;
+}
+
+.thankyou-message::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
+  background-color: #ccc;
+}
+
+.thankyou-message::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 30%); */
+  border-radius: 10px;
+  background-color: white;
 }

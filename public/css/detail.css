@@ -167,6 +167,15 @@ main {
   color: #777;
 }
 
+.carousel-item {
+  max-height: 600px;
+  object-fit: cover;
+}
+.detail-img {
+  max-height: 600px;
+  object-fit: cover;
+}
+
 /* footer */
 
 footer {
