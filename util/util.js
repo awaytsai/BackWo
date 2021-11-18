@@ -2,12 +2,11 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const S3 = require("aws-sdk/clients/s3");
 const fetch = require("node-fetch");
+const maxSize = 3 * 1024 * 1024; // 3MB
 
 // error catching
 const wrapAsync = (fn) => {
   return function (req, res, next) {
-    // Make sure to `.catch()` any errors and pass them along to the `next()`
-    // middleware in the chain, in this case the error handler.
     fn(req, res, next).catch(next);
   };
 };
@@ -39,7 +38,7 @@ const uploadS3_pets = multer({
     cb(null, true);
   },
   limit: {
-    fileSize: 3000000,
+    fileSize: maxSize,
   },
 });
 
@@ -58,14 +57,15 @@ const uploadS3_owners = multer({
   }),
   fileFilter: (req, file, cb) => {
     if (!file.originalname.match(/\.(jpg|jpeg)$/)) {
-      cb(new Error("Please upload a .jpg or .jpeg image"));
+      return cb(new Error("Please upload a .jpg or .jpeg image"));
     }
     cb(null, true);
   },
   limit: {
-    fileSize: 3000000,
+    fileSize: maxSize,
   },
 });
+
 const uploadFindPets = uploadS3_pets.fields([
   { name: "photo", maxCount: 1 },
   { name: "more_photo", maxCount: 2 },
@@ -132,6 +132,30 @@ async function convertGeoCoding(county, district, address) {
   return { lat, lng };
 }
 
+function isValidDate(dateString) {
+  // First check for the pattern
+  var regex_date = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
+  if (!regex_date.test(dateString)) {
+    return false;
+  }
+  // Parse the date parts to integers
+  var parts = dateString.split("-");
+  var day = parseInt(parts[2], 10);
+  var month = parseInt(parts[1], 10);
+  var year = parseInt(parts[0], 10);
+  // Check the ranges of month and year
+  if (year < 1000 || year > 3000 || month == 0 || month > 12) {
+    return false;
+  }
+  var monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  // Adjust for leap years
+  if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
+    monthLength[1] = 29;
+  }
+  // Check the range of the day
+  return day > 0 && day <= monthLength[month - 1];
+}
+
 module.exports = {
   wrapAsync,
   uploadFindPets,
@@ -141,4 +165,5 @@ module.exports = {
   getPhotoPath,
   formatPostData,
   convertGeoCoding,
+  isValidDate,
 };

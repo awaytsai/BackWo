@@ -50,6 +50,7 @@ async function uploadPost() {
     const county = document.querySelector(".filtercounty");
     const date = document.querySelector("#datepicker");
     const photo = document.querySelector("#formFile");
+    const note = document.querySelector(".note-message");
     // error handling
     if (token == null) {
       Swal.fire({
@@ -80,6 +81,11 @@ async function uploadPost() {
       Swal.fire({
         icon: "info",
         text: "請上傳一張照片，格式限定 .jpg 或 .jpeg",
+      });
+    } else if (note.value.length > 250) {
+      Swal.fire({
+        icon: "info",
+        text: "字數過多，請勿超過250字",
       });
     } else {
       alertLoading();
@@ -210,7 +216,38 @@ function preview() {
   }
 }
 
-function validateNum(input) {
+function validatePhoto(input) {
+  const fileNum = input.files.length;
+  const file1Size = input.files[0].size / 1024 / 1024;
+  let file2Size;
+  if (fileNum > 1) {
+    file2Size = input.files[1].size / 1024 / 1024;
+  }
+  // if (fileNum > 2) {
+  //   Swal.fire({
+  //     icon: "info",
+  //     text: "圖片僅限兩張",
+  //     showConfirmButton: true,
+  //     timer: 1500,
+  //   });
+  //   const uploadInput = document.querySelector("#formFile");
+  //   uploadInput.value = "";
+  // }
+  // if (file1Size > 3 || file2Size > 3) {
+  //   Swal.fire({
+  //     icon: "info",
+  //     text: "檔案大小請勿超過3MB",
+  //     showConfirmButton: true,
+  //     timer: 1500,
+  //   });
+  //   const uploadInput = document.querySelector("#formFile");
+  //   uploadInput.value = "";
+  // } else {
+  //   preview();
+  // }
+}
+
+function validateMorePhoto(input) {
   const fileNum = input.files.length;
   const file1Size = input.files[0].size / 1024 / 1024;
   let file2Size;

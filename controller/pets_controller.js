@@ -15,9 +15,10 @@ const {
   getPhotoPath,
   formatPostData,
   convertGeoCoding,
+  isValidDate,
 } = require("../util/util");
 
-const uploadFindPost = async (req, res) => {
+const uploadFindPost = async (err, req, res) => {
   const { kind, color, county, district, address, date, note } = req.body;
   const param = req.originalUrl.split("/")[2];
   let person = checkPerson(param);
@@ -25,6 +26,12 @@ const uploadFindPost = async (req, res) => {
   let breed = req.body.breed;
   if (!(kind && breed && color && county && district && address && date)) {
     return res.json({ message: "請填寫所有欄位" });
+  }
+  if (!isValidDate(date)) {
+    return res.json({ message: "日期格式錯誤" });
+  }
+  if (note.length > 250) {
+    return res.json({ message: "字數過多，請勿超過250字" });
   }
   if (breed == "其他") {
     breed = req.body.breedName;
@@ -114,6 +121,10 @@ const getPetsGeoInfo = async (req, res) => {
   let person = checkPerson(param);
   // check query string w/o filter
   if (kind && county && district && date) {
+    // check date format
+    if (!isValidDate(date)) {
+      return res.json({ message: "wrong date format" });
+    }
     if (kind == "全部") {
       const geoResult = await Geo.getAllBreedsFilterGeo(
         person,
@@ -162,10 +173,14 @@ const getPetsGeoInfo = async (req, res) => {
 const getFindPosts = async (req, res) => {
   // check query string w/o filter
   const { kind, county, district, date } = req.query;
-  // const person = "owner";
+
   const param = req.originalUrl.split("/")[2].split("P")[0].slice(3);
   let person = checkPerson(param);
   if (kind && county && district && date) {
+    // check date format
+    if (!isValidDate(date)) {
+      return res.json({ message: "wrong date format" });
+    }
     if (kind == "全部") {
       const postResult = await Pet.getAllBreedsFilterPosts(
         person,
@@ -184,13 +199,13 @@ const getFindPosts = async (req, res) => {
         date
       );
       getPhotoPath(postResult, param);
-      res.json(postResult);
+      return res.json(postResult);
     }
   } else {
     // without filter
     let postResult = await Pet.getPetsPosts(person);
     getPhotoPath(postResult, param);
-    res.json(postResult);
+    return res.json(postResult);
   }
 };
 
@@ -278,6 +293,12 @@ const updatePostdata = async (req, res) => {
   if (!(kind && breed && color && county && district && address && date)) {
     return res.json({ message: "請填寫所有欄位" });
   }
+  if (!isValidDate(date)) {
+    return res.json({ message: "日期格式錯誤" });
+  }
+  if (note.length > 250) {
+    return res.json({ message: "字數過多，請勿超過250字" });
+  }
   if (breed == "其他") {
     breed = req.body.breedName;
   }
@@ -290,10 +311,10 @@ const updatePostdata = async (req, res) => {
   console.log("postdata");
   console.log(postData);
   if (postData.length == 0) {
-    return res.json({ message: "noPostExistById" });
+    return res.json({ message: "頁面不存在" });
   }
   if (postData[0].user_id !== userId) {
-    return res.json({ message: "noaccess" });
+    return res.json({ message: "頁面不存在" });
   }
   // only address change => geocoding
   let lat = postData[0].lat;

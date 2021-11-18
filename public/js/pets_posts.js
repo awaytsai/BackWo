@@ -36,17 +36,28 @@ async function showFilterPosts(kind, county, district, date) {
     `/api/getf${person}Posts?kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterData = await filterResponse.json();
+  if (filterData.message == "wrong date format") {
+    Swal.fire({
+      icon: "info",
+      text: `日期無效`,
+    });
+    return;
+  }
   deleteElement();
   if (filterData.length > 0) {
     createElement(filterData);
   } else {
     const postDiv = document.querySelector(".posts");
-    postDiv.innerHTML = `<h5> 資料不存在 </h5>`;
+    postDiv.innerHTML = `<h5> 查無篩選結果 </h5>`;
   }
 }
 
 function createElement(data) {
   const postDiv = document.querySelector(".posts");
+  if (data.length == 0) {
+    postDiv.innerHTML = `<h5> 查無篩選結果 </h5>`;
+  }
+
   data.map((pet) => {
     const box = document.createElement("div");
     const a = document.createElement("a");
