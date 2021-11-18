@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>BackWo-會員登入</title>
+    <link rel="icon" href="/images/logo.jpeg" />
     <script>
       const access_token = localStorage.getItem("access_token");
       if (!access_token) {
@@ -67,7 +68,7 @@
         <div class="notification-wrap">
           <div class="notificatoin-title">
             <img src="/images/notification_icon.png" />
-            <p>比對通知：</p>
+            <p>比對通知</p>
           </div>
           <div class="sub-title">
             系統會協助比對協尋，比對結果會發送 Email 並在下方顯示通知。
@@ -122,45 +123,7 @@
             若有飼主針對您的貼文按下「送出比對」，系統會發送 email
             和在下方顯示通知請您確認。
           </div>
-          <div class="confrim-posts">
-            <!-- <div class="confirm-post">
-              <a href="/findpets/detail?id=${id}">
-                <img
-                  src="https://d3271x2nhsfyjz.cloudfront.net/findowners/Corgi-at-home.jpeg-1635577469729"
-                />
-              </a>
-              <div class="confirm-post-content">
-                <div class="user">
-                  <div>user pic</div>
-                  <div>username</div>
-                </div>
-                <div>
-                  留言: 感謝的話 Thank you so much. Thank you so much. Thank you
-                  so much. Thank you so much. Thank you so much. Thank you so
-                  much.
-                </div>
-              </div>
-              <input
-                type="radio"
-                class="btn-check"
-                name="options"
-                id="confirm"
-                autocomplete="off"
-              />
-              <label class="btn btn-outline-secondary" for="confirm"
-                >確認</label
-              >
-              <input
-                type="radio"
-                class="btn-check"
-                name="options"
-                id="cancel"
-                autocomplete="off"
-              />
-              <label class="btn btn-outline-secondary" for="cancel">取消</label>
-              <div class="save">Save</div>
-            </div> -->
-          </div>
+          <div class="confirm-posts"></div>
         </div>
       </div>
     </main>

@@ -79,6 +79,15 @@ main {
 }
 
 /* profile */
+.userPic {
+  width: 80px;
+}
+.welcome-message {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .welcome-message p {
   font-size: 20px;
   padding: 10px 0;
@@ -107,7 +116,7 @@ main {
 .notification-wrap,
 .history-post,
 .confirm-post-wrap {
-  margin: 10px 0;
+  margin: 30px 0;
   width: 60%;
 }
 
@@ -127,21 +136,23 @@ main {
 /* notification */
 .notifications {
   height: 300px;
-  overflow: scroll;
+  /* overflow: auto; */
   display: flex;
   flex-direction: column;
   margin: auto;
+  width: 800px;
 }
 
 .notification {
-  box-sizing: content-box;
   margin: 10px 0 20px 0;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   border-radius: 10px;
   padding: 20px 50px;
+  background-color: #f7f7f7;
+  width: 795px;
 }
 
 .sub-title {
@@ -200,19 +211,21 @@ main {
   margin: 0 10px;
 }
 .posts,
-.confrim-posts {
+.confirm-posts {
   display: flex;
   flex-direction: column;
   min-height: 200px;
   max-height: 500px;
-  overflow: scroll;
+  width: 800px;
+  margin-left: 30px;
+  /* overflow: auto; */
 }
 
 .post,
 .confirm-post {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 }
 .post img {
   /* width: 200px;
@@ -221,6 +234,7 @@ main {
   width: 200px;
   height: 150px;
   object-fit: cover;
+  border-radius: 10px;
 }
 .post-title {
   color: #333;
@@ -240,8 +254,8 @@ main {
 .edit {
   text-decoration: none;
   padding: 10px 15px;
-  background-color: #6c757d;
-  color: #f0f0f0;
+  background-color: #999;
+  color: #fff;
   cursor: pointer;
   margin: 0 20px;
   border-radius: 10px;
@@ -267,13 +281,14 @@ main {
   max-width: 200px;
   max-height: 200px;
   margin: 20px;
+  border-radius: 10px;
 }
 
 .confirm-post-content {
   width: 250px;
   max-height: 150px;
   margin: 10px 20px 10px 10px;
-  overflow: scroll;
+  /* overflow: auto; */
 }
 .confirm-post label {
   margin: 0 5px 0 0;
@@ -291,15 +306,14 @@ main {
 }
 
 .thankyou-message {
-  width: 250px;
+  width: 245px;
   word-wrap: break-word;
-  overflow: scroll;
 }
 
 .save {
   padding: 10px 15px;
-  background-color: #6c757d;
-  color: #f0f0f0;
+  background-color: #999;
+  color: #fff;
   cursor: pointer;
   border-radius: 10px;
 }
@@ -354,4 +368,46 @@ footer {
 .contact-link img {
   width: 40px;
   margin: 0 10px;
+}
+
+/*overflow */
+.notifications,
+.posts,
+.confirm-posts,
+.confirm-post-content {
+  overflow: hidden;
+}
+
+.notifications:hover,
+.posts:hover,
+.confirm-posts:hover,
+.confirm-post-content:hover {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+.notifications::-webkit-scrollbar,
+.posts::-webkit-scrollbar,
+.confirm-posts::-webkit-scrollbar,
+.confirm-post-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: white;
+}
+
+.notifications::-webkit-scrollbar-thumb,
+.posts::-webkit-scrollbar-thumb,
+.confirm-posts::-webkit-scrollbar-thumb,
+.confirm-post-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 30%);
+  background-color: #ccc;
+}
+
+.notifications::-webkit-scrollbar-track,
+.posts::-webkit-scrollbar-track,
+.confirm-posts::-webkit-scrollbar-track,
+.confirm-post-content::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 30%); */
+  border-radius: 10px;
+  background-color: white;
 }

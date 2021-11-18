@@ -25,7 +25,7 @@ async function welcomeMessage() {
     },
   });
   const result = await response.json();
-
+  console.log(result);
   if (result.message == "請先登入或註冊") {
     Swal.fire({
       icon: "info",
@@ -59,11 +59,15 @@ async function welcomeMessage() {
 
 function welmessageAndLogout(data) {
   const parentDiv = document.querySelector(".welcome-message");
+  const img = document.createElement("img");
   const p = document.createElement("p");
   const div = document.createElement("div");
   p.textContent = `歡迎回來，${data.name}`;
   div.textContent = "登出";
   div.className = "logout";
+  img.src = `${data.picture}`;
+  img.className = "userPic";
+  parentDiv.append(img);
   parentDiv.appendChild(p);
   parentDiv.appendChild(div);
   const logout = document.querySelector(".logout");
@@ -190,7 +194,7 @@ async function getConfirmPosts() {
 function createConfirmPost(result) {
   if (result.message == "nodata") {
     // show no existing post to confirm
-    const div = document.querySelector(".confrim-posts");
+    const div = document.querySelector(".confirm-posts");
     const nopost = document.createElement("div");
     nopost.textContent = "沒有待確認的貼文";
     nopost.className = "nopost";
@@ -198,7 +202,7 @@ function createConfirmPost(result) {
   }
   // render
   if (result.userData) {
-    const parentDiv = document.querySelector(".confrim-posts");
+    const parentDiv = document.querySelector(".confirm-posts");
     result.userData.map((post) => {
       const div = document.createElement("div");
       div.className = "confirm-post";
