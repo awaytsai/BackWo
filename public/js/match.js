@@ -81,8 +81,9 @@ function createHistoryPost(data) {
   const p = document.createElement("p");
   // const button = document.createElement("button");
   const wrapDiv = document.querySelector(".main-wrap");
-  h5.textContent = "請選擇對應的找寵物貼文";
+  h5.textContent = "請選擇您走失的寵物";
   p.textContent = `系統會將您的貼文，傳送給協尋者做比對確認`;
+  h5.className = "subtitle";
   p.className = "match-desc";
   div.className = "existing-post";
   // button.className = "submit";
