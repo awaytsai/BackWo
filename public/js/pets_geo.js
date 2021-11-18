@@ -50,10 +50,15 @@ async function filterMapMarker(kind, county, district, date) {
     `/api/getf${person}GeoInfo?kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterGeoData = await response.json();
-  console.log(filterGeoData);
+  if (filterGeoData.message == "wrong date format") {
+    Swal.fire({
+      icon: "info",
+      text: `日期無效`,
+    });
+    return;
+  }
   // add new marker
-  addMarker(filterGeoData);
-  // map.setCenter(markers.getPosition());
+  addMarkerFitBound(filterGeoData);
 }
 
 // add markers by bounds
@@ -121,4 +126,39 @@ function deleteMarkers() {
   for (i = 0; i < len; i++) {
     markers[i].setMap(null);
   }
+}
+
+function addMarkerFitBound(data) {
+  var bounds = new google.maps.LatLngBounds();
+  // update map center
+  data.forEach((pet) => {
+    const myLatLng = { lat: pet.lat, lng: pet.lng };
+    let image =
+      "https://cdn1.iconfinder.com/data/icons/animals-109/100/Dog-02_2-48.png";
+
+    if (pet.kind !== "狗") {
+      image =
+        "https://cdn1.iconfinder.com/data/icons/amenities-solid-ii/48/_cats2-40.png";
+    }
+    const contentString = `
+    <div>
+      <a href="/f${person}/detail.html?id=${pet.id}">
+        <img src="${pet.photo}" width="150px">
+      </a>
+      <div>品種: ${pet.breed}</div>
+      <div>顏色: ${pet.color}</div>
+    </div>`;
+    // markers
+    marker = new google.maps.Marker({
+      position: myLatLng,
+      map,
+      title: pet.breed,
+      icon: image,
+    });
+    bounds.extend(myLatLng);
+    // add info window
+    addInfoWindow(marker, contentString);
+    markers.push(marker);
+  });
+  map.panToBounds(bounds, 300);
 }
