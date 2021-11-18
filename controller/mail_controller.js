@@ -107,7 +107,7 @@ async function notiMail(data) {
                     <h3>Hello ${data[i].name}，你的個人頁面有一則新通知，有人找到的可能是你的寵物，點擊下方查看貼文確認。</h3>
                     <img class="photo" src="${data[i].photo}">
                     <div class="wrap">
-                        <a class="link" href="${process.env.DOMAIN}/profile">個人頁面</a>
+                        <a class="link" href="${process.env.DOMAIN}/profile.html">個人頁面</a>
                         <a class="link" href="${process.env.DOMAIN}/findowners/detail.html?id=${data[i].f_id}">貼文連結</a>
                     </div>
                 </body>
@@ -175,56 +175,3 @@ async function matchMail(data, sender) {
     console.log(err);
   }
 }
-
-// const getmail = async (req, res) => {
-//   // 1. sending notification
-//   const notiMailData = await Noti.getNotiMailData();
-//   if (notiMailData.length == 0) {
-//     return console.log("nothing to update");
-//   }
-//   const notiMailPhoto = await Noti.getNotiMailPhoto();
-//   getPhotoPath(notiMailPhoto, "findowners");
-//   for (let i = 0; i < notiMailData.length; i++) {
-//     notiMailData[i].photo = notiMailPhoto[i].photo;
-//   }
-//   console.log(notiMailData);
-//   const notiMailResponse = await notiMail(notiMailData);
-//   console.log("mail sended");
-//   // update mail status
-//   const notiIds = [];
-//   notiMailData.map((data) => notiIds.push(data.n_id));
-//   console.log(notiIds);
-//   const updateMailStatus = await Noti.updateNotiMailStatus(notiIds);
-//   console.log("4");
-//   // console.log(updateMailStatus);
-//   res.json({ status: "ok" });
-// };
-
-// const getMatchmail = async (req, res) => {
-//   // 2. sending confirm post
-//   const matchMailData = await Noti.getMatchMailData();
-//   if (matchMailData == 0) {
-//     return console.log("nothing to update");
-//   }
-//   console.log("5");
-//   console.log(matchMailData);
-//   const senderData = await Noti.getMatchSenderData();
-//   console.log("6");
-//   console.log(senderData);
-//   const matchIds = [];
-//   matchMailData.map((data) => {
-//     matchIds.push(data.mid);
-//   });
-//   console.log("7");
-//   console.log(matchIds);
-//   // send email
-//   const matchMailResponse = await matchMail(matchMailData, senderData);
-//   console.log("mail sended");
-//   // const updateMatchMailStatus = await Noti.updateMatchMailStatus(matchIds);
-//   console.log("8");
-//   // console.log(updateMatchMailStatus);
-//   console.log("updated");
-
-//   res.json({ status: "ok" });
-// };
-// module.exports = { getmail, getMatchmail };
