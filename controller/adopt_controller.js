@@ -100,7 +100,11 @@ const getAdoptData = async (req, res) => {
       offset
     );
     if (filterData.length > 0) {
-      const filterLength = await Adopt.countAdoptData(kind, region, shelter);
+      const filterLength = await Adopt.countAdoptDataByFilter(
+        kind,
+        region,
+        shelter
+      );
       const maxPage = Math.ceil(filterLength[0].count / limit) - 1;
       if (paging < maxPage) {
         nextPaging = paging + 1;
@@ -111,7 +115,7 @@ const getAdoptData = async (req, res) => {
   // without filter
   if (!(kind && shelter && region)) {
     const adoptData = await Adopt.getAllAdoptData(limit, offset);
-    const adoptLength = await Adopt.countAdoptData();
+    const adoptLength = await Adopt.countAdoptDataByRegion();
     // add paging (if exist)
     const maxPage = Math.ceil(adoptLength[0].count / limit) - 1;
     if (paging < maxPage) {

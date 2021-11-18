@@ -54,10 +54,11 @@ function changeRegion(region) {
 // all adopt post
 getAdoptData(paging);
 
+let adoptData;
 async function getAdoptData() {
   try {
     const response = await fetch(`/api/getAdoptData?paging=${paging}`);
-    const adoptData = await response.json();
+    adoptData = await response.json();
     console.log(adoptData);
     createPost(adoptData.adoptData);
     action.pop();
@@ -123,11 +124,12 @@ applyBtn.addEventListener("click", (e) => {
   }
 });
 
+let filterData;
 async function showFilterPosts(kind, region, shelter) {
   const response = await fetch(
     `/api/getAdoptData?kind=${kind}&region=${region}&shelter=${shelter}&paging=${paging}`
   );
-  const filterData = await response.json();
+  filterData = await response.json();
   console.log("filterData");
   console.log(filterData);
   deleteElement();
@@ -172,11 +174,12 @@ regions.map((r) => {
   });
 });
 
+let regionData;
 async function getRegionData(kind, region, shelter) {
   const response = await fetch(
     `/api/getAdoptData?kind=${kind}&region=${region}&shelter=${shelter}&paging=${paging}`
   );
-  const regionData = await response.json();
+  regionData = await response.json();
   console.log("regionData");
   console.log(regionData);
   deleteElement();
@@ -212,33 +215,37 @@ window.addEventListener("scroll", () => {
       getAdoptData(paging);
     }
     if (action[0] == "filter") {
-      Swal.fire({
-        html: "Loading...",
-        timer: 500,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-          const b = Swal.getHtmlContainer().querySelector("b");
-          timerInterval = setInterval(() => {
-            b.textContent = Swal.getTimerLeft();
-          }, 100);
-        },
-        willClose: () => {
-          clearInterval(timerInterval);
-        },
-      });
-      showFilterPosts(kind, region, shelter);
+      if (filterData.nextPaging) {
+        Swal.fire({
+          html: "Loading...",
+          timer: 500,
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+            const b = Swal.getHtmlContainer().querySelector("b");
+            timerInterval = setInterval(() => {
+              b.textContent = Swal.getTimerLeft();
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          },
+        });
+        showFilterPosts(kind, region, shelter);
+      }
     }
     if (action[0] == "region") {
-      Swal.fire({
-        html: "Loading.",
-        timer: 500,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-      getRegionData(kind, region, shelter);
+      if (regionData.nextPaging) {
+        Swal.fire({
+          html: "Loading.",
+          timer: 500,
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+        getRegionData(kind, region, shelter);
+      }
     }
   }
 });
