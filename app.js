@@ -28,8 +28,8 @@ app.use("/api", [
 
 // page not found 404
 app.use((req, res, next) => {
-  res.status(404).send("Page not exist");
-  //   res.status(404).sendFile(__dirname + "/public/404.html");
+  // res.status(404).send("Page not exist");
+  res.status(404).sendFile(__dirname + "/public/404.html");
 });
 
 // error handling
