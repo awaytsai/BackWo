@@ -203,12 +203,50 @@ const file = document.querySelector("#formFile");
 
 uploadBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  // check if upload images again
-  if (file.value == "") {
-    // update db only
-    updatefield();
+  const address = document.querySelector(".address");
+  const county = document.querySelector(".filtercounty");
+  const date = document.querySelector("#datepicker");
+  const photo = document.querySelector("#formFile");
+  const note = document.querySelector(".note-message");
+
+  if (token == null) {
+    Swal.fire({
+      icon: "info",
+      text: "請先登入或註冊",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/member.html";
+    }, 1600);
+  } else if (county.value == "") {
+    Swal.fire({
+      icon: "info",
+      text: "請填寫走失區域",
+    });
+  } else if (!address.value) {
+    Swal.fire({
+      icon: "info",
+      text: "請填寫走失地點",
+    });
+  } else if (!date.value) {
+    Swal.fire({
+      icon: "info",
+      text: "請填寫走失時間",
+    });
+  } else if (note.value.length > 250) {
+    Swal.fire({
+      icon: "info",
+      text: "字數過多，請勿超過250字",
+    });
   } else {
-    updateWithImage();
+    // check if upload images again
+    if (file.value == "") {
+      // update db only
+      updatefield();
+    } else {
+      updateWithImage();
+    }
   }
 });
 
@@ -223,28 +261,30 @@ async function updatefield() {
   });
   const result = await response.json();
   console.log(result);
-  if (result.message) {
-    if (result.message == "請填寫所有欄位") {
-      // alert fill in all the blank
-      Swal.fire({
-        icon: "info",
-        text: "請填寫所有欄位",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-    if (result.message == "noPostExistById" || result.message == "noaccess") {
-      // alert no access and redirect to profile
-      Swal.fire({
-        icon: "info",
-        text: "頁面不存在",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      setTimeout(() => {
-        window.location.href = "/profile.html";
-      }, 1600);
-    }
+  if (
+    result.message == "請填寫所有欄位" ||
+    result.message == "日期格式錯誤" ||
+    result.message == "字數過多，請勿超過250字"
+  ) {
+    // alert fill in all the blank
+    Swal.fire({
+      icon: "info",
+      text: `${result.message}`,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+  if (result.message == "頁面不存在") {
+    // alert no access and redirect to profile
+    Swal.fire({
+      icon: "info",
+      text: "頁面不存在",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = "/profile.html";
+    }, 1600);
   }
   if (result.status == "updated") {
     // alert success and redirect to profile
@@ -271,10 +311,14 @@ async function updateWithImage() {
   });
   const result = await response.json();
   console.log(result);
-  if (result.message == "請填寫所有欄位") {
+  if (
+    result.message == "請填寫所有欄位" ||
+    result.message == "日期格式錯誤" ||
+    result.message == "字數過多，請勿超過250字"
+  ) {
     Swal.fire({
       icon: "info",
-      text: "請填寫所有欄位",
+      text: `${result.message}`,
       showConfirmButton: false,
       timer: 1500,
     });
@@ -304,7 +348,38 @@ async function updateWithImage() {
   }
 }
 
-function validateNum(input) {
+function validatePhoto(input) {
+  const fileNum = input.files.length;
+  const file1Size = input.files[0].size / 1024 / 1024;
+  let file2Size;
+  if (fileNum > 1) {
+    file2Size = input.files[1].size / 1024 / 1024;
+  }
+  if (fileNum > 2) {
+    Swal.fire({
+      icon: "info",
+      text: "圖片僅限兩張",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFile");
+    uploadInput.value = "";
+  }
+  if (file1Size > 3 || file2Size > 3) {
+    Swal.fire({
+      icon: "info",
+      text: "檔案大小請勿超過3MB",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFile");
+    uploadInput.value = "";
+  } else {
+    preview();
+  }
+}
+
+function validateMorePhoto(input) {
   const fileNum = input.files.length;
   const file1Size = input.files[0].size / 1024 / 1024;
   let file2Size;
