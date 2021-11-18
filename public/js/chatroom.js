@@ -4,14 +4,12 @@ const input = document.querySelector("#chatinput");
 const messages = document.querySelector("#messages");
 const rooms = document.querySelector(".rooms");
 
-let self;
-
-//get query string
 const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());
 const roomId = params.room;
+let self;
 
-// check access (frontent)
+// check access
 if (roomId == "null") {
   Swal.fire({
     icon: "info",
@@ -40,7 +38,6 @@ if (roomId == "0") {
   checkAccess();
 }
 
-// check access (backend)
 async function checkAccess() {
   try {
     const response = await fetch(`/api/chat?room=${roomId}`, {
@@ -53,7 +50,6 @@ async function checkAccess() {
     });
     const usersData = await response.json();
     self = usersData.senderId;
-    console.log(usersData);
     if (usersData.message == "blankroom") {
       console.log("blankroom");
       createBlankElement();
@@ -96,7 +92,6 @@ async function showRoomsAndConnectIO(usersData) {
   const historyData = await getExistingRoomsRecord(usersData);
   // connect socket io
   connectToIo(usersData);
-  console.log(historyData);
   // show history room info
   if (historyData.error) {
     const item = document.createElement("div");
@@ -112,12 +107,21 @@ function connectToIo(usersData) {
   var socket = io();
   // send userid, roomid to server
   socket.emit("joinroom", usersData);
-
+  createReceiverInfo(usersData);
   // listen on message
   chatform.addEventListener("submit", function (e) {
     e.preventDefault();
     let msg = input.value;
-    if (msg) {
+    if (msg.length > 255) {
+      Swal.fire({
+        icon: "info",
+        title: "訊息過長無法傳送",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      input.value = "";
+    }
+    if (msg.length <= 255) {
       socket.emit("chatMessage", msg, usersData);
       input.value = "";
     }
@@ -129,6 +133,14 @@ function connectToIo(usersData) {
   // history message
   socket.on("historymessage", function (historyMessage, usersData) {
     createHistoryMessage(historyMessage, usersData);
+  });
+  socket.on("error", function (errorMessage) {
+    Swal.fire({
+      icon: "info",
+      title: `${errorMessage}`,
+      showConfirmButton: false,
+      timer: 1000,
+    });
   });
 }
 
@@ -147,7 +159,6 @@ function createChatMessage(msg, usersData) {
   time = time.toLocaleString("en-US").split(", ")[1];
   const ampm = time.slice(-3);
   time = time.split(" ")[0].slice(0, -3);
-  console.log(time);
   const item = document.createElement("div");
   // check who said the message
   if (usersData.senderId != self) {
@@ -175,9 +186,8 @@ function createChatMessage(msg, usersData) {
   }
 }
 
-function createHistoryMessage(historyMessage, usersData) {
+function createHistoryMessage(historyMessage) {
   console.log(historyMessage);
-  createReceiverInfo(usersData);
   if (historyMessage.length == 0) {
   }
   historyMessage.reverse().map((message) => {
@@ -192,75 +202,28 @@ function createHistoryMessage(historyMessage, usersData) {
       .split(", ")[1];
     const ampm = time.slice(-3);
     time = time.split(" ")[0].slice(0, -3);
-
     if (message.sender == self) {
-      // print self message(send class)
       messageBox.innerHTML = `
       <div class="message-content send">
         <p>${message.message}</p>
       </div>`;
       messageTime.className = "message-time-send";
       messageTime.innerHTML = `<p>${time} ${ampm}</p>`;
-      // messageBox.classList.add("send");
-
       messages.appendChild(wrapitem);
       wrapitem.appendChild(messageBox);
       wrapitem.appendChild(messageTime);
       messages.scrollTop = messages.scrollHeight;
-
-      // const item = document.createElement("div");
-      // item.classList.add("history-message", "message-box");
-      // let time = new Date(Date.parse(message.time))
-      //   .toLocaleString("en-US")
-      //   .split(", ")[1];
-      // const ampm = time.slice(-3);
-      // time = time.split(" ")[0].slice(0, -3);
-      // if (message.sender == self) {
-      //   // print self message(send class)
-      //   item.innerHTML = `
-      //   <div class="message-content">
-      //     <p>${message.message}</p>
-      //   </div>
-      //   <div class="message-time">
-      //     <p>${time} ${ampm}</p>
-      //   </div>`;
-      //   item.classList.add("send");
-      //   messages.appendChild(item);
-      //   messages.scrollTop = messages.scrollHeight;
     } else {
-      // const userBox = document.createElement("div");
-      // userBox.className = "message-sender receive";
-      // userBox.innerHTML = `
-      // <img class="memberpic" src="${usersData.receiverPicture}">
-      // <div>${usersData.receiverName}</div>`;
       messageBox.innerHTML = `
       <div class="message-content receive">
       <p>${message.message}</p>
       </div>`;
       messageTime.innerHTML = `<p>${time} ${ampm}</p>`;
       messageTime.className = "message-time-receive";
-
       messages.appendChild(wrapitem);
-      // wrapitem.appendChild(userBox);
       wrapitem.appendChild(messageBox);
       wrapitem.appendChild(messageTime);
       messages.scrollTop = messages.scrollHeight;
-
-      // prinet others message(receive class)
-      // item.innerHTML = `
-      // <div class="message-sender">
-      //   <img class="memberpic" src="${usersData.receiverPicture}">
-      //   <span>${usersData.receiverName}</span>
-      // </div>
-      // <div class="message-content">
-      //   <p>${message.message}</p>
-      // </div>
-      // <div class="message-time">
-      //   <p>${time} ${ampm}</p>
-      // </div>`;
-      // item.classList.add("receive");
-      // messages.appendChild(item);
-      // messages.scrollTop = messages.scrollHeight;
     }
   });
 }

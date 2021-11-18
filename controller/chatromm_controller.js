@@ -12,7 +12,11 @@ const getChatroomAccess = async (req, res) => {
   const roomids = room.split("-", 2);
   const user2Id = parseInt(roomids.filter((id) => id != userId)[0]);
   const checkRoom = roomids.filter((id) => id == userId);
-  if (checkRoom.length == 0) {
+  if (
+    checkRoom.length == 0 ||
+    roomids[0] == roomids[1] ||
+    roomids[0] > roomids[1]
+  ) {
     res.json({ message: "noaccess" });
     return;
   }
@@ -35,20 +39,17 @@ const getChatroomAccess = async (req, res) => {
     receiverPicture: receiverData[0].picture,
     roomId: room,
   };
-  res.json(formatUserData);
+  return res.json(formatUserData);
 };
 
 const getChatroomRecord = async (req, res) => {
   const userId = req.query.uid;
   // check existing room_id by uid
   let existingIds = await Chat.getExistingRoomIds(userId);
-  // console.log(existingIds);
   if (existingIds.length == 0) {
     res.json({ error: "no existing rooms" });
     return;
   }
-  console.log("existingIds");
-  console.log(existingIds);
   // get other users ids
   existingIds.map((data) => {
     let ids = data.room_id.split("-");
@@ -58,16 +59,12 @@ const getChatroomRecord = async (req, res) => {
       }
     });
   });
-  console.log("ids");
-  console.log(existingIds);
   // get last records by roomids
   const ids = existingIds.map((data) => Object.values(data));
   const roomRecords = await Chat.getRoomLastRecord(ids);
-  console.log(roomRecords);
-  res.json(roomRecords);
+  return res.json(roomRecords);
 };
 
-// get latest room_id
 const getUserLatestRoomId = async (req, res) => {
   const userId = req.decoded.payload.id;
   const latestRoomId = await Chat.getLatestRoomId(userId);
