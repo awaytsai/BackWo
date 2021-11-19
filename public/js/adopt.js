@@ -79,10 +79,12 @@ function createPost(adoptData) {
     a.href = data.link;
     a.target = "_blank";
     img.src = data.album_file;
+    img.classList = "adopt-image";
+    img.onerror = imgError(img);
     if (!data.album_file) {
       img.src =
         "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
-      img.className = "default";
+      img.classList.add("default");
     }
     title.className = "post-title";
     title.textContent = data.animal_place;
@@ -98,6 +100,11 @@ function createPost(adoptData) {
     .split("T")[0]
     .split(", ")[0];
   updateTime.textContent = `更新時間: ${time}`;
+}
+
+function imgError(img) {
+  img.src = "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
+  img.classList.add("default");
 }
 
 function deleteElement() {
