@@ -28,7 +28,12 @@ const getRoomLastRecord = async (ids) => {
   const result = [];
   for (let i = 0; i < ids.length; i++) {
     const [roomRecord] = await db.query(
-      "SELECT c.sender, c.receiver, c.message, c.time, c.room_id, u.name, u.picture FROM chat as c INNER JOIN user as u ON c.receiver = u.id WHERE c.room_id = ? and c.receiver = ? ORDER BY time DESC LIMIT 1;",
+      `SELECT c.sender, c.receiver, c.message, c.time, c.room_id, u.name, u.picture 
+      FROM chat as c ,user as u 
+      WHERE c.room_id = ? 
+      and u.id = ?
+      ORDER BY time 
+      DESC LIMIT 1 ;`,
       ids[i]
     );
     result.push(roomRecord);
