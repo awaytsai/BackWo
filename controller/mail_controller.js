@@ -54,7 +54,7 @@ const jobMatch = schedule.scheduleJob(ruleMatch, async () => {
   console.log(senderData);
   const matchIds = [];
   matchMailData.map((data) => {
-    matchIds.push(data.mid);
+    matchIds.push(data.id);
   });
   console.log(matchIds);
   // send email

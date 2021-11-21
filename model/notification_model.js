@@ -81,11 +81,12 @@ const updateNotiMailStatus = async (id) => {
 
 const getMatchMailData = async () => {
   const [notification] = await db.query(
-    `SELECT u.name, u.email, u.picture, m.id AS mid, m.thank_message, m.sender, m.find_owner_id FROM 
-    (SELECT id, thank_message, sender, find_owner_id FROM match_list 
-    WHERE status ='pending' and mail_status is null) AS m
-    INNER JOIN user AS u
-    ON u.id = m.sender ; `
+    `SELECT m.id, m.thank_message, m.find_owner_id, p.user_id, u.name, u.email 
+    FROM match_list  AS m, pet_post AS p, user AS u
+    WHERE m.status ='pending' 
+    AND m.mail_status is null
+    AND p.id= m.find_owner_id
+    AND u.id=p.user_id ; `
   );
   return notification;
 };
