@@ -1,29 +1,7 @@
 const db = require("../db");
 const crypto = require("crypto");
 const { jwtTokenGenerater, userinfoFormat } = require("../util/auth");
-
-// const checkExistedEmail = async (email) => {
-//   const [existingEmail] = await db.query(
-//     "SELECT count(email) as count FROM user WHERE email = ? ;",
-//     [email]
-//   );
-//   return existingEmail;
-// };
-
-// const insertUserData = async (provider, name, email, hashPassword, picture) => {
-//   const [existingEmail] = await db.query(
-//     "INSERT INTO user(provider, name, email, password, picture) VALUES (?,?,?,?,?) ;",
-//     [provider, name, email, hashPassword, picture]
-//   );
-//   return existingEmail;
-// };
-
-const getUserDataByEmail = async (email) => {
-  const [userData] = await db.query("SELECT * FROM user WHERE email = ?;", [
-    email,
-  ]);
-  return userData;
-};
+const fetch = require("node-fetch");
 
 const getUserData = async (id) => {
   const [userData] = await db.query("SELECT * FROM user WHERE id = ?;", [id]);
@@ -132,7 +110,7 @@ const getFacebookProfile = async function (access_token) {
     const response = await fetch(
       `https://graph.facebook.com/v11.0/me?fields=id,name,email,picture&access_token=${access_token}`
     );
-    const data = response.json();
+    const data = await response.json();
     console.log(data);
     return data;
   } catch (e) {
@@ -146,7 +124,7 @@ const facebookSignIn = async (id, name, email, picture) => {
   try {
     await conn.query("START TRANSACTION");
     const [users] = await conn.query(
-      "SELECT id FROM user WHERE email = ? AND provider = 'facebook' FOR UPDATE ;",
+      "SELECT id FROM user WHERE email = ? FOR UPDATE ;",
       [email]
     );
     const provider = "facebook";
@@ -158,6 +136,11 @@ const facebookSignIn = async (id, name, email, picture) => {
         [provider, name, email, picture]
       );
       userId = result.insertId;
+    } else {
+      // Update existed user
+      userId = users[0].id;
+      const queryStr = "UPDATE user SET picture = ?, name = ? WHERE id = ?";
+      await conn.query(queryStr, [picture, name, userId]);
     }
     const payload = {
       id: userId,
@@ -180,9 +163,6 @@ const facebookSignIn = async (id, name, email, picture) => {
 };
 
 module.exports = {
-  // checkExistedEmail,
-  // insertUserData,
-  // getUserDataByEmail,
   getUserData,
   getPendingUserData,
   signUp,

@@ -47,7 +47,7 @@ async function authMiddlewareforChat(req, res, next) {
 }
 
 function userinfoFormat(token, payload) {
-  const expiresIn = "1h";
+  const expiresIn = "24h";
   const registedResponse = {
     access_token: token,
     access_expired: expiresIn,

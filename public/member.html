@@ -39,21 +39,14 @@
     <link rel="stylesheet" href="/css/member.css" />
   </head>
   <body>
-    <script>
-      window.fbAsyncInit = function () {
-        FB.init({
-          appId: "700343897588452",
-          autoLogAppEvents: true,
-          xfbml: true,
-          version: "v12.0",
-        });
-      };
-    </script>
+    <!-- Load the JS SDK asynchronously -->
+    <div id="fb-root"></div>
     <script
       async
       defer
       crossorigin="anonymous"
-      src="https://connect.facebook.net/en_US/sdk.js"
+      src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v12.0&appId=700343897588452&autoLogAppEvents=1"
+      nonce="VrFKgkzf"
     ></script>
     <header>
       <div class="header-wrap">
@@ -109,6 +102,7 @@
                   data-layout="default"
                   data-auto-logout-link="false"
                   data-use-continue-as="false"
+                  onlogin="checkLoginState();"
                 ></div>
                 <p class="switch-signup">還沒加入嗎？去註冊</p>
               </form>
@@ -164,29 +158,16 @@
           <div class="contact">聯絡我們</div>
           <div class="contact-link">
             <a href=""><img src="/images/fb_icon.png" /></a>
-            <a href=""><img src="/images/email_icon.png" /></a>
+            <a href="mailto:backwo.tw@gmail.com"
+              ><img src="/images/email_icon.png"
+            /></a>
           </div>
         </div>
       </div>
       <div class="copyright">Copyright © 2021 BackWo</div>
     </footer>
-    <!-- Load the JS SDK asynchronously -->
-    <div id="fb-root"></div>
-    <script
-      async
-      defer
-      crossorigin="anonymous"
-      src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v12.0&appId=700343897588452&autoLogAppEvents=1"
-      nonce="VrFKgkzf"
-    ></script>
-    <!--facebook-->
-    <script
-      async
-      defer
-      crossorigin="anonymous"
-      src="https://connect.facebook.net/en_US/sdk.js"
-    ></script>
     <script src="/js/member.js"></script>
     <script src="/js/chat.js"></script>
+    <script src="js/fblogin.js"></script>
   </body>
 </html>
