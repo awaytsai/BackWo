@@ -4,8 +4,8 @@ const Adopt = require("../model/adopt_model");
 const shelterList = require("../public/data/adopt_shelter.json");
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 18;
-rule.minute = 00;
+rule.hour = 20;
+rule.minute = 01;
 rule.tz = "Asia/Taipei";
 
 const job = schedule.scheduleJob(rule, async () => {
