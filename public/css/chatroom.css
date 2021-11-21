@@ -135,6 +135,7 @@ main {
   margin: 10px 0 10px 30px;
   width: 60px;
   height: 60px;
+  border-radius: 50%;
 }
 .username {
   margin: 0 0 0 20px;
@@ -174,6 +175,10 @@ main {
 .room-time p {
   margin: 0 5px;
 }
+.room-user img {
+  border-radius: 50%;
+}
+
 .room-time {
   font-size: 14px;
 }

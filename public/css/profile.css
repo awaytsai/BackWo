@@ -81,6 +81,7 @@ main {
 /* profile */
 .userPic {
   width: 80px;
+  border-radius: 50%;
 }
 .welcome-message {
   padding: 20px 0;
@@ -303,6 +304,7 @@ main {
   width: 35px;
   height: 35px;
   margin: 0 10px 5px 0;
+  border-radius: 50%;
 }
 
 .thankyou-message {

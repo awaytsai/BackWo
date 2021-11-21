@@ -146,6 +146,7 @@ main {
 }
 .finderinfo img {
   width: 35px;
+  border-radius: 50%;
 }
 .finder-name span {
   margin: 0 10px;
