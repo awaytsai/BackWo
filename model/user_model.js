@@ -75,6 +75,9 @@ const nativeSignIn = async (email, password) => {
     const [users] = await conn.query("SELECT * FROM user WHERE email = ? ;", [
       email,
     ]);
+    if (users.length == 0) {
+      return { error: "email 輸入錯誤" };
+    }
     const user = users[0];
     const hashPassword = crypto
       .createHash("sha256")

@@ -39,7 +39,9 @@ const signIn = async (req, res) => {
   }
   try {
     const result = await User.nativeSignIn(email, password);
-    console.log(result);
+    if (result.error) {
+      return res.status(400).json({ error: result.error });
+    }
     return res.status(200).json(result);
   } catch (error) {
     return { error };
