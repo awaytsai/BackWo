@@ -139,8 +139,9 @@ const facebookSignIn = async (id, name, email, picture) => {
     } else {
       // Update existed user
       userId = users[0].id;
-      const queryStr = "UPDATE user SET picture = ?, name = ? WHERE id = ?";
-      await conn.query(queryStr, [picture, name, userId]);
+      const queryStr =
+        "UPDATE user SET provider = ?, picture = ?, name = ? WHERE id = ?";
+      await conn.query(queryStr, [provider, picture, name, userId]);
     }
     const payload = {
       id: userId,
