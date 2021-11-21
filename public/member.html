@@ -39,6 +39,22 @@
     <link rel="stylesheet" href="/css/member.css" />
   </head>
   <body>
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "700343897588452",
+          autoLogAppEvents: true,
+          xfbml: true,
+          version: "v12.0",
+        });
+      };
+    </script>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
     <header>
       <div class="header-wrap">
         <div class="logo-wrap">
@@ -64,64 +80,72 @@
     <div class="infobar">Back Wo，讓毛小孩們回到自己的窩</div>
     <main>
       <div class="main">
-        <div class="form-message"></div>
         <div class="sign-wrap">
-          <!--signin-->
-          <form class="signin" method="POST" action="/api/member/signin">
-            <h2>SIGN IN</h2>
-            <label>Email</label>
-            <input
-              type="text"
-              name="email"
-              placeholder="test@gmail.com"
-              id="signinemail"
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="e.g., ********"
-              id="signinpassword"
-            />
-            <button>Submit</button>
-            <!-- <div class="separator">
-              <div class="line"></div>
-              <h5>or</h5>
-              <div class="line"></div>
+          <div class="flipper">
+            <div class="front">
+              <!--signin-->
+              <form class="signin" method="POST" action="/api/member/signin">
+                <h2>登入</h2>
+                <label>Email</label>
+                <input
+                  type="text"
+                  name="email"
+                  placeholder="test@gmail.com"
+                  id="signinemail"
+                />
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="e.g., ********"
+                  id="signinpassword"
+                />
+                <button>Submit</button>
+                <div
+                  class="fb-login-button"
+                  data-width=""
+                  data-size="large"
+                  data-button-type="continue_with"
+                  data-layout="default"
+                  data-auto-logout-link="false"
+                  data-use-continue-as="false"
+                ></div>
+                <p class="switch-signup">還沒加入嗎？去註冊</p>
+              </form>
             </div>
-            <fb:login-button
-              scope="public_profile,email"
-              onlogin="checkLoginState();"
-            >
-            </fb:login-button>
-            <button class="fb-signout">signout</button> -->
-          </form>
-          <!--signup-->
-          <form class="signup" method="POST" action="/api/member/signup">
-            <h2>SIGN UP</h2>
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="王小明"
-              id="signupname"
-            />
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="test@gmail.com"
-              id="signupemail"
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="At least 6 characters"
-              id="signuppassword"
-            />
-            <button>Submit</button>
-          </form>
+            <div class="back">
+              <!--signup-->
+              <form class="signup" method="POST" action="/api/member/signup">
+                <h2>註冊</h2>
+                <label>姓名</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="王小明"
+                  id="signupname"
+                />
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="test@gmail.com"
+                  id="signupemail"
+                />
+                <label>密碼</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="At least 6 characters"
+                  id="signuppassword"
+                />
+                <button>Submit</button>
+                <p class="switch-login">已經註冊嗎？去登入</p>
+              </form>
+            </div>
+          </div>
+          <div class="main-image">
+            <img src="images/Animal shelter-rafiki.png" />
+          </div>
         </div>
       </div>
     </main>
@@ -146,6 +170,15 @@
       </div>
       <div class="copyright">Copyright © 2021 BackWo</div>
     </footer>
+    <!-- Load the JS SDK asynchronously -->
+    <div id="fb-root"></div>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v12.0&appId=700343897588452&autoLogAppEvents=1"
+      nonce="VrFKgkzf"
+    ></script>
     <!--facebook-->
     <script
       async

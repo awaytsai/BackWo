@@ -80,20 +80,23 @@ main {
 
 /* member */
 .main {
-  margin: 150px 0;
+  /* margin: 150px 0; */
 }
-
-.form-message {
-  margin-left: 50px;
-  color: brown;
+.main-image {
+  display: flex;
+  justify-content: center;
+  margin-left: 400px;
+  max-height: 600px;
 }
 .sign-wrap {
   display: flex;
   width: 100%;
-  height: 300px;
+  height: 550px;
   justify-content: center;
-  align-items: center;
-  margin: 100px 0 80px;
+  margin: 50px 0;
+  /* align-items: center; */
+  /* margin: auto; */
+  /* margin: 50px 0 0 100px; */
 }
 
 .signin,
@@ -104,7 +107,7 @@ main {
   font-size: 18px;
   box-sizing: border-box;
   width: 360px;
-  height: 420px;
+  height: 500px;
   border: solid 1px #979797;
   padding: 20px;
   border-radius: 20px;
@@ -153,6 +156,49 @@ button {
   flex: 1;
   height: 1px;
   background-color: #000;
+}
+
+.switch-login,
+.switch-signup {
+  color: #888;
+}
+.switch-login {
+  margin: 20px 0 0 0;
+}
+.switch-signup:hover,
+.switch-login:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.flipper {
+  padding: 30px;
+  position: relative;
+  /* background: #ffffff; */
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+}
+.front,
+.back {
+  position: absolute;
+  padding: 10px 30px;
+  top: 0;
+  left: 0;
+  right: 0;
+  backface-visibility: hidden;
+}
+
+.front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+.back {
+  transform: rotateY(180deg);
+}
+.flip {
+  transform: rotateY(180deg);
 }
 
 /* footer */

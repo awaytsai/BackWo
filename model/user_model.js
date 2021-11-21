@@ -127,6 +127,58 @@ const nativeSignIn = async (email, password) => {
   }
 };
 
+const getFacebookProfile = async function (access_token) {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/v11.0/me?fields=id,name,email,picture&access_token=${access_token}`
+    );
+    const data = response.json();
+    console.log(data);
+    return data;
+  } catch (e) {
+    console.log(e);
+    throw "Permissions Error: facebook access token is wrong";
+  }
+};
+
+const facebookSignIn = async (id, name, email, picture) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.query("START TRANSACTION");
+    const [users] = await conn.query(
+      "SELECT id FROM user WHERE email = ? AND provider = 'facebook' FOR UPDATE ;",
+      [email]
+    );
+    const provider = "facebook";
+    let userId;
+    if (users.length === 0) {
+      // insert db
+      const [result] = await conn.query(
+        "INSERT INTO user(provider, name, email, picture) VALUES (?,?,?,?) ;",
+        [provider, name, email, picture]
+      );
+      userId = result.insertId;
+    }
+    const payload = {
+      id: userId,
+      name: name,
+      email: email,
+      provider: provider,
+      picture: picture,
+    };
+    const token = await jwtTokenGenerater(payload);
+    const userResult = userinfoFormat(token, payload);
+
+    await conn.query("COMMIT");
+    return userResult;
+  } catch (error) {
+    await conn.query("ROLLBACK");
+    return { error };
+  } finally {
+    await conn.release();
+  }
+};
+
 module.exports = {
   // checkExistedEmail,
   // insertUserData,
@@ -135,4 +187,6 @@ module.exports = {
   getPendingUserData,
   signUp,
   nativeSignIn,
+  getFacebookProfile,
+  facebookSignIn,
 };

@@ -80,6 +80,29 @@ const signIn = async (req, res) => {
   }
 };
 
+const facebookSignIn = async (req, res) => {
+  const { access_token } = req.body;
+  // check access token
+  if (!access_token) {
+    res.status(400).json({ error: "no access token" });
+    return;
+  }
+  try {
+    // get fb profile data
+    const profile = await User.getFacebookProfile(access_token);
+    const { id, name, email, picture } = profile;
+    if (!id || !name || !email) {
+      res.status(400).json({ error: "no access token" });
+      return;
+    }
+    // signin
+    const result = await User.facebookSignIn(id, name, email, picture);
+    return result;
+  } catch (error) {
+    return { error: error };
+  }
+};
+
 // const signIn = async (req, res) => {
 //   const { email, password } = req.body;
 //   if (!email || !password) {

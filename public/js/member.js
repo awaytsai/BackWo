@@ -127,3 +127,15 @@ async function signIn(body) {
     console.log(err);
   }
 }
+
+const switchSignup = document.querySelector(".switch-signup");
+const switchLogin = document.querySelector(".switch-login");
+const flip = document.querySelector(".flipper");
+switchSignup.addEventListener("click", (e) => {
+  e.preventDefault();
+  flip.classList.toggle("flip");
+});
+switchLogin.addEventListener("click", (e) => {
+  e.preventDefault();
+  flip.classList.toggle("flip");
+});
