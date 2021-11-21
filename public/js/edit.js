@@ -222,17 +222,17 @@ uploadBtn.addEventListener("click", (e) => {
   } else if (county.value == "") {
     Swal.fire({
       icon: "info",
-      text: "請填寫走失區域",
+      text: "請填寫走失/尋獲區域",
     });
   } else if (!address.value) {
     Swal.fire({
       icon: "info",
-      text: "請填寫走失地點",
+      text: "請填寫走失/尋獲地點",
     });
   } else if (!date.value) {
     Swal.fire({
       icon: "info",
-      text: "請填寫走失時間",
+      text: "請填寫走失/尋獲時間",
     });
   } else if (note.value.length > 250) {
     Swal.fire({

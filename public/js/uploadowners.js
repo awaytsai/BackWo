@@ -65,17 +65,17 @@ async function uploadPost() {
     } else if (county.value == "") {
       Swal.fire({
         icon: "info",
-        text: "請填寫走失區域",
+        text: "請填寫尋獲區域",
       });
     } else if (!address.value) {
       Swal.fire({
         icon: "info",
-        text: "請填寫走失地點",
+        text: "請填寫尋獲地點",
       });
     } else if (!date.value) {
       Swal.fire({
         icon: "info",
-        text: "請填寫走失時間",
+        text: "請填寫尋獲時間",
       });
     } else if (!photo.value) {
       Swal.fire({
@@ -126,7 +126,7 @@ async function uploadPost() {
 function alertLoading() {
   Swal.fire({
     html: "Loading...",
-    timer: 1000,
+    timer: 2000,
     timerProgressBar: true,
     didOpen: () => {
       Swal.showLoading();
@@ -223,28 +223,28 @@ function validatePhoto(input) {
   if (fileNum > 1) {
     file2Size = input.files[1].size / 1024 / 1024;
   }
-  // if (fileNum > 2) {
-  //   Swal.fire({
-  //     icon: "info",
-  //     text: "圖片僅限兩張",
-  //     showConfirmButton: true,
-  //     timer: 1500,
-  //   });
-  //   const uploadInput = document.querySelector("#formFile");
-  //   uploadInput.value = "";
-  // }
-  // if (file1Size > 3 || file2Size > 3) {
-  //   Swal.fire({
-  //     icon: "info",
-  //     text: "檔案大小請勿超過3MB",
-  //     showConfirmButton: true,
-  //     timer: 1500,
-  //   });
-  //   const uploadInput = document.querySelector("#formFile");
-  //   uploadInput.value = "";
-  // } else {
-  //   preview();
-  // }
+  if (fileNum > 2) {
+    Swal.fire({
+      icon: "info",
+      text: "圖片僅限兩張",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFile");
+    uploadInput.value = "";
+  }
+  if (file1Size > 3 || file2Size > 3) {
+    Swal.fire({
+      icon: "info",
+      text: "檔案大小請勿超過3MB",
+      showConfirmButton: true,
+      timer: 1500,
+    });
+    const uploadInput = document.querySelector("#formFile");
+    uploadInput.value = "";
+  } else {
+    preview();
+  }
 }
 
 function validateMorePhoto(input) {

@@ -18,7 +18,7 @@ const {
   isValidDate,
 } = require("../util/util");
 
-const uploadFindPost = async (err, req, res) => {
+const uploadFindPost = async (req, res) => {
   const { kind, color, county, district, address, date, note } = req.body;
   const param = req.originalUrl.split("/")[2];
   let person = checkPerson(param);
