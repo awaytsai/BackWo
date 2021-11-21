@@ -79,7 +79,7 @@ nav a:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 150px 0;
+  margin-top: 50px;
 }
 .nofound h1 {
   font-size: 100px;
