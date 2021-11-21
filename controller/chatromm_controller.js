@@ -10,13 +10,13 @@ const getChatroomAccess = async (req, res) => {
   const userId = req.decoded.payload.id;
   // check if user is able to chat in room
   const roomids = room.split("-", 2);
+  if (roomids[0] == roomids[1]) {
+    res.json({ message: "noaccess" });
+    return;
+  }
   const user2Id = parseInt(roomids.filter((id) => id != userId)[0]);
   const checkRoom = roomids.filter((id) => id == userId);
-  if (
-    checkRoom.length == 0 ||
-    roomids[0] == roomids[1] ||
-    roomids[0] > roomids[1]
-  ) {
+  if (checkRoom.length == 0 || parseInt(roomids[0]) > parseInt(roomids[1])) {
     res.json({ message: "noaccess" });
     return;
   }

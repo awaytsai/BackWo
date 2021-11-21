@@ -112,6 +112,14 @@ function connectToIo(usersData) {
   chatform.addEventListener("submit", function (e) {
     e.preventDefault();
     let msg = input.value;
+    if (msg == "") {
+      Swal.fire({
+        icon: "info",
+        title: "請輸入訊息",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
     if (msg.length > 255) {
       Swal.fire({
         icon: "info",
@@ -121,7 +129,7 @@ function connectToIo(usersData) {
       });
       input.value = "";
     }
-    if (msg.length <= 255) {
+    if (msg.length <= 255 && msg !== "") {
       socket.emit("chatMessage", msg, usersData);
       input.value = "";
     }
@@ -258,7 +266,6 @@ function createExistingRooms(historyData) {
 const chatArea = document.querySelector(".chat-area");
 
 function createReceiverInfo(usersData) {
-  console.log("no history");
   const div = document.createElement("div");
   const wrapdiv = document.createElement("div");
   const img = document.createElement("img");
