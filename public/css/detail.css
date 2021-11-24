@@ -137,6 +137,8 @@ main {
 }
 
 .info {
+  display: flex;
+  flex-wrap: wrap;
   color: #333;
   margin: 10px 0;
 }
@@ -144,8 +146,12 @@ main {
 .info span {
   font-weight: 500;
   color: #777;
+  margin-right: 5px;
 }
 
+.note {
+  margin-bottom: 10px;
+}
 .finderinfo {
   display: flex;
   align-items: center;
@@ -154,14 +160,22 @@ main {
 
 .finderinfo img {
   width: 35px;
-  margin: 0 10px 0 0;
+  /* margin: 0 10px 0 0; */
   border-radius: 50%;
+}
+.finder-name {
+  display: flex;
+  align-items: center;
+}
+.finder-name p {
+  margin: 0 8px;
 }
 
 .finder-name span {
   font-weight: 500;
   color: #777;
 }
+
 .check-desc {
   margin: 20px 10px;
   font-size: 14px;
