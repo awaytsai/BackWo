@@ -3,32 +3,54 @@ const currentUrl = location.href;
 const queryString = currentUrl.split("?id=");
 const id = queryString[1];
 const token = localStorage.getItem("access_token");
-const person = location.href.split("/f")[1].split(".")[0].split("/")[0];
-console.log(person);
+// const person = location.href.split("/f")[1].split(".")[0].split("/")[0];
+// console.log(person);
 
+const urlParam = window.location.href;
+let person;
 getPostDetail();
+
+function checkPerson(urlParam) {
+  if (urlParam.includes("findowners")) {
+    person = "findowners";
+  }
+  if (urlParam.includes("findpets")) {
+    person = "findpets";
+  }
+}
 
 // render by id
 async function getPostDetail() {
   try {
-    const fetchData = await fetch(`/api/f${person}/detail?id=${id}`, {
+    checkPerson(urlParam);
+    const fetchData = await fetch(`/api/${person}/detail?id=${id}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     const data = await fetchData.json();
+    if (data.message) {
+      Swal.fire({
+        icon: "info",
+        text: "頁面不存在",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setTimeout(() => {
+        window.location.href = `/${person}.html`;
+      }, 1600);
+    }
     console.log(data);
     let time = new Date(Date.parse(data.formatData.date))
       .toLocaleString("en-US")
       .split(", ")[0];
     data.formatData.date = time;
     console.log(time);
-    // check person
     if (data.formatData.roomId) {
-      // check if user login or not
+      // user login
       if (data.formatData.roomId == "null") {
-        // element with self post
+        // self post
         createElementSelfPost(data);
       } else {
         // element with roomid
@@ -36,7 +58,7 @@ async function getPostDetail() {
         createElement(data, roomIdHref);
       }
     } else {
-      // element with redirect href
+      // user not login
       const href = `/chatroom.html`;
       createElement(data, href);
     }
@@ -46,82 +68,34 @@ async function getPostDetail() {
 }
 
 function createElement(data, href) {
-  console.log(data);
-  if (person == "indowners") {
+  if (person == "findowners") {
     const name = "協尋者: ";
-    const parentDiv = document.querySelector(".info-wrap");
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <div>
-      <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
-      <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
-      <div class="info"><span>地點 : </span>${data.formatData.fullAddress}</div>
-      <div class="info"><span>時間 : </span>${data.formatData.date}</div>
-      <div class="info"><span>備註 : </span>${data.formatData.note}</div>
-    </div>
-    <div class="finderinfo">
-      <div><img src="${data.formatData.postUserPic}"/></div>
-      <div class="finder-name"><span>${name}</span>${data.formatData.postUserName}</div>
-      <div class=chat-button>
-        <a href="${href}">傳送訊息</a>
-      </div>
-    </div>
-    <div class="match-button">
-      <a href="/checkmatch.html?id=${data.formatData.id}">送出比對</a>
-      <p class="check-desc">請先和協尋者聯絡，確認為自己的寵物後，再請按下送出比對。</p>
-    </div>
-    `;
-    parentDiv.appendChild(div);
-    createCarousel(data.photoData);
-  } else {
-    const parentDiv = document.querySelector(".info-wrap");
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <div>
-        <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
-        <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
-        <div class="info"><span>地點 : </span>${data.formatData.fullAddress}</div>
-        <div class="info"><span>時間 : </span>${data.formatData.date}</div>
-        <div class="info"><span>備註 : </span>${data.formatData.note}</div>
-      </div>
-      <div class="finderinfo">
-        <div><img src="${data.formatData.postUserPic}"/></div>
-        <div class="finder-name"><span>飼主: </span>${data.formatData.postUserName}</div>
-        <div class=chat-button>
-          <a href="${href}">傳送訊息</a>
-        </div>
-      </div>
-    `;
-    parentDiv.appendChild(div);
-    createCarousel(data.photoData);
+    createBreedElement(data);
+    createfinderElement(data, name);
+    createChatElement(href);
+    createMatchElement(data);
+    createPhoto(data.photoData);
+  }
+  if (person == "findpets") {
+    const name = "飼主: ";
+    createBreedElement(data);
+    createfinderElement(data, name);
+    createChatElement(href);
+    createPhoto(data.photoData);
   }
 }
 
 function createElementSelfPost(data) {
   let name = "飼主: ";
-  if (person == "indowners") {
+  if (person == "findowners") {
     name = "協尋者: ";
   }
-  const div = document.createElement("div");
-  div.className = "photo-info-wrap";
-  const parentDiv = document.querySelector(".info-wrap");
-  div.innerHTML = `
-    <div>
-      <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
-      <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
-      <div class="info"><span>地點 : </span>${data.formatData.fullAddress}</div>
-      <div class="info"><span>時間 : </span>${data.formatData.date}</div>
-      <div class="info"><span>備註 : </span>${data.formatData.note}</div>
-    </div>
-    <div class="finderinfo">
-      <div><img src="${data.formatData.postUserPic}"/></div>
-      <div class="finder-name"><span>${name} </span>${data.formatData.postUserName}</div>
-    </div>`;
-  parentDiv.appendChild(div);
-  createCarousel(data.photoData);
+  createBreedElement(data);
+  createfinderElement(data, name);
+  createPhoto(data.photoData);
 }
 
-function createCarousel(data) {
+function createPhoto(data) {
   const carousel = document.querySelector("#carouselExampleControls");
   if (data.length < 2) {
     carousel.innerHTML = "";
@@ -144,4 +118,46 @@ function createCarousel(data) {
     const firstCard = document.querySelectorAll(".carousel-item");
     firstCard[0].classList.add("active");
   }
+}
+
+function createBreedElement(data) {
+  const breedDiv = document.querySelector(".breed");
+  const colorDiv = document.querySelector(".color");
+  const locationDiv = document.querySelector(".location");
+  const dateDiv = document.querySelector(".date");
+  const noteDiv = document.querySelector(".note");
+  breedDiv.textContent = `${data.formatData.breed}`;
+  colorDiv.textContent = `${data.formatData.color}`;
+  locationDiv.textContent = `${data.formatData.fullAddress}`;
+  dateDiv.textContent = `${data.formatData.date}`;
+  noteDiv.textContent = `${data.formatData.note}`;
+}
+
+function createfinderElement(data, name) {
+  const finderImg = document.querySelector(".finderinfo-img");
+  const finderName = document.querySelector(".finder-name");
+  const span = document.createElement("span");
+  const p = document.createElement("p");
+  finderImg.src = `${data.formatData.postUserPic}`;
+  span.textContent = `${name}`;
+  p.className = "name";
+  p.textContent = `${data.formatData.postUserName}`;
+  finderName.appendChild(span);
+  finderName.appendChild(p);
+}
+
+function createChatElement(href) {
+  const chatBtn = document.querySelector(".chat-button");
+  const a = document.createElement("a");
+  a.textContent = `傳送訊息`;
+  a.href = `${href}`;
+  chatBtn.appendChild(a);
+}
+
+function createMatchElement(data) {
+  const matchBtn = document.querySelector(".match-button");
+  const a = document.createElement("a");
+  a.href = `/checkmatch.html?id=${data.formatData.id}`;
+  a.textContent = `送出比對`;
+  matchBtn.appendChild(a);
 }

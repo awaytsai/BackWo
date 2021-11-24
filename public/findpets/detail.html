@@ -59,29 +59,6 @@
           class="carousel slide"
           data-bs-ride="carousel"
         >
-          <!-- <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img
-                src="https://d3271x2nhsfyjz.cloudfront.net/findowners/金.jpeg-1636884172115"
-                class="d-block w-100"
-                alt="..."
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="https://d3271x2nhsfyjz.cloudfront.net/findowners/金.jpeg-1636884172115"
-                class="d-block w-100"
-                alt="..."
-              />
-            </div>
-            <div class="carousel-item">
-              <img
-                src="https://d3271x2nhsfyjz.cloudfront.net/findowners/金.jpeg-1636884172115"
-                class="d-block w-100"
-                alt="..."
-              />
-            </div>
-          </div> -->
           <button
             class="carousel-control-prev"
             type="button"
@@ -102,27 +79,39 @@
           </button>
         </div>
         <div class="info-wrap">
-          <!-- <div>
-            <div class="info"><span>品種 : </span>${data.formatData.breed}</div>
-            <div class="info"><span>顏色 : </span>${data.formatData.color}</div>
+          <div class="pet-info-wrap">
             <div class="info">
-              <span>地點 : </span>${data.formatData.fullAddress}
+              <span>品種 : </span>
+              <p class="breed"></p>
             </div>
-            <div class="info"><span>時間 : </span>${data.formatData.date}</div>
-            <div class="info"><span>備註 : </span>${data.formatData.note}</div>
+            <div class="info">
+              <span>顏色 : </span>
+              <p class="color"></p>
+            </div>
+            <div class="info">
+              <span>地點 : </span>
+              <p class="location"></p>
+            </div>
+            <div class="info">
+              <span>時間 : </span>
+              <p class="date"></p>
+            </div>
+            <div class="info">
+              <span>備註 : </span>
+              <p class="note"></p>
+            </div>
           </div>
           <div class="finderinfo">
-            <div><img src="${data.formatData.postUserPic}" /></div>
+            <div>
+              <img class="finderinfo-img" src="" />
+            </div>
             <div class="finder-name">
-              <span>Finder Name: </span>${data.formatData.postUserName}
+              <span> </span>
+              <p class="name"></p>
             </div>
-            <div class="chat-button">
-              <a href="${href}">傳送訊息</a>
-            </div>
+            <div class="chat-button"></div>
           </div>
-          <div class="match-button">
-            <a href="/checkmatch.html?id=${data.formatData.id}">送出比對</a>
-          </div> -->
+          <div class="match-button"></div>
         </div>
       </div>
     </main>
