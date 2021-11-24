@@ -1,5 +1,5 @@
 const token = localStorage.getItem("access_token");
-const notification = document.querySelector(".notifications");
+const notifications = document.querySelector(".notifications");
 const posts = document.querySelector(".posts");
 
 if (!token) {
@@ -14,10 +14,13 @@ if (!token) {
   }, 1600);
 }
 if (token) {
-  welcomeMessage();
+  getUserData();
+  getNotification();
+  getPosts();
+  getConfirmPosts();
 }
 
-async function welcomeMessage() {
+async function getUserData() {
   const response = await fetch("/api/getUserData", {
     method: "GET",
     headers: {
@@ -50,14 +53,11 @@ async function welcomeMessage() {
     }, 1600);
   }
   if (result.userData) {
-    welmessageAndLogout(result.userData);
-    getNotification();
-    getPosts();
-    getConfirmPosts();
+    showWelcomeMessage(result.userData);
   }
 }
 
-function welmessageAndLogout(data) {
+function showWelcomeMessage(data) {
   const parentDiv = document.querySelector(".welcome-message");
   const img = document.createElement("img");
   const p = document.createElement("p");
@@ -86,8 +86,6 @@ async function getNotification() {
     },
   });
   const notificationData = await response.json();
-  console.log("findowner id for notification");
-  console.log(notificationData);
   if (notificationData.message) {
     Swal.fire({
       icon: "info",
@@ -99,13 +97,13 @@ async function getNotification() {
       window.location.href = "/member.html";
     }, 1600);
   } else {
-    if (notificationData.length > 0) {
-      createNotification(notificationData);
-    } else {
+    if (notificationData.length == 0) {
       const div = document.createElement("div");
       div.textContent = `沒有已比對的通知`;
       div.className = "nopost";
       notification.appendChild(div);
+    } else {
+      createNotification(notificationData);
     }
   }
 }
@@ -119,33 +117,28 @@ async function getPosts() {
     },
   });
   const postsData = await response.json();
-  console.log("post history");
-  console.log(postsData);
   if (postsData.length == 0) {
     const div = document.querySelector(".posts");
     const nopost = document.createElement("div");
     nopost.textContent = "沒有已發佈的貼文";
     nopost.className = "nopost";
     div.appendChild(nopost);
+  } else {
+    await createExistingPosts(postsData);
   }
-  await createExistingPosts(postsData);
 
   // delete existing posts
   const deleteBtn = [...document.querySelectorAll(".delete")];
   deleteBtn.map((del) => {
     del.addEventListener("click", (e) => {
-      console.log(e.target);
       const person = e.target.className.split(" ")[1];
       const id = e.target.className.split(" ")[2];
-      console.log(person, id);
-      // alert to confirm delete
       Swal.fire({
         title: "確定要刪除此篇貼文嗎?",
         showCancelButton: true,
         confirmButtonText: "確認",
         denyButtonText: `取消`,
       }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           deletePost(person, id);
         }
@@ -178,7 +171,6 @@ async function deletePost(person, id) {
   }
 }
 
-// show confirm post
 async function getConfirmPosts() {
   const response = await fetch("/api/getConfirmPost", {
     headers: {
@@ -186,21 +178,18 @@ async function getConfirmPosts() {
     },
   });
   const result = await response.json();
-  console.log("confirm post");
-  console.log(result);
   createConfirmPost(result);
 }
 
 function createConfirmPost(result) {
+  // no existing confirm post
   if (result.message == "nodata") {
-    // show no existing post to confirm
     const div = document.querySelector(".confirm-posts");
     const nopost = document.createElement("div");
     nopost.textContent = "沒有待確認的貼文";
     nopost.className = "nopost";
     div.appendChild(nopost);
   }
-  // render
   if (result.userData) {
     const parentDiv = document.querySelector(".confirm-posts");
     result.userData.map((post) => {
@@ -217,40 +206,62 @@ function createConfirmPost(result) {
         href = "/findpets.html";
         noPost = "沒有刊登找寵物貼文";
       }
-      div.innerHTML = `
-      <a href="${href}">
-        <img src="${photo}"/>
-      </a>
-      <div class="confirm-post-content">
-        <div class="user">
-          <img src="${post.picture}"></>
-          <div>${post.name}</div>
-        </div>
-        <div>${noPost}</div>
-        <div>感謝留言: </div>
-        <div class="thankyou-message">${post.thank_message}</div>
-      </div>
-      <input
-        type="radio"
-        class="btn-check"
-        name="options${post.mid}"
-        id="confirm${post.mid}"
-        autocomplete="off"
-        value="confirm"
-      />
-      <label class="btn btn-outline-secondary" for="confirm${post.mid}"
-        >確認</label>
-      <input
-        type="radio"
-        class="btn-check"
-        name="options${post.mid}"
-        id="cancel${post.mid}"
-        autocomplete="off"
-        value="cancel"
-      />
-      <label class="btn btn-outline-secondary" for="cancel${post.mid}">取消</label>
-      <div class="save ${post.mid}">Save</div>
-      `;
+      const a = document.createElement("a");
+      const confirmPostDiv = document.createElement("div");
+      const confirmInput = document.createElement("input");
+      const confirmLabel = document.createElement("label");
+      const cancelInput = document.createElement("input");
+      const cancelLabel = document.createElement("label");
+      const saveBtn = document.createElement("div");
+      confirmPostDiv.className = `confirm-post-content`;
+      a.href = `${href}`;
+      confirmInput.type = `radio`;
+      confirmInput.className = `btn-check`;
+      confirmInput.name = `options${post.mid}`;
+      confirmInput.id = `confirm${post.mid}`;
+      confirmInput.autocomplete = "off";
+      confirmInput.value = `confirm`;
+      confirmLabel.classList = `btn btn-outline-secondary`;
+      confirmLabel.htmlFor = `confirm${post.mid}`;
+      confirmLabel.textContent = `確認`;
+      cancelInput.type = `radio`;
+      cancelInput.className = `btn-check`;
+      cancelInput.name = `options${post.mid}`;
+      cancelInput.id = `cancel${post.mid}`;
+      cancelInput.autocomplete = "off";
+      cancelInput.value = `cancel`;
+      cancelLabel.classList = `btn btn-outline-secondary`;
+      cancelLabel.htmlFor = `cancel${post.mid}`;
+      cancelLabel.textContent = `取消`;
+      saveBtn.classList = `save ${post.mid}`;
+      saveBtn.textContent = `Save`;
+      div.append(
+        a,
+        confirmPostDiv,
+        confirmInput,
+        confirmLabel,
+        cancelInput,
+        cancelLabel,
+        saveBtn
+      );
+      const img = document.createElement("img");
+      img.src = `${photo}`;
+      a.appendChild(img);
+      const userDiv = document.createElement("div");
+      userDiv.className = `user`;
+      const userImg = document.createElement("img");
+      const userName = document.createElement("div");
+      userImg.src = `${post.picture}`;
+      userName.textContent = `${post.name}`;
+      userDiv.append(userImg, userName);
+      const contentDiv = document.createElement("div");
+      contentDiv.textContent = `${noPost}`;
+      const thankTitleDiv = document.createElement("div");
+      thankTitleDiv.textContent = `感謝留言: `;
+      const thankDiv = document.createElement("div");
+      thankDiv.textContent = `${post.thank_message}`;
+      thankDiv.className = `thankyou-message`;
+      confirmPostDiv.append(userDiv, contentDiv, thankTitleDiv, thankDiv);
       parentDiv.appendChild(div);
     });
   }
@@ -259,14 +270,9 @@ function createConfirmPost(result) {
   const saveBtn = [...document.querySelectorAll(".save")];
   saveBtn.map((btn) => {
     btn.addEventListener("click", (e) => {
-      // check if radio checked
-      console.log("clickk");
       const id = e.target.className.split(" ")[1];
-      console.log(id);
-
+      // confirm radio checked
       if (document.getElementById(`confirm${id}`).checked) {
-        console.log(`select confirm${id}`);
-        // alert to confirm and update("match")
         Swal.fire({
           title: "請確認貼文配對",
           text: "確認後將會成功配對，感謝您的協助 =]",
@@ -274,16 +280,14 @@ function createConfirmPost(result) {
           confirmButtonText: "確認",
           denyButtonText: `取消`,
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // update
             const data = { status: "match", id: `${id}` };
             updateConfirmPost(data);
           }
         });
-      } else if (document.getElementById(`cancel${id}`).checked) {
-        console.log(`select cancel${id}`);
-        // alert to cancel and update("fail")
+      }
+      // cancel radio checked
+      if (document.getElementById(`cancel${id}`).checked) {
         Swal.fire({
           title: "請確認貼文配對",
           text: "配對將會取消，並通知對方",
@@ -291,16 +295,17 @@ function createConfirmPost(result) {
           confirmButtonText: "確認",
           denyButtonText: `取消`,
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // update
             const data = { status: "fail", id: `${id}` };
             updateConfirmPost(data);
           }
         });
-      } else {
-        console.log(`not selected ${id}`);
-        // alert to choose one
+      }
+      // not checked
+      if (
+        !document.getElementById(`cancel${id}`).checked &&
+        !document.getElementById(`confirm${id}`).checked
+      ) {
         Swal.fire({
           icon: "info",
           text: "請勾選後再送出",
@@ -320,28 +325,38 @@ function createNotification(notificationData) {
     data.time = time;
     const div = document.createElement("div");
     div.className = "notification";
-    div.innerHTML = `
-    <a href="/findowners/detail.html?id=${data.find_owners_id}">
-    <div class="noti-text-time">
-      <img class="noti-icon" src="/images/notification.png" />
-      <p>
-        <span class="highlight">通知：</span
-        >這可能是你走失的寵物，快來查看
-        <span class="link"> 詳細資訊</span>。
-      </p>
-      <p class="notification-time">${time}</p>
-    </div>
-  </a>
-  <img class="cancel ${data.id}" src="/images/cancel_icon.png" />
-      `;
-    notification.appendChild(div);
+    const a = document.createElement("a");
+    a.href = `/findowners/detail.html?id=${data.find_owners_id}`;
+    const img = document.createElement("img");
+    img.src = "/images/cancel_icon.png";
+    img.classList = `cancel ${data.id}`;
+    div.append(a, img);
+    const notiTimeDiv = document.createElement("div");
+    notiTimeDiv.className = "noti-text-time";
+    a.appendChild(notiTimeDiv);
+    const notiIcon = document.createElement("img");
+    notiIcon.className = `noti-icon`;
+    notiIcon.src = "/images/notification.png";
+    const p = document.createElement("p");
+    notiTimeDiv.append(notiIcon, p);
+    const highlightSpan = document.createElement("span");
+    highlightSpan.textContent = `通知：`;
+    highlightSpan.className = `highlight`;
+    const contentSpan = document.createElement("span");
+    contentSpan.textContent = `這可能是你走失的寵物，快來查看`;
+    const linkSpan = document.createElement("span");
+    linkSpan.textContent = `詳細資訊`;
+    linkSpan.className = `link`;
+    p.append(highlightSpan, contentSpan, linkSpan);
+    notifications.appendChild(div);
   });
+
+  // delete notification
   const cancel = [...document.querySelectorAll(".cancel")];
   cancel.map((data) => {
     data.addEventListener("click", (e) => {
       const id = e.target.className.split(" ")[1];
       const data = { id: id };
-      /////
       Swal.fire({
         title: "",
         text: "這則通知將不會再顯示",
@@ -398,22 +413,42 @@ async function createExistingPosts(postsData) {
       title = "找主人";
       edit = `/findowners/edit.html?id=`;
     }
-    div.innerHTML = `
-              <img
-                src="${post.photo}"
-              />
-              <div class="post-content">
-              <div class="post-title">${title}</div>
-                <div><span>品種 : </span>${post.breed}</div>
-                <div><span>地點 : </span>${post.county}${post.district}${post.address}</div>
-                <div><span>日期 : </span>${time}</div>
-                <div><span>狀態 : </span>${post.status}</div>
-              </div>
-              <a class="edit" href="${edit}${post.id}">編輯</a>
-              <div class="delete ${post.person} ${post.id}" id="${post.id}">
-                <img class="delete ${post.person} ${post.id}" src="/images/delete_icon.png">
-              </div>
-    `;
+
+    const img = document.createElement("img");
+    img.src = `${post.photo}`;
+    const postContent = document.createElement("div");
+    postContent.className = `post-content`;
+    const a = document.createElement("a");
+    a.className = `edit`;
+    a.href = `${edit}${post.id}`;
+    a.textContent = `編輯`;
+    const deleteDiv = document.createElement("div");
+    deleteDiv.classList = `delete ${post.person} ${post.id}`;
+    deleteDiv.id = `${post.id}`;
+    const deleteImg = document.createElement("img");
+    deleteImg.classList = `delete ${post.person} ${post.id}`;
+    deleteImg.src = `/images/delete_icon.png`;
+    div.append(img, postContent, a, deleteDiv);
+    deleteDiv.appendChild(deleteImg);
+    const postTitle = document.createElement("div");
+    postTitle.textContent = `${title}`;
+    const breedDiv = document.createElement("div");
+    const locationDiv = document.createElement("div");
+    const dateDiv = document.createElement("div");
+    const statusDiv = document.createElement("div");
+    const breedSpan = document.createElement("span");
+    const locationSpan = document.createElement("span");
+    const dateSpan = document.createElement("span");
+    const statusSpan = document.createElement("span");
+    breedSpan.textContent = `品種 : ${post.breed}`;
+    locationSpan.textContent = `地點 : ${post.county}${post.district}${post.address}`;
+    dateSpan.textContent = `日期 : ${time}`;
+    statusSpan.textContent = `狀態 : ${post.status}`;
+    postContent.append(postTitle, breedDiv, locationDiv, dateDiv, statusDiv);
+    breedDiv.appendChild(breedSpan);
+    locationDiv.appendChild(locationSpan);
+    dateDiv.appendChild(dateSpan);
+    statusDiv.appendChild(statusSpan);
     posts.appendChild(div);
   });
 }
