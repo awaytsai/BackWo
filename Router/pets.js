@@ -37,10 +37,6 @@ router
   .route("/findowners/updateWithImage")
   .put(authMiddleware, uploadFindOwners, wrapAsync(Pets.updatePostdata));
 
-// for this is my pet button -match
-// router.route("/findowners/match").get(wrapAsync(Pets.getMatchPost));
-// // .get(authMiddleware, wrapAsync(Pets.getMatchPost));
-
 ///////////////////////////////////////////////////////////////////////
 
 // * findpets //

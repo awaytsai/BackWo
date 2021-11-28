@@ -9,26 +9,21 @@ app.use(express.urlencoded({ extended: true }));
 // socket.io
 const http = require("http");
 const server = http.createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "http://localhost:8080",
-  },
-});
+const io = require("socket.io")(server);
 const { socketController } = require("./controller/socketio_controller");
 socketController(io);
 
 app.use("/api", [
-  require("./Router/pets"),
-  require("./Router/breedData"),
-  require("./Router/user"),
-  require("./Router/chat"),
-  require("./Router/match"),
-  require("./Router/adopt"),
+  require("./router/pets"),
+  require("./router/breedData"),
+  require("./router/user"),
+  require("./router/chat"),
+  require("./router/match"),
+  require("./router/adopt"),
 ]);
 
-// page not found 404
+// 404
 app.use((req, res, next) => {
-  // res.status(404).send("Page not exist");
   res.status(404).sendFile(__dirname + "/public/404.html");
 });
 
@@ -42,4 +37,4 @@ server.listen(PORT, () => {
   console.log("server running");
 });
 
-module.exports = server;
+module.exports = { server, app };
