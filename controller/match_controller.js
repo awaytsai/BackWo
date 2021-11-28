@@ -8,38 +8,38 @@ const getMatchPostDetail = async (req, res) => {
   const userId = req.decoded.payload.id;
   const person = "owner";
   const id = req.query.id;
-  // get post detail
+  let param = "findowners";
+  // get match post detail
   const postData = await Pet.getPostDetailById(person, id);
   const postDetail = postData[0];
-  const formatData = await formatPostData(postDetail, userId, "findowners");
+  const formatData = await formatPostData(postDetail, userId, param);
 
-  // user's existing post
+  // get user history post
   const historyResult = await Pet.getFindPetPostByUser(userId);
-  console.log(historyResult);
   let historyData;
   if (historyResult.length == 0) {
     historyData = "nodata";
     return res.json({ formatData, historyData });
   }
   historyData = [];
+  param = "findpets";
   for (let i = 0; i < historyResult.length; i++) {
-    let post = await formatPostData(historyResult[i], userId, "findpets");
+    let post = await formatPostData(historyResult[i], userId, param);
     post.status = "lost";
     historyData.push(post);
   }
-  res.json({ formatData, historyData });
+  return res.json({ formatData, historyData });
 };
 
 const storeMatchList = async (req, res) => {
-  // ?foid=${id}&fpid=${fpid}
-  const senderId = req.decoded.payload.id;
+  const userId = req.decoded.payload.id;
   let { foid, fpid } = req.query;
   const message = req.body.thankmessage;
-  const status = "pending";
-  console.log(senderId, foid, fpid);
+  const matchStatus = "pending";
+  // with find pets post
   if (fpid != 0) {
-    // check if sender has those fp post
-    const postData = await Pet.getFindPetPostByUser(senderId);
+    // check access
+    const postData = await Pet.getFindPetPostByUser(userId);
     if (postData.length == 0) {
       return res.json({ message: "noaccess" });
     }
@@ -49,64 +49,62 @@ const storeMatchList = async (req, res) => {
         return res.json({ message: "noaccess" });
       }
       if (result.length > 0) {
-        // update time null
         const updateTime = null;
-        const storeResult = await Match.storeMatchList(
+        await Match.createMatchList(
           message,
-          senderId,
+          userId,
           foid,
-          status,
+          matchStatus,
           fpid,
           updateTime
         );
       }
     }
   }
+  // without find pets post
   if (fpid == 0) {
-    // update time null
     const updateTime = null;
-    const storeResult = await Match.storeMatchListNoFP(
+    await Match.createMatchListNoPetPost(
       message,
-      senderId,
+      userId,
       foid,
-      status,
+      matchStatus,
       updateTime
     );
-    console.log(storeResult);
   }
-  res.json({ status: "updated" });
+  return res.json({ status: "updated" });
 };
 
 const getConfirmPost = async (req, res) => {
   const userId = req.decoded.payload.id;
-  const postData = await Pet.getPostByUser(userId, "owner", "lost");
-  // no owner post => no need to confirm
-  if (postData.length == 0) {
+  const person = "owner";
+  const petStatus = "lost";
+  const findOwnersPostData = await Pet.getPostByUser(userId, person, petStatus);
+  if (findOwnersPostData.length == 0) {
     return res.json({ message: "nodata" });
   }
-  // get all sender id for user info
-  const ids = [];
-  postData.map((post) => {
-    ids.push(post.id);
+  // get all confirm post sender data
+  const findOwnerIds = [];
+  findOwnersPostData.map((post) => {
+    findOwnerIds.push(post.id);
   });
-  const userData = await User.getPendingUserData(ids);
+  const userData = await User.getConfirmPostUserData(findOwnerIds);
   if (userData.length == 0) {
     return res.json({ message: "nodata" });
   }
-  // filter find pet id and get find pet post
+  // get all find pet post
   const findPetIds = [];
   userData.map((data) => {
     findPetIds.push(data.find_pet_id);
   });
   let filterId = findPetIds.filter((id) => id !== null);
-  if (filterId.length == 0) {
-    if (findPetIds.includes(null)) {
-      console.log("only null");
-      return res.json({ userData });
-    }
+  // without find pet post
+  if (filterId.length == 0 && findPetIds.includes(null)) {
+    return res.json({ userData });
   }
+  // with find pet post
   const petData = await Pet.getFindPostById(filterId);
-  // combine user & match & post data
+  console.log(petData);
   petData.map((data) => {
     for (i = 0; i < userData.length; i++) {
       if (userData[i].find_pet_id == data.id) {
@@ -116,32 +114,26 @@ const getConfirmPost = async (req, res) => {
       }
     }
   });
-  console.log(userData);
   return res.json({ userData });
 };
 
 const updateConfirmPost = async (req, res) => {
-  console.log(req.body);
   // check access
   // add update time
   const updateTime = new Date();
   const { status, id } = req.body;
-  const updateConfirm = await Match.updateMatchList(status, updateTime, id);
-  console.log("updateConfirm");
-  console.log(updateConfirm);
+  await Match.updateMatchList(status, updateTime, id);
 
   const matchResult = await Match.getMatchById(id);
-  console.log("matchResult");
-  console.log(matchResult);
+
   if (matchResult.length > 0) {
     // update pet posts to match
     const ids = [matchResult[0].find_pet_id, matchResult[0].find_owner_id];
-    const updateResult = await Pet.updatePostStatus(ids);
-    console.log("updateResult");
-    console.log(updateResult);
+    await Pet.updatePostStatus(ids);
+
     // update notification to match
     const status = "match";
-    const updateNoti = await Noti.updateNotification(
+    await Noti.updateNotification(
       status,
       matchResult[0].find_owner_id,
       matchResult[0].find_pet_id
@@ -152,13 +144,12 @@ const updateConfirmPost = async (req, res) => {
 };
 
 const getSuccessCase = async (req, res) => {
-  const limit = 3;
-  const MatchData = await Match.getSuccessCase(limit);
-  console.log(MatchData);
-  MatchData.map((data) => {
+  const limitSuccessCase = parseInt(process.env.LIMIT_SUCCESS_CASE);
+  const matchData = await Match.getSuccessCase(limitSuccessCase);
+  matchData.map((data) => {
     data.photo = `${process.env.CLOUDFRONT}/findowners/${data.photo}`;
   });
-  res.json(MatchData);
+  return res.json(matchData);
 };
 
 module.exports = {
