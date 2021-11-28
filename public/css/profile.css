@@ -186,6 +186,9 @@ main {
   font-weight: 500;
   text-decoration: underline;
 }
+.noti-time {
+  margin: 0 20px;
+}
 .noti-icon,
 .cancel {
   width: 24px;

@@ -28,7 +28,7 @@ async function getUserData() {
     },
   });
   const result = await response.json();
-  console.log(result);
+
   if (result.message == "請先登入或註冊") {
     Swal.fire({
       icon: "info",
@@ -274,7 +274,7 @@ function createConfirmPost(result) {
       // confirm radio checked
       if (document.getElementById(`confirm${id}`).checked) {
         Swal.fire({
-          title: "請確認貼文配對",
+          title: "請確認貼文配對",
           text: "確認後將會成功配對，感謝您的協助 =]",
           showCancelButton: true,
           confirmButtonText: "確認",
@@ -289,8 +289,8 @@ function createConfirmPost(result) {
       // cancel radio checked
       if (document.getElementById(`cancel${id}`).checked) {
         Swal.fire({
-          title: "請確認貼文配對",
-          text: "配對將會取消，並通知對方",
+          title: "請確認貼文配對",
+          text: "配對將會取消，並通知對方",
           showCancelButton: true,
           confirmButtonText: "確認",
           denyButtonText: `取消`,
@@ -347,7 +347,10 @@ function createNotification(notificationData) {
     const linkSpan = document.createElement("span");
     linkSpan.textContent = `詳細資訊`;
     linkSpan.className = `link`;
-    p.append(highlightSpan, contentSpan, linkSpan);
+    const timeSpan = document.createElement("span");
+    timeSpan.textContent = `${data.time}`;
+    timeSpan.className = `noti-time`;
+    p.append(highlightSpan, contentSpan, linkSpan, timeSpan);
     notifications.appendChild(div);
   });
 
@@ -358,8 +361,8 @@ function createNotification(notificationData) {
       const id = e.target.className.split(" ")[1];
       const data = { id: id };
       Swal.fire({
-        title: "",
-        text: "這則通知將不會再顯示",
+        icon: "info",
+        text: "這則通知將不會再顯示",
         showCancelButton: true,
         confirmButtonText: "確認",
         denyButtonText: `取消`,
@@ -454,7 +457,6 @@ async function createExistingPosts(postsData) {
 }
 
 async function updateConfirmPost(data) {
-  // call api
   const response = await fetch(`/api/updateConfirmPost`, {
     method: "PUT",
     headers: {
@@ -476,8 +478,5 @@ async function updateConfirmPost(data) {
     setTimeout(() => {
       window.location.href = "/profile.html";
     }, 1600);
-  }
-  if (confirmUpdate.message) {
-    console.log("noooo");
   }
 }
