@@ -1,15 +1,23 @@
-// findowners/edit.html?id=41
 const token = localStorage.getItem("access_token");
 const id = location.href.split("?id=")[1];
-const person = location.href.split("/f")[1].split(".")[0].split("/")[0];
 const breedSelect = document.getElementById("breedselect");
 const dog = document.querySelector(".doglabel");
 const cat = document.querySelector(".catlabel");
 const uploadBtn = document.querySelector(".uploadBtn");
 
 const breeds = [];
-// 要做
-// check if blank coloum in frontend //
+let person;
+const urlParam = window.location.href;
+checkPerson(urlParam);
+
+function checkPerson(urlParam) {
+  if (urlParam.includes("findowners")) {
+    person = "findowners";
+  }
+  if (urlParam.includes("findpets")) {
+    person = "findpets";
+  }
+}
 
 loadBreedList();
 async function loadBreedList() {
@@ -23,18 +31,19 @@ async function loadBreedList() {
 }
 
 async function getExistingPostData() {
-  const response = await fetch(`/api/f${person}/edit/detail?id=${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: "Bearer " + token,
-    },
-  });
+  const response = await fetch(
+    `/api/findpost/edit/detail?id=${id}&tag=${person}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
   const postData = await response.json();
-  console.log(postData);
   if (postData.message) {
-    // alert
     Swal.fire({
       icon: "info",
       text: "頁面不存在",
@@ -122,7 +131,6 @@ for (i = 0; i < radio.length; i++) {
   };
 }
 function radioChange() {
-  console.log("change");
   const input = document.querySelector(".other-breed");
   input.style.display = "none";
 }
@@ -147,7 +155,6 @@ function preview() {
 
 // rednder existing post data
 function fillInData(data) {
-  console.log(data);
   // kind
   let kind;
   let breed;
@@ -198,7 +205,6 @@ function fillInData(data) {
   originalPhoto.src = `${data.photo}`;
 }
 
-//
 const file = document.querySelector("#formFile");
 
 uploadBtn.addEventListener("click", (e) => {
@@ -252,15 +258,17 @@ uploadBtn.addEventListener("click", (e) => {
 
 const formData = document.querySelector(".uploadform");
 async function updatefield() {
-  const response = await fetch(`/api/f${person}/updatePostdata?id=${id}`, {
-    method: "PUT",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    body: new FormData(formData),
-  });
+  const response = await fetch(
+    `/api/findpost/updatePostdata?id=${id}&tag=${person}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: new FormData(formData),
+    }
+  );
   const result = await response.json();
-  console.log(result);
   if (
     result.message == "請填寫所有欄位" ||
     result.message == "日期格式錯誤" ||
@@ -275,7 +283,6 @@ async function updatefield() {
     });
   }
   if (result.message == "頁面不存在") {
-    // alert no access and redirect to profile
     Swal.fire({
       icon: "info",
       text: "頁面不存在",
@@ -287,7 +294,6 @@ async function updatefield() {
     }, 1600);
   }
   if (result.status == "updated") {
-    // alert success and redirect to profile
     Swal.fire({
       position: "top-end",
       icon: "success",
@@ -310,7 +316,6 @@ async function updateWithImage() {
     body: new FormData(formData),
   });
   const result = await response.json();
-  console.log(result);
   if (
     result.message == "請填寫所有欄位" ||
     result.message == "日期格式錯誤" ||

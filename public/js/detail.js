@@ -1,10 +1,6 @@
-// get query string
 const currentUrl = location.href;
-const queryString = currentUrl.split("?id=");
-const id = queryString[1];
+const id = currentUrl.split("?id=")[1];
 const token = localStorage.getItem("access_token");
-// const person = location.href.split("/f")[1].split(".")[0].split("/")[0];
-// console.log(person);
 
 const urlParam = window.location.href;
 let person;
@@ -23,12 +19,15 @@ function checkPerson(urlParam) {
 async function getPostDetail() {
   try {
     checkPerson(urlParam);
-    const fetchData = await fetch(`/api/${person}/detail?id=${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const fetchData = await fetch(
+      `/api/findpost/detail?id=${id}&tag=${person}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     const data = await fetchData.json();
     if (data.message) {
       Swal.fire({
@@ -41,12 +40,11 @@ async function getPostDetail() {
         window.location.href = `/${person}.html`;
       }, 1600);
     }
-    console.log(data);
+
     let time = new Date(Date.parse(data.formatData.date))
       .toLocaleString("en-US")
       .split(", ")[0];
     data.formatData.date = time;
-    console.log(time);
     if (data.formatData.roomId) {
       // user login
       if (data.formatData.roomId == "null") {
@@ -104,7 +102,6 @@ function createPhoto(data) {
     img.src = data;
     carousel.prepend(img);
   } else {
-    console.log(data);
     const div = document.createElement("div");
     div.className = "carousel-inner";
     carousel.prepend(div);
