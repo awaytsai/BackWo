@@ -1,6 +1,6 @@
 const db = require("../db");
 
-const storeMatchList = async (
+const createMatchList = async (
   message,
   userId,
   foid,
@@ -15,7 +15,7 @@ const storeMatchList = async (
   return matchResult;
 };
 
-const storeMatchListNoFP = async (
+const createMatchListNoPetPost = async (
   message,
   userId,
   foid,
@@ -85,8 +85,8 @@ const getMatchById = async (id) => {
 };
 
 module.exports = {
-  storeMatchList,
-  storeMatchListNoFP,
+  createMatchList,
+  createMatchListNoPetPost,
   getMatchList,
   updateMatchList,
   deleteMatchListByFindPet,

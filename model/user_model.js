@@ -8,7 +8,7 @@ const getUserData = async (id) => {
   return userData;
 };
 
-const getPendingUserData = async (id) => {
+const getConfirmPostUserData = async (id) => {
   const [userData] = await db.query(
     `SELECT u.id, u.name, u.picture, m.id as mid ,m.sender, m.find_pet_id, m.thank_message
     FROM user as u 
@@ -168,7 +168,7 @@ const facebookSignIn = async (id, name, email, picture) => {
 
 module.exports = {
   getUserData,
-  getPendingUserData,
+  getConfirmPostUserData,
   signUp,
   nativeSignIn,
   getFacebookProfile,
