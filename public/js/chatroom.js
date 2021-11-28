@@ -51,7 +51,6 @@ async function checkAccess() {
     const usersData = await response.json();
     self = usersData.senderId;
     if (usersData.message == "blankroom") {
-      console.log("blankroom");
       createBlankElement();
     } else if (
       usersData.message == "請重新登入" ||
@@ -79,7 +78,6 @@ async function checkAccess() {
         window.location.href = "/";
       }, 1600);
     } else {
-      // ok
       showRoomsAndConnectIO(usersData);
     }
   } catch (err) {
@@ -93,7 +91,7 @@ async function showRoomsAndConnectIO(usersData) {
   // connect socket io
   connectToIo(usersData);
   // show history room info
-  if (historyData.error) {
+  if (historyData.message) {
     const item = document.createElement("div");
     item.textContent = `沒有聊天記錄`;
     item.className = "nochat";
@@ -136,7 +134,7 @@ function connectToIo(usersData) {
   });
   // on chatnessage(chat)
   socket.on("chatMessage", function (msg, usersData) {
-    createChatMessage(msg, usersData);
+    createChatElement(msg, usersData);
   });
   // history message
   socket.on("historymessage", function (historyMessage, usersData) {
@@ -162,38 +160,7 @@ async function getExistingRoomsRecord(usersData) {
   return historyData;
 }
 
-function createChatMessage(msg, usersData) {
-  let time = new Date();
-  time = time.toLocaleString("en-US").split(", ")[1];
-  const ampm = time.slice(-3);
-  time = time.split(" ")[0].slice(0, -3);
-  const item = document.createElement("div");
-  // check who said the message
-  if (usersData.senderId != self) {
-    item.innerHTML = `
-      <div class="message-content receive">
-        <p>${msg}</p>
-      </div>
-      <div class="message-time-receive">
-        <p>${time} ${ampm}</p>
-      </div>`;
-    item.classList.add("message-box");
-    messages.appendChild(item);
-    messages.scrollTop = messages.scrollHeight;
-  } else {
-    item.innerHTML = `
-      <div class="message-content send">
-        <p>${msg}</p>
-      </div>
-      <div class="message-time-send">
-        <p>${time} ${ampm}</p>
-      </div>`;
-    item.classList.add("message-box");
-    messages.appendChild(item);
-    messages.scrollTop = messages.scrollHeight;
-  }
-}
-
+//
 function createHistoryMessage(historyMessage) {
   console.log(historyMessage);
   if (historyMessage.length == 0) {
@@ -210,29 +177,28 @@ function createHistoryMessage(historyMessage) {
       .split(", ")[1];
     const ampm = time.slice(-3);
     time = time.split(" ")[0].slice(0, -3);
+
+    const msgContentDiv = document.createElement("div");
+    const p = document.createElement("p");
+    p.textContent = `${message.message}`;
+    msgContentDiv.appendChild(p);
+    messageBox.appendChild(msgContentDiv);
+    const messageTimeDiv = document.createElement("p");
+    messageTimeDiv.textContent = `${time} ${ampm}`;
+    messageTime.appendChild(messageTimeDiv);
+
     if (message.sender == self) {
-      messageBox.innerHTML = `
-      <div class="message-content send">
-        <p>${message.message}</p>
-      </div>`;
+      msgContentDiv.classList = `message-content send`;
       messageTime.className = "message-time-send";
-      messageTime.innerHTML = `<p>${time} ${ampm}</p>`;
-      messages.appendChild(wrapitem);
-      wrapitem.appendChild(messageBox);
-      wrapitem.appendChild(messageTime);
-      messages.scrollTop = messages.scrollHeight;
-    } else {
-      messageBox.innerHTML = `
-      <div class="message-content receive">
-      <p>${message.message}</p>
-      </div>`;
-      messageTime.innerHTML = `<p>${time} ${ampm}</p>`;
-      messageTime.className = "message-time-receive";
-      messages.appendChild(wrapitem);
-      wrapitem.appendChild(messageBox);
-      wrapitem.appendChild(messageTime);
-      messages.scrollTop = messages.scrollHeight;
     }
+    if (message.sender !== self) {
+      msgContentDiv.classList = `message-content receive`;
+      messageTime.className = "message-time-receive";
+    }
+    messages.appendChild(wrapitem);
+    wrapitem.appendChild(messageBox);
+    wrapitem.appendChild(messageTime);
+    messages.scrollTop = messages.scrollHeight;
   });
 }
 
@@ -247,17 +213,28 @@ function createExistingRooms(historyData) {
     time = time[1].split(" ")[0].slice(0, -3);
     const item = document.createElement("div");
     item.className = "room";
-    item.innerHTML = `
-      <a class="room-a" href="/chatroom.html?room=${data[0].room_id}">
-        <div class="room-user">
-          <img src="${data[0].picture}" width="30px" />
-          <p>${data[0].name}</p>
-        </div>
-        <div class="room-content">
-          <p class="room-message">${data[0].message}</p>
-          <p class="room-time">${date} ${time} ${ampm}</p>
-        </div>
-      </a>`;
+    const a = document.createElement("a");
+    a.className = `room-a`;
+    a.href = `/chatroom.html?room=${data[0].room_id}`;
+    item.appendChild(a);
+    const roomUserDiv = document.createElement("div");
+    const roomContentDiv = document.createElement("div");
+    a.append(roomUserDiv, roomContentDiv);
+    roomUserDiv.className = `room-user`;
+    const userImg = document.createElement("img");
+    userImg.src = `${data[0].picture}`;
+    userImg.style.width = "30px";
+    const userName = document.createElement("p");
+    userName.textContent = `${data[0].name}`;
+    roomUserDiv.append(userImg, userName);
+    const roomMessage = document.createElement("p");
+    const roomTime = document.createElement("p");
+    roomMessage.textContent = `${data[0].message}`;
+    roomTime.textContent = `${date} ${time} ${ampm}`;
+    roomMessage.className = `room-message`;
+    roomTime.className = `room-time`;
+    roomContentDiv.className = `room-content`;
+    roomContentDiv.append(roomMessage, roomTime);
     rooms.appendChild(item);
   });
   checkFocusRoom();
@@ -296,4 +273,32 @@ async function checkFocusRoom() {
       existingRooms[i].classList = "room selected";
     }
   }
+}
+
+function createChatElement(msg, usersData) {
+  let time = new Date();
+  time = time.toLocaleString("en-US").split(", ")[1];
+  const ampm = time.slice(-3);
+  time = time.split(" ")[0].slice(0, -3);
+  const item = document.createElement("div");
+  const msgContentDiv = document.createElement("div");
+  const msgTimeDiv = document.createElement("div");
+  const message = document.createElement("p");
+  const msgTime = document.createElement("p");
+  message.textContent = `${msg}`;
+  msgTime.textContent = `${time} ${ampm}`;
+  item.append(msgContentDiv, msgTimeDiv);
+  msgContentDiv.appendChild(message);
+  msgTimeDiv.appendChild(msgTime);
+  if (usersData.senderId == self) {
+    msgContentDiv.classList = `message-content send`;
+    msgTimeDiv.classList = `message-time-send`;
+  }
+  if (usersData.senderId !== self) {
+    msgContentDiv.classList = `message-content receive`;
+    msgTimeDiv.classList = `message-time-receive`;
+  }
+  item.classList.add("message-box");
+  messages.appendChild(item);
+  messages.scrollTop = messages.scrollHeight;
 }
