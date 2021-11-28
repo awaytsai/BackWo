@@ -39,8 +39,4 @@ router
 // show successful cases
 router.route("/getSuccessCase").get(wrapAsync(Match.getSuccessCase));
 
-// send email
-// router.route("/mail").get(mail.getmail);
-// router.route("/matchmail").get(mail.getMatchmail);
-
 module.exports = router;
