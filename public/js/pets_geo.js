@@ -20,7 +20,6 @@ function initMap() {
 }
 
 // show filter map
-// const applyBtn = document.querySelector(".apply");
 applyBtn.addEventListener("click", (e) => {
   e.preventDefault();
   const kind = document.querySelector(".filterkind").value;
@@ -32,13 +31,13 @@ applyBtn.addEventListener("click", (e) => {
     deleteMarkers();
     // add new markers
     filterMapMarker(kind, county, district, date);
-  } else {
   }
 });
 
 // add all markers
 async function addAllMarker() {
-  const response = await fetch(`/api/getf${person}GeoInfo`);
+  checkPerson(urlParam);
+  const response = await fetch(`/api/get${person}GeoInfo`);
   const findOwnersGeoData = await response.json();
   console.log(findOwnersGeoData);
   addMarker(findOwnersGeoData);
@@ -46,8 +45,9 @@ async function addAllMarker() {
 
 // add filter markers
 async function filterMapMarker(kind, county, district, date) {
+  checkPerson(urlParam);
   const response = await fetch(
-    `/api/getf${person}GeoInfo?kind=${kind}&county=${county}&district=${district}&date=${date}`
+    `/api/get${person}GeoInfo?kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterGeoData = await response.json();
   if (filterGeoData.message == "wrong date format") {
@@ -63,7 +63,8 @@ async function filterMapMarker(kind, county, district, date) {
 
 // add markers by bounds
 async function addMarkerByBounds(ne, sw) {
-  const response = await fetch(`/api/getf${person}GeoInfo?ne=${ne}&sw=${sw}`);
+  checkPerson(urlParam);
+  const response = await fetch(`/api/get${person}GeoInfo?ne=${ne}&sw=${sw}`);
   const findOwnersGeoData = await response.json();
   console.log(findOwnersGeoData);
   addMarker(findOwnersGeoData);
@@ -86,7 +87,7 @@ function addMarker(data) {
     }
     const contentString = `
     <div>
-      <a href="/f${person}/detail.html?id=${pet.id}">
+      <a href="/${person}/detail.html?id=${pet.id}">
         <img src="${pet.photo}" width="150px">
       </a>
       <div>品種: ${pet.breed}</div>
@@ -99,7 +100,6 @@ function addMarker(data) {
       title: pet.breed,
       icon: image,
     });
-    console.log("mark");
     // add info window
     addInfoWindow(marker, contentString);
     markers.push(marker);
@@ -121,7 +121,6 @@ function addInfoWindow(marker, contentString) {
 }
 
 function deleteMarkers() {
-  // console.log("delete");
   const len = markers.length;
   for (i = 0; i < len; i++) {
     markers[i].setMap(null);
@@ -142,7 +141,7 @@ function addMarkerFitBound(data) {
     }
     const contentString = `
     <div>
-      <a href="/f${person}/detail.html?id=${pet.id}">
+      <a href="/${person}/detail.html?id=${pet.id}">
         <img src="${pet.photo}" width="150px">
       </a>
       <div>品種: ${pet.breed}</div>
@@ -160,5 +159,6 @@ function addMarkerFitBound(data) {
     addInfoWindow(marker, contentString);
     markers.push(marker);
   });
+  // adj center
   map.panToBounds(bounds, 300);
 }

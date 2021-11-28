@@ -1,6 +1,7 @@
-const person = location.href.split("/f")[1].split(".")[0];
 const token = localStorage.getItem("access_token");
-console.log(person);
+const urlParam = window.location.href;
+let person;
+
 // show all posts
 showPosts();
 
@@ -24,7 +25,8 @@ applyBtn.addEventListener("click", (e) => {
 });
 
 async function showPosts() {
-  const response = await fetch(`/api/getf${person}Posts`);
+  checkPerson(urlParam);
+  const response = await fetch(`/api/get${person}Posts`);
   const findOwnersPostsData = await response.json();
   deleteElement();
   console.log(findOwnersPostsData);
@@ -32,8 +34,9 @@ async function showPosts() {
 }
 
 async function showFilterPosts(kind, county, district, date) {
+  checkPerson(urlParam);
   const filterResponse = await fetch(
-    `/api/getf${person}Posts?kind=${kind}&county=${county}&district=${district}&date=${date}`
+    `/api/get${person}Posts?kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterData = await filterResponse.json();
   if (filterData.message == "wrong date format") {
@@ -66,7 +69,7 @@ function createElement(data) {
     box.className = "box";
     title.className = "title";
     title.innerText = `${pet.county}${pet.district}`;
-    a.href = `/f${person}/detail.html?id=${pet.id}`;
+    a.href = `/${person}/detail.html?id=${pet.id}`;
     img.src = `${pet.photo}`;
     postDiv.appendChild(box);
     box.appendChild(a);
@@ -78,4 +81,13 @@ function createElement(data) {
 function deleteElement() {
   const postDiv = document.querySelector(".posts");
   postDiv.innerHTML = "";
+}
+
+function checkPerson(urlParam) {
+  if (urlParam.includes("findowners")) {
+    person = "findowners";
+  }
+  if (urlParam.includes("findpets")) {
+    person = "findpets";
+  }
 }
