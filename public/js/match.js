@@ -1,4 +1,3 @@
-// /checkmatch.html?id=${data.id}
 const currentUrl = location.href;
 const id = currentUrl.split("?id=")[1];
 const token = localStorage.getItem("access_token");
@@ -43,6 +42,7 @@ async function getPostDetail() {
   }
   createDetail(matchPostData.formatData);
   if (matchPostData.historyData !== "nodata") {
+    // if login and history post existed
     createHistoryPost(matchPostData.historyData);
   }
 }
@@ -52,26 +52,45 @@ function createDetail(data) {
     .toLocaleString("en-US")
     .split(", ")[0];
   data.date = time;
+
   const div = document.createElement("div");
   div.className = "photo-info-wrap";
   const parentDiv = document.querySelector(".post-detail");
-  div.innerHTML = `
-      <div class="photo">
-        <img src="${data.photo}"/>
-      </div>
-      <div class="info-wrap">
-        <div>
-          <div class="info"><span>品種 : </span>${data.breed}</div>
-          <div class="info"><span>顏色 : </span>${data.color}</div>
-          <div class="info"><span>地點 : </span>${data.fullAddress}</div>
-          <div class="info"><span>時間 : </span>${data.date}</div>
-          <div class="info"><span>備註 : </span>${data.note}</div>
-        </div>
-        <div class="finderinfo">
-          <div><img src="${data.postUserPic}"/></div>
-          <div class="finder-name"><span>協尋者 : </span>${data.postUserName}</div>
-        </div>
-      </div>`;
+  const photoDiv = document.createElement("div");
+  photoDiv.className = `photo`;
+  const photoImg = document.createElement("img");
+  photoImg.src = `${data.photo}`;
+  photoDiv.appendChild(photoImg);
+  const infoWrapDiv = document.createElement("div");
+  infoWrapDiv.className = `info-wrap`;
+  div.append(photoDiv, infoWrapDiv);
+  const infoDiv = document.createElement("div");
+  const breedInfo = document.createElement("div");
+  const colorInfo = document.createElement("div");
+  const locationInfo = document.createElement("div");
+  const dateInfo = document.createElement("div");
+  const noteInfo = document.createElement("div");
+  breedInfo.className = "info";
+  breedInfo.textContent = `品種 : ${data.breed}`;
+  colorInfo.className = "info";
+  colorInfo.textContent = `顏色 : ${data.color}`;
+  locationInfo.className = "info";
+  locationInfo.textContent = `地點 : ${data.fullAddress}`;
+  dateInfo.className = "info";
+  dateInfo.textContent = `時間 : ${data.date}`;
+  noteInfo.className = "info";
+  noteInfo.textContent = `備註 : ${data.note}`;
+  infoDiv.append(breedInfo, colorInfo, locationInfo, dateInfo, noteInfo);
+  const finderInfo = document.createElement("div");
+  finderInfo.className = `finderinfo`;
+  const finderPic = document.createElement("img");
+  finderPic.src = `${data.postUserPic}`;
+  const finderName = document.createElement("div");
+  finderName.className = "finder-name";
+  finderName.textContent = `協尋者： ${data.postUserName}`;
+  finderInfo.append(finderPic, finderName);
+  infoWrapDiv.append(infoDiv, finderInfo);
+
   parentDiv.appendChild(div);
 }
 
@@ -79,15 +98,12 @@ function createHistoryPost(data) {
   const h5 = document.createElement("h5");
   const div = document.createElement("div");
   const p = document.createElement("p");
-  // const button = document.createElement("button");
   const wrapDiv = document.querySelector(".main-wrap");
   h5.textContent = "請選擇您走失的寵物";
   p.textContent = `系統會將您的貼文，傳送給協尋者做比對確認`;
   h5.className = "subtitle";
   p.className = "match-desc";
   div.className = "existing-post";
-  // button.className = "submit";
-  // button.textContent = "Submit";
   wrapDiv.appendChild(h5);
   wrapDiv.appendChild(p);
   wrapDiv.appendChild(div);
@@ -97,28 +113,53 @@ function createHistoryPost(data) {
       .toLocaleString("en-US")
       .split(", ")[0];
     post.date = time;
+
     const div = document.createElement("div");
     const parentDiv = document.querySelector(".existing-post");
     div.classList = `post ${post.id}`;
-    div.innerHTML = `
-    <label class="check-label">
-    <img
-      src="${post.photo}"
-    />
-    <div class="post-info">
-      <div class="post-info-title">找寵物</div>
-      <div><span>品種: </span>${post.breed}</div>
-      <div><span>地點: </span>${post.fullAddress}</div>
-      <div><span>日期: </span>${post.date}</div>
-      <div><span>狀態: </span>${post.status}</div>
-    </div>
-    <div class="check ${post.id}"></div>
-    <input type="radio" name="post" value="${post.id}" />
-  </label>
-    `;
+    const label = document.createElement("label");
+    label.className = `check-label`;
+    const postImg = document.createElement("img");
+    postImg.src = `${post.photo}`;
+    const postInfo = document.createElement("div");
+    postInfo.className = `post-info`;
+    const postInfoTitle = document.createElement("div");
+    postInfoTitle.className = `post-info-title`;
+    postInfoTitle.textContent = `找寵物`;
+    div.appendChild(label);
+
+    const breedDiv = document.createElement("div");
+    const breedSpan = document.createElement("span");
+    breedSpan.textContent = `品種: `;
+    breedDiv.textContent = `${post.breed}`;
+    breedDiv.prepend(breedSpan);
+    const locationDiv = document.createElement("div");
+    const locationSpan = document.createElement("span");
+    locationSpan.textContent = `地點: `;
+    locationDiv.textContent = `${post.fullAddress}`;
+    locationDiv.prepend(locationSpan);
+    const dateDiv = document.createElement("div");
+    const dateSpan = document.createElement("span");
+    dateSpan.textContent = `日期: `;
+    dateDiv.textContent = `${post.date}`;
+    dateDiv.prepend(dateSpan);
+    const statusDiv = document.createElement("div");
+    const statusSpan = document.createElement("span");
+    statusSpan.textContent = `狀態: `;
+    statusDiv.textContent = `${post.status}`;
+    statusDiv.prepend(statusSpan);
+    postInfo.append(postInfoTitle, breedDiv, locationDiv, dateDiv, statusDiv);
+
+    const checkDiv = document.createElement("div");
+    checkDiv.classList = `check ${post.id}`;
+    const input = document.createElement("input");
+    input.type = `radio`;
+    input.name = "post";
+    input.value = `${post.id}`;
+
+    label.append(postImg, postInfo, checkDiv, input);
     parentDiv.appendChild(div);
   });
-  // wrapDiv.appendChild(button);
 }
 
 let fpid;
@@ -150,10 +191,7 @@ function alertAndSave(message, fpid) {
     confirmButtonText: "確認",
     denyButtonText: `取消`,
   }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
-      console.log("確認");
-      // call api
       storeMatchList(fpid);
     }
   });
@@ -164,7 +202,6 @@ async function storeMatchList(fpid) {
   const body = {
     thankmessage: thankmessage,
   };
-  // call api
   const response = await fetch(`/api/storeMatchList?foid=${id}&fpid=${fpid}`, {
     method: "POST",
     headers: {
