@@ -156,6 +156,19 @@ function isValidDate(dateString) {
   return day > 0 && day <= monthLength[month - 1];
 }
 
+function getOtherUserId(existingIds, userId) {
+  existingIds.map((data) => {
+    let ids = data.room_id.split("-");
+    ids.forEach((id) => {
+      if (id != userId) {
+        console.log(id);
+        data.othersId = id;
+      }
+    });
+  });
+  return existingIds;
+}
+
 module.exports = {
   wrapAsync,
   uploadFindPets,
@@ -166,4 +179,5 @@ module.exports = {
   formatPostData,
   convertGeoCoding,
   isValidDate,
+  getOtherUserId,
 };
