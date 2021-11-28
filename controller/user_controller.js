@@ -1,41 +1,39 @@
 const validator = require("validator");
 const User = require("../model/user_model");
-const Auth = require("../util/auth");
-const crypto = require("crypto");
 
 const signUp = async (req, res) => {
   const { email, password } = req.body;
   let { name } = req.body;
-  name = validator.escape(name);
   const provider = "native";
   const picture = `${process.env.CLOUDFRONT}/member_default_image.png`;
+  const passwordLenMax = 6;
 
   if (!name || !email || !password) {
-    res.status(400).json({ error: "請輸入名字、email 和密碼" });
-    return;
+    return res.status(400).json({ error: "請輸入名字、email 和密碼" });
+  }
+
+  if (name) {
+    name = validator.escape(name);
   }
   if (!validator.isEmail(email)) {
-    res.status(400).json({ error: "請輸入正確的 email" });
-    return;
+    return res.status(400).json({ error: "請輸入正確的 email" });
   }
-  if (password.length < 6) {
-    res.status(400).json({ error: "請輸入至少6位數密碼" });
+  if (password.length < passwordLenMax) {
+    return res.status(400).json({ error: "請輸入至少6位數密碼" });
   }
 
   const result = await User.signUp(provider, name, email, password, picture);
   if (result.error) {
-    res.status(403).json({ error: result.error });
-    return;
+    return res.status(403).json({ error: result.error });
   }
+
   return res.status(200).json(result);
 };
 
 const signIn = async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
-    res.status(400).json({ error: "請輸入 email 和密碼" });
-    return;
+    return res.status(400).json({ error: "請輸入 email 和密碼" });
   }
   try {
     const result = await User.nativeSignIn(email, password);
@@ -51,8 +49,7 @@ const signIn = async (req, res) => {
 const facebookSignIn = async (req, res) => {
   const { access_token } = req.body;
   if (!access_token) {
-    res.status(400).json({ error: "no access token" });
-    return;
+    return res.status(400).json({ error: "no access token" });
   }
   try {
     // get fb profile data
@@ -60,13 +57,12 @@ const facebookSignIn = async (req, res) => {
     const { id, name, email } = profile;
     const picture = profile.picture.data.url;
     if (!id || !name || !email) {
-      res.status(400).json({ error: "no access token" });
-      return;
+      return res.status(400).json({ error: "no access token" });
     }
     const result = await User.facebookSignIn(id, name, email, picture);
     return res.json(result);
   } catch (error) {
-    return { error: error };
+    return { error };
   }
 };
 
@@ -77,8 +73,7 @@ const getUserData = async (req, res) => {
     name: payload.name,
     picture: payload.picture,
   };
-  console.log(userData);
-  res.json({ userData });
+  return res.json({ userData });
 };
 
 module.exports = { signUp, signIn, getUserData, facebookSignIn };

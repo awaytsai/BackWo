@@ -1,13 +1,7 @@
-const aws = require("aws-sdk");
-const fetch = require("node-fetch");
-const breedsList = require("../public/data/breeds.json");
-
 const Pet = require("../model/petposts_model");
-const Lables = require("../model/labels_model");
 const Notification = require("../model/notification_model");
 const Geo = require("../model/geo_model");
 const Match = require("../model/match_model");
-
 const awsReko = require("../util/aws_reko");
 const {
   checkPerson,
@@ -18,10 +12,15 @@ const {
   isValidDate,
 } = require("../util/util");
 
+const MAXLENGTH = parseInt(process.env.MAX_INPUT_LENGTH);
+
 const uploadFindPost = async (req, res) => {
   const { kind, color, county, district, address, date, note } = req.body;
   const param = req.originalUrl.split("/")[2];
+
+  console.log(param);
   let person = checkPerson(param);
+  console.log(person);
 
   let breed = req.body.breed;
   if (!(kind && breed && color && county && district && address && date)) {
@@ -30,7 +29,7 @@ const uploadFindPost = async (req, res) => {
   if (!isValidDate(date)) {
     return res.json({ message: "日期格式錯誤" });
   }
-  if (note.length > 250) {
+  if (note.length > MAXLENGTH) {
     return res.json({ message: "字數過多，請勿超過250字" });
   }
   if (breed == "其他") {
@@ -58,16 +57,20 @@ const uploadFindPost = async (req, res) => {
     geoCoding.lng
   );
   const postId = postResult.insertId;
+  console.log("1. geocoding");
   // console.log(postResult);
   // console.log(postId);
   let morePhoto;
+  console.log(req.files.more_photo);
   if (req.files.more_photo) {
     morePhoto = req.files.more_photo.map((p) => p.key);
     // morePhoto = [req.files.more_photo[0].key, req.files.more_photo[1].key];
     const storePhotos = await Pet.storeMorePhoto(postId, morePhoto);
+    console.log("2. morePhoto");
   }
 
   if (breed == "未知") {
+    console.log("未知");
     // aws reko
     const awsData = await awsReko.awsReko(
       param,
@@ -78,6 +81,7 @@ const uploadFindPost = async (req, res) => {
       county,
       date
     );
+    console.log("10", awsData);
     return res.json({ status: "updated" });
   }
 
@@ -112,7 +116,7 @@ const uploadFindPost = async (req, res) => {
     // console.log(notificationData);
     console.log("NOTIFICATION DONE");
   }
-  res.json({ status: "updated" });
+  return res.json({ status: "updated" });
 };
 
 const getPetsGeoInfo = async (req, res) => {
@@ -219,7 +223,9 @@ const getFindPostDetail = async (req, res) => {
   const morePhoto = await Pet.getPhotosById(id);
   getPhotoPath(morePhoto, param);
   console.log(morePhoto);
-
+  if (postData.length == 0) {
+    return res.json({ message: "notexist" });
+  }
   const postDetail = postData[0];
   // check if user login
   if (!req.decoded) {
@@ -296,7 +302,7 @@ const updatePostdata = async (req, res) => {
   if (!isValidDate(date)) {
     return res.json({ message: "日期格式錯誤" });
   }
-  if (note.length > 250) {
+  if (note.length > MAXLENGTH) {
     return res.json({ message: "字數過多，請勿超過250字" });
   }
   if (breed == "其他") {
