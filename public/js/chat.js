@@ -1,7 +1,5 @@
-// add eventlistener => hit api with token
 const chat = document.querySelector(".chat");
 chat.addEventListener("click", () => {
-  // if no token
   if (!token) {
     Swal.fire({
       icon: "info",
@@ -27,7 +25,6 @@ async function getRoomData() {
     },
   });
   const latestRoomId = await response.json();
-  console.log(latestRoomId);
 
   if (
     latestRoomId.message == "請先登入或註冊" ||

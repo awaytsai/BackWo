@@ -108,7 +108,6 @@ function createHistoryPost(data) {
   wrapDiv.appendChild(p);
   wrapDiv.appendChild(div);
   data.map((post) => {
-    console.log(post);
     let time = new Date(Date.parse(post.date))
       .toLocaleString("en-US")
       .split(", ")[0];
@@ -168,14 +167,11 @@ let fpid;
 const submitBtn = document.querySelector(".submit");
 submitBtn.addEventListener("click", () => {
   const radios = document.querySelectorAll('input[type="radio"]:checked');
-  console.log(radios);
   if (radios.length > 0) {
-    console.log("checked");
     const message = "待協尋者確認後，會協助您將找寵物的貼文移除";
     fpid = radios[0].value;
     alertAndSave(message, fpid);
   } else {
-    console.log("no checked or no post");
     const message = "將傳送感謝訊息給協尋者";
     fpid = 0;
     alertAndSave(message, fpid);

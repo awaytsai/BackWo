@@ -7,7 +7,6 @@ getMatchCase();
 async function getMatchCase() {
   const response = await fetch("/api/getSuccessCase");
   const matchData = await response.json();
-  console.log(matchData);
   createCase(matchData);
 }
 

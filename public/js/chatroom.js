@@ -156,13 +156,10 @@ async function getExistingRoomsRecord(usersData) {
     `/api/chatroomrecord?uid=${usersData.senderId}`
   );
   const historyData = await historyResponse.json();
-  console.log(historyData);
   return historyData;
 }
 
-//
 function createHistoryMessage(historyMessage) {
-  console.log(historyMessage);
   if (historyMessage.length == 0) {
   }
   historyMessage.reverse().map((message) => {
@@ -204,7 +201,6 @@ function createHistoryMessage(historyMessage) {
 
 function createExistingRooms(historyData) {
   historyData.map((data) => {
-    console.log(data);
     let time = new Date(Date.parse(data[0].time))
       .toLocaleString("en-US")
       .split(", ");

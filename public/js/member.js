@@ -96,7 +96,7 @@ async function signIn(body) {
     };
     const response = await fetch("/api/member/signin", param);
     const result = await response.json();
-    console.log(result);
+
     if (result.error) {
       Swal.fire({
         icon: "info",
