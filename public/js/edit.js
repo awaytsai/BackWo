@@ -259,7 +259,7 @@ uploadBtn.addEventListener("click", (e) => {
 const formData = document.querySelector(".uploadform");
 async function updatefield() {
   const response = await fetch(
-    `/api/findpost/updatePostdata?id=${id}&tag=${person}`,
+    `/api/${person}/updatePostdata?id=${id}&tag=${person}`,
     {
       method: "PUT",
       headers: {
@@ -308,13 +308,16 @@ async function updatefield() {
 }
 
 async function updateWithImage() {
-  const response = await fetch(`/api/f${person}/updateWithImage?id=${id}`, {
-    method: "PUT",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    body: new FormData(formData),
-  });
+  const response = await fetch(
+    `/api/${person}/updateWithImage?id=${id}&tag=${person}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: new FormData(formData),
+    }
+  );
   const result = await response.json();
   if (
     result.message == "請填寫所有欄位" ||
