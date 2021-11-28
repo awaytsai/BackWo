@@ -13,59 +13,48 @@ const { getPhotoPath } = require("../util/util");
 // │    └──────────────────── minute (0 - 59)
 // └───────────────────────── second (0 - 59, OPTIONAL)
 
-const rule = "*/1 * * * *";
-// const rule = "1 * * * *";
-// scheduling for monute is 1;
+// scheduling for every minute
+const ruleNoti = "*/1 * * * *";
 
-const job = schedule.scheduleJob(rule, async () => {
-  // 1. sending notification
+// send notification to finder
+schedule.scheduleJob(ruleNoti, async () => {
   const notiMailData = await Noti.getNotiMailData();
   if (notiMailData.length == 0) {
     return console.log("nothing to update");
   }
+  const person = "findowners";
   const notiMailPhoto = await Noti.getNotiMailPhoto();
-  getPhotoPath(notiMailPhoto, "findowners");
+  getPhotoPath(notiMailPhoto, person);
   for (let i = 0; i < notiMailData.length; i++) {
     notiMailData[i].photo = notiMailPhoto[i].photo;
   }
-  console.log(notiMailData);
-  const notiMailResponse = await notiMail(notiMailData);
-  console.log("mail sended");
-  // update mail status
+  await sendNotiMail(notiMailData);
+
   const notiIds = [];
   notiMailData.map((data) => notiIds.push(data.n_id));
-  console.log(notiIds);
-  const updateMailStatus = await Noti.updateNotiMailStatus(notiIds);
-  console.log(updateMailStatus);
+  await Noti.updateNotiMailStatus(notiIds);
 });
 
+// scheduling for every minute
 const ruleMatch = "*/1 * * * *";
-// const ruleMatch = "2 * * * *";
-// scheduling for monute is 2;
 
-const jobMatch = schedule.scheduleJob(ruleMatch, async () => {
-  // 2. sending confirm post
+// sending confirm post to owner
+schedule.scheduleJob(ruleMatch, async () => {
   const matchMailData = await Noti.getMatchMailData();
-  if (matchMailData == 0) {
+  if (matchMailData.length == 0) {
     return console.log("nothing to update");
   }
-  console.log(matchMailData);
   const senderData = await Noti.getMatchSenderData();
-  console.log(senderData);
+  await sendMatchMail(matchMailData, senderData);
+
   const matchIds = [];
   matchMailData.map((data) => {
     matchIds.push(data.id);
   });
-  console.log(matchIds);
-  // send email
-  const matchMailResponse = await matchMail(matchMailData, senderData);
-  console.log("mail sended");
-  const updateMatchMailStatus = await Noti.updateMatchMailStatus(matchIds);
-  console.log(updateMatchMailStatus);
-  console.log("updated");
+  await Noti.updateMatchMailStatus(matchIds);
 });
 
-async function notiMail(data) {
+async function sendNotiMail(data) {
   try {
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -120,7 +109,7 @@ async function notiMail(data) {
   }
 }
 
-async function matchMail(data, sender) {
+async function sendMatchMail(data, sender) {
   try {
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
