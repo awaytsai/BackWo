@@ -39,7 +39,6 @@ describe("user signup", () => {
     };
 
     expect(data.user).to.deep.equal(userExpected);
-    // expect(data.access_token).to.be.a("string");
   });
 
   it("signup without name or email or password", async () => {
