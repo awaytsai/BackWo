@@ -161,7 +161,6 @@ function getOtherUserId(existingIds, userId) {
     let ids = data.room_id.split("-");
     ids.forEach((id) => {
       if (id != userId) {
-        console.log(id);
         data.othersId = id;
       }
     });
