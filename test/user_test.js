@@ -1,6 +1,9 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const { truncateTestData } = require("../test/test_data_generator");
+const {
+  truncateTestData,
+  createFakeData,
+} = require("../test/test_data_generator");
 const { app } = require("../app");
 const expect = chai.expect;
 
@@ -13,13 +16,14 @@ describe("user signup", () => {
     if (env !== "test") {
       throw "test env required";
     }
-    // await truncateTestData("user");
+    await truncateTestData("user");
+    await createFakeData();
   });
 
   it("native sign up", async () => {
     const user = {
       name: "test",
-      email: "test6@gmail.com",
+      email: "test1@gmail.com",
       password: "000000",
     };
 
@@ -95,7 +99,7 @@ describe("user signup", () => {
     // existed email
     const user6 = {
       name: "aaa",
-      email: "00@gmail.com",
+      email: "test@gmail.com",
       password: "000000",
     };
     const res6 = await requester.post("/api/member/signup").send(user6);
