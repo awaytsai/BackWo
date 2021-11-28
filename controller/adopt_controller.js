@@ -1,102 +1,91 @@
 const schedule = require("node-schedule");
 const fetch = require("node-fetch");
 const Adopt = require("../model/adopt_model");
-const shelterList = require("../public/data/adopt_shelter.json");
+const shelterList = require("../data/adopt_shelter.json");
+const cityRegion = require("../data/region_city.json");
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 20;
-rule.minute = 01;
+rule.hour = parseInt(process.env.ADOPT_SCHEDULE_HOUR);
+rule.minute = parseInt(process.env.ADOPT_SCHEDULE_MINUTE);
 rule.tz = "Asia/Taipei";
 
-const job = schedule.scheduleJob(rule, async () => {
-  console.log("crontab");
-  const truncateResult = await Adopt.truncateAdoptData();
+schedule.scheduleJob(rule, async () => {
   const url =
     "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL";
   const response = await fetch(url);
   const adoptData = await response.json();
-  // add link to each data
-  // add URL and region
+  if (adoptData.length == 0) {
+    return;
+  }
+  await Adopt.truncateAdoptData();
+  // add formated URL and region category
   adoptData.map((data) => {
     data.link = `https://asms.coa.gov.tw/Amlapp/App/AnnounceList.aspx?Id=${data.animal_id}&AcceptNum=${data.animal_subid}&PageType=Adopt`;
     const place = data.animal_place.slice(0, 3);
-    if (
-      place == "新北市" ||
-      place == "臺北市" ||
-      place == "桃園市" ||
-      place == "新竹縣" ||
-      place == "新竹市" ||
-      place == "苗栗縣" ||
-      place == "基隆市"
-    ) {
+    if (cityRegion.north.includes(place)) {
       data.region = "北部";
     }
-    if (place == "臺中市" || place == "彰化縣" || place == "南投縣") {
+    if (cityRegion.central.includes(place)) {
       data.region = "中部";
     }
-    if (
-      place == "臺南市" ||
-      place == "高雄市" ||
-      place == "南投縣" ||
-      place == "雲林縣" ||
-      place == "屏東縣" ||
-      place == "嘉義市" ||
-      place == "嘉義縣"
-    ) {
+    if (cityRegion.south.includes(place)) {
       data.region = "南部";
     }
-    if (place == "宜蘭縣" || place == "花蓮縣" || place == "臺東縣") {
+    if (cityRegion.east.includes(place)) {
       data.region = "東部";
     }
-    if (place == "金門縣" || place == "連江縣" || place == "澎湖縣") {
+    if (cityRegion.island.includes(place)) {
       data.region = "外島";
     }
   });
-  const adoptResult = await Adopt.updateAdoptData(adoptData);
+  await Adopt.updateAdoptData(adoptData);
 });
 
 const getShelters = async (req, res) => {
-  return res.json(shelterList);
+  return res.status(200).json(shelterList);
 };
 
 const getAdoptData = async (req, res) => {
   let { kind, region, shelter } = req.query;
-  const limit = 60;
+  const all = "全部";
+  const dog = "狗";
+  const cat = "貓";
+  const adoptPostLimit = parseInt(process.env.ADOPT_POST_LIMIT);
+
   let paging = parseInt(req.query.paging);
   if (!paging) {
     paging = 0;
   }
-  const offset = paging * limit;
+  const offset = paging * adoptPostLimit;
   let nextPaging;
   // with filter
   if (kind && shelter && region) {
-    if (kind == "全部") {
-      kind = ["狗", "貓"];
+    if (kind == all) {
+      kind = [dog, cat];
     }
-    // for region
-    if (shelter == "all") {
+    // region filter
+    if (shelter == all) {
       const regionData = await Adopt.getRegionAdoptData(
         kind,
         region,
-        limit,
+        adoptPostLimit,
         offset
       );
       if (regionData.length > 0) {
         const regionLength = await Adopt.countAdoptDataByRegion(kind, region);
-        const maxPage = Math.ceil(regionLength[0].count / limit) - 1;
+        const maxPage = Math.ceil(regionLength[0].count / adoptPostLimit) - 1;
         if (paging < maxPage) {
           nextPaging = paging + 1;
         }
-        return res.json({ regionData, nextPaging: nextPaging });
+        return res.status(200).json({ regionData, nextPaging: nextPaging });
       }
     }
-
-    // for shelter
+    // shelter filter
     const filterData = await Adopt.getFilterAdoptData(
       kind,
       region,
       shelter,
-      limit,
+      adoptPostLimit,
       offset
     );
     if (filterData.length > 0) {
@@ -105,23 +94,22 @@ const getAdoptData = async (req, res) => {
         region,
         shelter
       );
-      const maxPage = Math.ceil(filterLength[0].count / limit) - 1;
+      const maxPage = Math.ceil(filterLength[0].count / adoptPostLimit) - 1;
       if (paging < maxPage) {
         nextPaging = paging + 1;
       }
-      return res.json({ filterData, nextPaging: nextPaging });
+      return res.status(200).json({ filterData, nextPaging: nextPaging });
     }
   }
   // without filter
   if (!(kind && shelter && region)) {
-    const adoptData = await Adopt.getAllAdoptData(limit, offset);
+    const adoptData = await Adopt.getAllAdoptData(adoptPostLimit, offset);
     const adoptLength = await Adopt.countAdoptDataByRegion();
-    // add paging (if exist)
-    const maxPage = Math.ceil(adoptLength[0].count / limit) - 1;
+    const maxPage = Math.ceil(adoptLength[0].count / adoptPostLimit) - 1;
     if (paging < maxPage) {
       nextPaging = paging + 1;
     }
-    return res.json({ adoptData, nextPaging: nextPaging });
+    return res.status(200).json({ adoptData, nextPaging: nextPaging });
   }
 };
 

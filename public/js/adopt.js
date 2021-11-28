@@ -176,7 +176,7 @@ regions.map((r) => {
     const classNam = e.target.className;
     kind = "全部";
     region = regionList[classNam];
-    shelter = "all";
+    shelter = "全部";
     getRegionData(kind, region, shelter);
   });
 });
