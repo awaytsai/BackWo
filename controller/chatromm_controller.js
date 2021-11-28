@@ -26,7 +26,7 @@ const getChatroomAccess = async (req, res) => {
   const receiverData = await User.getUserData(otherUserId);
 
   if (senderData.length == 0 || receiverData.length == 0) {
-    return res.status(401).json({ message: "noaccess" });
+    return res.status(403).json({ message: "noaccess" });
   }
 
   const formatUserData = {
@@ -45,7 +45,7 @@ const getChatroomRecord = async (req, res) => {
   const userId = req.query.uid;
   let existingIds = await Chat.getExistingRoomIds(userId);
   if (existingIds.length == 0) {
-    return res.json({ message: "no existing rooms" });
+    return res.status(200).json({ message: "no existing rooms" });
   }
 
   getOtherUserId(existingIds, userId);
@@ -59,7 +59,7 @@ const getUserLatestRoomId = async (req, res) => {
   const userId = req.decoded.payload.id;
   const latestRoomId = await Chat.getLatestRoomId(userId);
   if (latestRoomId.length == 0) {
-    return res.json({ message: "noExistingRoom" });
+    return res.status(200).json({ message: "noExistingRoom" });
   } else {
     return res.status(200).json(latestRoomId[0]);
   }

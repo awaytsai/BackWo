@@ -19,7 +19,7 @@ const getMatchPostDetail = async (req, res) => {
   let historyData;
   if (historyResult.length == 0) {
     historyData = "nodata";
-    return res.json({ formatData, historyData });
+    return res.status(200).json({ formatData, historyData });
   }
   historyData = [];
   param = "findpets";
@@ -28,7 +28,7 @@ const getMatchPostDetail = async (req, res) => {
     post.status = "lost";
     historyData.push(post);
   }
-  return res.json({ formatData, historyData });
+  return res.status(200).json({ formatData, historyData });
 };
 
 const storeMatchList = async (req, res) => {
@@ -41,12 +41,12 @@ const storeMatchList = async (req, res) => {
     // check access
     const postData = await Pet.getFindPetPostByUser(userId);
     if (postData.length == 0) {
-      return res.json({ message: "noaccess" });
+      return res.status(403).json({ message: "noaccess" });
     }
     if (postData.length > 0) {
       const result = postData.filter((post) => post.id == fpid);
       if (result.length == 0) {
-        return res.json({ message: "noaccess" });
+        return res.status(403).json({ message: "noaccess" });
       }
       if (result.length > 0) {
         const updateTime = null;
@@ -72,7 +72,7 @@ const storeMatchList = async (req, res) => {
       updateTime
     );
   }
-  return res.json({ status: "updated" });
+  return res.status(200).json({ status: "updated" });
 };
 
 const getConfirmPost = async (req, res) => {
@@ -81,7 +81,7 @@ const getConfirmPost = async (req, res) => {
   const petStatus = "lost";
   const findOwnersPostData = await Pet.getPostByUser(userId, person, petStatus);
   if (findOwnersPostData.length == 0) {
-    return res.json({ message: "nodata" });
+    return res.status(403).json({ message: "nodata" });
   }
   // get all confirm post sender data
   const findOwnerIds = [];
@@ -90,7 +90,7 @@ const getConfirmPost = async (req, res) => {
   });
   const userData = await User.getConfirmPostUserData(findOwnerIds);
   if (userData.length == 0) {
-    return res.json({ message: "nodata" });
+    return res.status(200).json({ message: "nodata" });
   }
   // get all find pet post
   const findPetIds = [];
@@ -100,11 +100,10 @@ const getConfirmPost = async (req, res) => {
   let filterId = findPetIds.filter((id) => id !== null);
   // without find pet post
   if (filterId.length == 0 && findPetIds.includes(null)) {
-    return res.json({ userData });
+    return res.status(200).json({ userData });
   }
   // with find pet post
   const petData = await Pet.getFindPostById(filterId);
-  console.log(petData);
   petData.map((data) => {
     for (i = 0; i < userData.length; i++) {
       if (userData[i].find_pet_id == data.id) {
@@ -114,7 +113,7 @@ const getConfirmPost = async (req, res) => {
       }
     }
   });
-  return res.json({ userData });
+  return res.status(200).json({ userData });
 };
 
 const updateConfirmPost = async (req, res) => {
@@ -140,7 +139,7 @@ const updateConfirmPost = async (req, res) => {
     );
   }
 
-  return res.json({ status: "updated" });
+  return res.status(200).json({ status: "updated" });
 };
 
 const getSuccessCase = async (req, res) => {
@@ -149,7 +148,7 @@ const getSuccessCase = async (req, res) => {
   matchData.map((data) => {
     data.photo = `${process.env.CLOUDFRONT}/findowners/${data.photo}`;
   });
-  return res.json(matchData);
+  return res.status(200).json(matchData);
 };
 
 module.exports = {
