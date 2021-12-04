@@ -245,6 +245,11 @@ uploadBtn.addEventListener("click", (e) => {
       icon: "info",
       text: "字數過多，請勿超過250字",
     });
+  } else if (file.value == "") {
+    Swal.fire({
+      icon: "info",
+      text: "請上傳更新封面照片",
+    });
   } else {
     // check if upload images again
     if (file.value == "") {
@@ -258,6 +263,7 @@ uploadBtn.addEventListener("click", (e) => {
 
 const formData = document.querySelector(".uploadform");
 async function updatefield() {
+  await alertLoading();
   const response = await fetch(
     `/api/${person}/updatePostdata?id=${id}&tag=${person}`,
     {
@@ -308,6 +314,7 @@ async function updatefield() {
 }
 
 async function updateWithImage() {
+  await alertLoading();
   const response = await fetch(
     `/api/${person}/updateWithImage?id=${id}&tag=${person}`,
     {
@@ -414,4 +421,22 @@ function validateMorePhoto(input) {
     const uploadInput = document.querySelector("#formFileMore");
     uploadInput.value = "";
   }
+}
+
+async function alertLoading() {
+  Swal.fire({
+    html: "Loading...",
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  });
 }
