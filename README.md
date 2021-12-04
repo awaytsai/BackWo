@@ -38,13 +38,13 @@ https://www.back-wo.com
   - Showing lost pet post information. All posts will be visualized on Google Map with description info windows.
   - Drag the map or use the filter to break down lost pets’ information.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/view_posts.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/view_posts.mp4)
 
 - **Image Auto Labeling**
 
   - Upload a pet post. The main image will be detected and labeled by Amazon Rekognition for unknown pet breeds.
 
-  ![](./public/assets/readme/view_posts.mp4)
+  ![](./public/assets/readme/view_posts.gif)
 
 - **Lost Pets Matching and Notification**
 
