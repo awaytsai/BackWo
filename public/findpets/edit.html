@@ -36,10 +36,7 @@
     <header>
       <div class="header-wrap">
         <div class="logo-wrap">
-          <a class="logo" href="/"
-            ><img
-              src="https://media.istockphoto.com/vectors/cat-dog-yin-yang-vector-id1157833047?k=20&m=1157833047&s=612x612&w=0&h=0NbXpgif_tjPpbXrLedyl7gA94xW2Y_DNNdv-WgS9MY="
-          /></a>
+          <a class="logo" href="/"><img src="/images/logo.jpeg" /></a>
           <a href="/"><div class="logo-message">Back Wo</div></a>
         </div>
         <div class="nav-wrap">
@@ -58,7 +55,7 @@
     <div class="infobar">Back Wo，讓毛小孩們回到自己的窩</div>
     <main>
       <div class="post">
-        <div class="post-title">編輯<span> 找主人 </span>貼文</div>
+        <div class="post-title">編輯<span> 找寵物 </span>貼文</div>
         <div class="post-form">
           <form
             class="uploadform"
@@ -147,7 +144,9 @@
             <div class="form-wrap-right">
               <div class="photo-wrap">
                 <div class="photo-upload" class="mb-3">
-                  <label for="formFile" class="form-label">更新封面照片</label>
+                  <label for="formFile" class="form-label"
+                    >更新封面照片<span>*</span></label
+                  >
                   <input
                     type="file"
                     name="photo"
@@ -155,6 +154,7 @@
                     class="form-control"
                     id="formFile"
                     onchange="preview()"
+                    required
                   />
                 </div>
                 <div class="photo-upload" class="mb-3">
@@ -183,9 +183,7 @@
                 </div>
                 <div class="photo-reminder">
                   <div>
-                    <img
-                      src="https://w7.pngwing.com/pngs/387/325/png-transparent-exclamation-mark-scalable-graphics-wikimedia-commons-computer-file-exclamation-mark-angle-text-orange.png"
-                    />
+                    <img src="/images/upload_info_icon.png" />
                   </div>
                   <div class="photo-reminder-text">
                     <p>1. 封面圖片僅限一張，更多圖片僅限兩張</p>
