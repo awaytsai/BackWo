@@ -62,7 +62,16 @@ const uploadFindPost = async (req, res) => {
 
   if (breed == "未知") {
     // aws reko
-    await awsReko.awsReko(param, photo, postId, breed, person, county, date);
+    await awsReko.awsReko(
+      param,
+      photo,
+      postId,
+      breed,
+      kind,
+      person,
+      county,
+      date
+    );
     return res.status(200).json({ status: "updated" });
   }
 
@@ -73,6 +82,7 @@ const uploadFindPost = async (req, res) => {
   person = switchPerson(param);
   const matchBreedData = await Pet.getMatchBreedPosts(
     person,
+    kind,
     breed,
     county,
     date
@@ -282,7 +292,7 @@ const updatePostdata = async (req, res) => {
   const userId = req.decoded.payload.id;
   const id = req.query.id;
   const param = req.originalUrl.split("/")[2];
-  const person = checkPerson(param);
+  let person = checkPerson(param);
   const postData = await Pet.getFindPostById(id);
 
   if (postData.length == 0) {
@@ -338,6 +348,35 @@ const updatePostdata = async (req, res) => {
     lng,
     id
   );
+
+  // check if owner post (breed/county/time) match
+  if (param == "findpets") {
+    return res.status(200).json({ status: "updated" });
+  }
+  person = switchPerson(param);
+  const matchBreedData = await Pet.getMatchBreedPosts(
+    person,
+    kind,
+    breed,
+    county,
+    date
+  );
+  if (matchBreedData.length > 0) {
+    const petPostIds = [];
+    matchBreedData.map((data) => {
+      petPostIds.push(data.id);
+    });
+    const notiStauts = "created";
+    const mailStatus = null;
+    // create notification data (fp_id/fo_id/)
+    await Notification.insertNotification(
+      petPostIds,
+      id,
+      notiStauts,
+      mailStatus
+    );
+  }
+
   return res.status(200).json({ status: "updated" });
 };
 

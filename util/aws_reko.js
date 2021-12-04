@@ -7,7 +7,18 @@ const Notification = require("../model/notification_model");
 const Pet = require("../model/petposts_model");
 const { switchPerson } = require("../util/util");
 
-async function awsReko(param, photo, postId, breed, person, county, date) {
+let updateBreed;
+
+async function awsReko(
+  param,
+  photo,
+  postId,
+  breed,
+  kind,
+  person,
+  county,
+  date
+) {
   aws.config.update({
     region: process.env.AWS_BUCKET_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -23,57 +34,82 @@ async function awsReko(param, photo, postId, breed, person, county, date) {
     MaxLabels: 20,
     MinConfidence: 80,
   };
-
-  const labels = [];
-  let detectBreed;
-
   const rekognition = new aws.Rekognition();
   rekognition.detectLabels(params, async (err, data) => {
     if (err) console.log(err, err.stack);
     else console.log(data);
-
-    // labels
-    data.Labels.map((lb) => {
-      labels.push(lb.Name);
-    });
-    labels.map((lb) => {
-      breedsList.dog_breed_en.map((breed) => {
-        // check if label detect pet breed
-        if (lb == breed) {
-          detectBreed =
-            breedsList.dog_breed[breedsList.dog_breed_en.indexOf(breed)];
-        }
-      });
-    });
-    await Lables.createLable(labels, postId);
-
-    if (detectBreed) {
-      breed = detectBreed;
-      await Pet.updatePetsPost(breed, postId);
-    }
-
-    // check if post match
-    person = switchPerson(param);
-    const matchBreedData = await Pet.getMatchBreedPosts(
+    await updateLabelsAndPost(data, postId, breed);
+    await updateNotiAndMatch(
+      param,
+      postId,
+      updateBreed,
       person,
-      breed,
+      kind,
       county,
       date
     );
-    if (matchBreedData.length > 0) {
-      const petPostIds = [];
-      matchBreedData.map((data) => {
-        petPostIds.push(data.id);
-      });
-
-      // create notification
-      const notiStauts = "created";
-      await Notification.insertNotification(petPostIds, postId, notiStauts);
-
-      const response = { status: "updated" };
-      return response;
-    }
   });
+}
+
+async function updateLabelsAndPost(data, postId, breed) {
+  let detectBreed;
+  const labels = [];
+  let detectBreedList = [];
+  // labels
+  data.Labels.map((lb) => {
+    labels.push(lb.Name);
+  });
+  labels.map((lb) => {
+    breedsList.dog_breed_en.map((breed) => {
+      // check if label detect pet breed
+      if (lb == breed) {
+        detectBreed =
+          breedsList.dog_breed[breedsList.dog_breed_en.indexOf(breed)];
+        detectBreedList.push(detectBreed);
+      }
+    });
+  });
+  const labelData = labels.map((lb) => [lb, postId]);
+  await Lables.createLable(labelData);
+
+  updateBreed = breed;
+  if (detectBreed != undefined) {
+    updateBreed = detectBreedList[0];
+    await Pet.updatePetsPost(updateBreed, postId);
+  }
+}
+
+async function updateNotiAndMatch(
+  param,
+  postId,
+  breed,
+  person,
+  kind,
+  county,
+  date
+) {
+  // check if post match
+  person = switchPerson(param);
+  const matchBreedData = await Pet.getMatchBreedPosts(
+    person,
+    kind,
+    breed,
+    county,
+    date
+  );
+  detectBreedList = [];
+
+  if (matchBreedData.length > 0) {
+    const petPostIds = [];
+    matchBreedData.map((data) => {
+      petPostIds.push(data.id);
+    });
+    // create notification
+    const notiStauts = "created";
+    await Notification.insertNotification(petPostIds, postId, notiStauts);
+    const response = { status: "updated" };
+    return response;
+  }
 }
 
 module.exports = {

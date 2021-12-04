@@ -75,10 +75,10 @@ const updatePetsPost = async (breed, postId) => {
   return updatePetsPost;
 };
 
-const getMatchBreedPosts = async (person, breed, county, date) => {
+const getMatchBreedPosts = async (person, kind, breed, county, date) => {
   const [matchBreedPosts] = await db.query(
-    `SELECT * FROM pet_post WHERE person =? and breed = ? and county = ? and date <= ? and status ='lost';`,
-    [person, breed, county, date]
+    `SELECT * FROM pet_post WHERE person =? and kind = ? and breed = ? and county = ? and date <= ? and status ='lost';`,
+    [person, kind, breed, county, date]
   );
   return matchBreedPosts;
 };
