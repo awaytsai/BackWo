@@ -20,7 +20,7 @@ const ruleNoti = "*/1 * * * *";
 schedule.scheduleJob(ruleNoti, async () => {
   const notiMailData = await Noti.getNotiMailData();
   if (notiMailData.length == 0) {
-    return console.log("nothing to update");
+    return;
   }
   const person = "findowners";
   const notiMailPhoto = await Noti.getNotiMailPhoto();
@@ -42,7 +42,7 @@ const ruleMatch = "*/1 * * * *";
 schedule.scheduleJob(ruleMatch, async () => {
   const matchMailData = await Noti.getMatchMailData();
   if (matchMailData.length == 0) {
-    return console.log("nothing to update");
+    return;
   }
   const senderData = await Noti.getMatchSenderData();
   await sendMatchMail(matchMailData, senderData);
