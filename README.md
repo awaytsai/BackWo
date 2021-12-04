@@ -17,8 +17,6 @@ https://www.back-wo.com
 
 ## **Contents**
 
----
-
 - [Architecture](#architecture)
 - [Database Schema](#databaseSchema)
 - [Feature Highlights](#featureHighlights)
@@ -27,26 +25,20 @@ https://www.back-wo.com
 
 ## **Architecture**
 
----
-
 ![](https://dxnjy6wff2091.cloudfront.net/readme/backwo_architecture.png)
 
 ## **Database Schema**
 
----
-
 ![](https://dxnjy6wff2091.cloudfront.net/readme/backwo_rds_EERDiagram.png)
 
 ## **Feature Highlights**
-
----
 
 - **Pets Post Data Visualisation**
 
   - Showing lost pet post information. All posts will be visualized on Google Map with description info windows.
   - Drag the map or use the filter to break down lost pets’ information.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/view_posts.mp4)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/view_posts.gif)
 
 - **Image Auto Labeling**
 
@@ -67,8 +59,6 @@ https://www.back-wo.com
   - Adopt pets information will be updated through government open data API and scheduled cron jobs daily by crontab.
 
 ## **Technologies**
-
----
 
 ### **Back-End**
 
@@ -116,8 +106,6 @@ https://www.back-wo.com
 - Mocha
 - Chai
 
-### **Contact**
-
----
+## **Contact**
 
 Vinny Tsai @ tsai.vinny@gmail.com
