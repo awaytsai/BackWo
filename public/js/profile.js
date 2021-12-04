@@ -101,7 +101,7 @@ async function getNotification() {
       const div = document.createElement("div");
       div.textContent = `沒有已比對的通知`;
       div.className = "nopost";
-      notification.appendChild(div);
+      notifications.appendChild(div);
     } else {
       createNotification(notificationData);
     }
