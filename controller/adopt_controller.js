@@ -10,35 +10,46 @@ rule.minute = parseInt(process.env.ADOPT_SCHEDULE_MINUTE);
 rule.tz = "Asia/Taipei";
 
 schedule.scheduleJob(rule, async () => {
-  const url =
-    "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL";
-  const response = await fetch(url);
-  const adoptData = await response.json();
-  if (adoptData.length == 0) {
+  try {
+    const url =
+      "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DLss";
+    const response = await fetch(url);
+    const adoptData = await response.json();
+    if (!adoptData) {
+      return;
+    }
+    if (adoptData.length == 0) {
+      return;
+    }
+    if (adoptData.length > 5000) {
+      await Adopt.truncateAdoptData();
+      // add formated URL and region category
+      adoptData.map((data) => {
+        data.link = `https://asms.coa.gov.tw/Amlapp/App/AnnounceList.aspx?Id=${data.animal_id}&AcceptNum=${data.animal_subid}&PageType=Adopt`;
+        const place = data.animal_place.slice(0, 3);
+        if (cityRegion.north.includes(place)) {
+          data.region = "北部";
+        }
+        if (cityRegion.central.includes(place)) {
+          data.region = "中部";
+        }
+        if (cityRegion.south.includes(place)) {
+          data.region = "南部";
+        }
+        if (cityRegion.east.includes(place)) {
+          data.region = "東部";
+        }
+        if (cityRegion.island.includes(place)) {
+          data.region = "外島";
+        }
+      });
+      await Adopt.updateAdoptData(adoptData);
+      console.log("adopt updated");
+    }
+  } catch (err) {
+    console.log(err);
     return;
   }
-  await Adopt.truncateAdoptData();
-  // add formated URL and region category
-  adoptData.map((data) => {
-    data.link = `https://asms.coa.gov.tw/Amlapp/App/AnnounceList.aspx?Id=${data.animal_id}&AcceptNum=${data.animal_subid}&PageType=Adopt`;
-    const place = data.animal_place.slice(0, 3);
-    if (cityRegion.north.includes(place)) {
-      data.region = "北部";
-    }
-    if (cityRegion.central.includes(place)) {
-      data.region = "中部";
-    }
-    if (cityRegion.south.includes(place)) {
-      data.region = "南部";
-    }
-    if (cityRegion.east.includes(place)) {
-      data.region = "東部";
-    }
-    if (cityRegion.island.includes(place)) {
-      data.region = "外島";
-    }
-  });
-  await Adopt.updateAdoptData(adoptData);
 });
 
 const getShelters = async (req, res) => {

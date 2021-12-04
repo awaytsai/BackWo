@@ -76,7 +76,9 @@ function createPost(adoptData) {
     a.target = "_blank";
     img.src = data.album_file;
     img.classList = "adopt-image";
-    img.onerror = imgError(this);
+    img.onerror = function () {
+      imgError(this);
+    };
     if (!data.album_file) {
       img.src =
         "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
@@ -99,7 +101,8 @@ function createPost(adoptData) {
 function imgError(image) {
   image.src =
     "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
-  image.classList = "default, adopt-image";
+  image.classList = "default adopt-image";
+  return;
 }
 
 function deleteElement() {
