@@ -29,9 +29,4 @@ let mysqlEnv = mysqlConfig[env];
 
 const db = mysql.createPool(mysqlEnv);
 
-db.getConnection((err) => {
-  if (err) throw err;
-  console.log(`mysql connected! ${mysqlEnv}`);
-});
-
 module.exports = db;
