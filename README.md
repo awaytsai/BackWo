@@ -38,7 +38,7 @@ https://www.back-wo.com
   - Showing lost pet post information. All posts will be visualized on Google Map with description info windows.
   - Drag the map or use the filter to break down lost pets’ information.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/view_posts.gif)
+  <img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/view_posts.gif">
 
 - **Image Auto Labeling**
 
