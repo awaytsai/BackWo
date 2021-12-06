@@ -18,7 +18,7 @@ async function awsReko(
   county,
   date
 ) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     aws.config.update({
       region: process.env.AWS_BUCKET_REGION,
       accessKeyId: process.env.AWS_ACCESS_KEY,
@@ -36,18 +36,33 @@ async function awsReko(
     };
     const rekognition = new aws.Rekognition();
     rekognition.detectLabels(params, async (err, data) => {
-      if (err) console.log(err, err.stack);
-      else console.log(data);
+      if (err) {
+        console.log(err, err.stack);
+        if (person == "owner") {
+          await updateNotiAndMatch(
+            param,
+            postId,
+            updateBreed,
+            person,
+            kind,
+            county,
+            date
+          );
+        }
+        return resolve(err);
+      } else console.log(data);
       await updateLabelsAndPost(data, postId, breed);
-      await updateNotiAndMatch(
-        param,
-        postId,
-        updateBreed,
-        person,
-        kind,
-        county,
-        date
-      );
+      if (person == "owner") {
+        await updateNotiAndMatch(
+          param,
+          postId,
+          updateBreed,
+          person,
+          kind,
+          county,
+          date
+        );
+      }
       return resolve();
     });
   });
@@ -90,7 +105,6 @@ async function updateNotiAndMatch(
   county,
   date
 ) {
-  // check if post match
   person = switchPerson(param);
   const matchBreedData = await Pet.getMatchBreedPosts(
     person,
