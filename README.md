@@ -4,7 +4,7 @@
 
 https://www.back-wo.com
 
-![](https://dxnjy6wff2091.cloudfront.net/readme/backwo_homepage.png)
+<img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/backwo_homepage.png">
 
 ## **Test Accounts :**
 
@@ -25,11 +25,11 @@ https://www.back-wo.com
 
 ## **Architecture**
 
-![](https://dxnjy6wff2091.cloudfront.net/readme/backwo_architecture.png)
+<img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/backwo_architecture.png">
 
 ## **Database Schema**
 
-![](https://dxnjy6wff2091.cloudfront.net/readme/backwo_rds_EERDiagram.png)
+<img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/backwo_rds_EERDiagram.png">
 
 ## **Feature Highlights**
 
