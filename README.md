@@ -4,7 +4,7 @@
 
 https://www.back-wo.com
 
-![](./public/assets/readme/backwo_homepage.png)
+![](https://dxnjy6wff2091.cloudfront.net/readme/backwo_homepage.png)
 
 ## **Test Accounts :**
 
