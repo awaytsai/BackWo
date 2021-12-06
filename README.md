@@ -44,7 +44,7 @@ https://www.back-wo.com
 
   - Upload a pet post. The main image will be detected and labeled by Amazon Rekognition for unknown pet breeds.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/labeling.gif)
+  <img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/labeling.gif">
 
 - **Lost Pets Matching and Notification**
 
@@ -52,26 +52,26 @@ https://www.back-wo.com
   - Notifications will be sent through email as well.
   - Pet owners could write a thank-you message to pet finders after matching.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/notifications.gif)
+  <img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/notifications.gif">
 
 - **Successful Matching Case**
 
   - Pet finders will get the confirm post on the profile page with a thank-you message from pet owners.
   - After confirming the post and saving the change, the lost post will be removed and show the successful case on the home page.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/successmatch.gif)
+  <img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/successmatch.gif">
 
 - **Chat Room Message**
 
   - Send real-time messages to other users in a private chat room.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/chatmessage.gif)
+  <img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/chatmessage.gif">
 
 - **Adopt Pets Information**
 
   - Adopt pets information will be updated through government open data API and scheduled cron jobs daily by crontab.
 
-  ![](https://dxnjy6wff2091.cloudfront.net/readme/adopts.gif)
+  <img width="800" src="https://raw.githubusercontent.com/awaytsai/assets/main/adoptpet.gif">
 
 ## **Technologies**
 
