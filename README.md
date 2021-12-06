@@ -38,13 +38,13 @@ https://www.back-wo.com
   - Showing lost pet post information. All posts will be visualized on Google Map with description info windows.
   - Drag the map or use the filter to break down lost pets’ information.
 
-  ![](./public/assets/readme/view_posts.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/view_posts.gif)
 
 - **Image Auto Labeling**
 
   - Upload a pet post. The main image will be detected and labeled by Amazon Rekognition for unknown pet breeds.
 
-  ![](./public/assets/readme/auto_labeling.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/labeling.gif)
 
 - **Lost Pets Matching and Notification**
 
@@ -52,26 +52,26 @@ https://www.back-wo.com
   - Notifications will be sent through email as well.
   - Pet owners could write a thank-you message to pet finders after matching.
 
-  ![](./public/assets/readme/notification.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/notifications.gif)
 
 - **Successful Matching Case**
 
   - Pet finders will get the confirm post on the profile page with a thank-you message from pet owners.
   - After confirming the post and saving the change, the lost post will be removed and show the successful case on the home page.
 
-  ![](./public/assets/readme/match.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/successmatch.gif)
 
 - **Chat Room Message**
 
   - Send real-time messages to other users in a private chat room.
 
-  ![](./public/assets/readme/chat.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/chatmessage.gif)
 
 - **Adopt Pets Information**
 
   - Adopt pets information will be updated through government open data API and scheduled cron jobs daily by crontab.
 
-  ![](./public/assets/readme/adopt.gif)
+  ![](https://dxnjy6wff2091.cloudfront.net/readme/adopts.gif)
 
 ## **Technologies**
 
