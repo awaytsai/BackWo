@@ -8,7 +8,6 @@ const Pet = require("../model/petposts_model");
 const { switchPerson } = require("../util/util");
 
 let updateBreed;
-
 async function awsReko(
   param,
   photo,
@@ -19,35 +18,38 @@ async function awsReko(
   county,
   date
 ) {
-  aws.config.update({
-    region: process.env.AWS_BUCKET_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-  });
-  const params = {
-    Image: {
-      S3Object: {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Name: `${param}/${photo}`,
+  return new Promise((resolve) => {
+    aws.config.update({
+      region: process.env.AWS_BUCKET_REGION,
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_KEY,
+    });
+    const params = {
+      Image: {
+        S3Object: {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Name: `${param}/${photo}`,
+        },
       },
-    },
-    MaxLabels: 20,
-    MinConfidence: 80,
-  };
-  const rekognition = new aws.Rekognition();
-  rekognition.detectLabels(params, async (err, data) => {
-    if (err) console.log(err, err.stack);
-    else console.log(data);
-    await updateLabelsAndPost(data, postId, breed);
-    await updateNotiAndMatch(
-      param,
-      postId,
-      updateBreed,
-      person,
-      kind,
-      county,
-      date
-    );
+      MaxLabels: 20,
+      MinConfidence: 80,
+    };
+    const rekognition = new aws.Rekognition();
+    rekognition.detectLabels(params, async (err, data) => {
+      if (err) console.log(err, err.stack);
+      else console.log(data);
+      await updateLabelsAndPost(data, postId, breed);
+      await updateNotiAndMatch(
+        param,
+        postId,
+        updateBreed,
+        person,
+        kind,
+        county,
+        date
+      );
+      return resolve();
+    });
   });
 }
 
