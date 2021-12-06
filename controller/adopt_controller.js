@@ -12,7 +12,7 @@ rule.tz = "Asia/Taipei";
 schedule.scheduleJob(rule, async () => {
   try {
     const url =
-      "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DLss";
+      "https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL";
     const response = await fetch(url);
     const adoptData = await response.json();
     if (!adoptData) {
