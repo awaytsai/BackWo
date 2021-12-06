@@ -76,6 +76,7 @@ const nativeSignIn = async (email, password) => {
       email,
     ]);
     if (users.length == 0) {
+      await conn.query("COMMIT");
       return { error: "email 輸入錯誤" };
     }
     const user = users[0];
@@ -99,6 +100,7 @@ const nativeSignIn = async (email, password) => {
 
     const token = await jwtTokenGenerater(payload);
     const userResult = userinfoFormat(token, payload);
+    await conn.query("COMMIT");
     return userResult;
   } catch (error) {
     await conn.query("ROLLBACK");
