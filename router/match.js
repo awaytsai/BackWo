@@ -8,12 +8,12 @@ const mail = require("../controller/mail_controller");
 
 // get notification  by user
 router
-  .route("/notification")
+  .route("/notifications")
   .get(authMiddleware, wrapAsync(Noti.getNotification));
 
 // get notification  by user
 router
-  .route("/deletenotification")
+  .route("/notifications")
   .delete(authMiddleware, wrapAsync(Noti.deleteNotification));
 
 // get match post
@@ -23,20 +23,20 @@ router
 
 // store match list
 router
-  .route("/storeMatchList")
+  .route("/matchList")
   .post(authMiddleware, wrapAsync(Match.storeMatchList));
 
 // show confirm post
 router
-  .route("/getConfirmPost")
+  .route("/confirmPosts")
   .get(authMiddleware, wrapAsync(Match.getConfirmPost));
 
 // update confirm post
 router
-  .route("/updateConfirmPost")
+  .route("/confirmPosts")
   .put(authMiddleware, wrapAsync(Match.updateConfirmPost));
 
 // show successful cases
-router.route("/getSuccessCase").get(wrapAsync(Match.getSuccessCase));
+router.route("/successCases").get(wrapAsync(Match.getSuccessCase));
 
 module.exports = router;

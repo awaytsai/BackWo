@@ -21,7 +21,7 @@ if (token) {
 }
 
 async function getUserData() {
-  const response = await fetch("/api/getUserData", {
+  const response = await fetch("/api/userData", {
     method: "GET",
     headers: {
       Authorization: "Bearer " + token,
@@ -79,7 +79,7 @@ function showWelcomeMessage(data) {
 
 // show notification
 async function getNotification() {
-  const response = await fetch("/api/notification", {
+  const response = await fetch("/api/notifications", {
     method: "GET",
     headers: {
       Authorization: "Bearer " + token,
@@ -110,7 +110,7 @@ async function getNotification() {
 
 // show existing post
 async function getPosts() {
-  const response = await fetch("/api/getAllPostsByUser", {
+  const response = await fetch("/api/usersPosts", {
     method: "GET",
     headers: {
       Authorization: "Bearer " + token,
@@ -148,7 +148,7 @@ async function getPosts() {
 }
 
 async function deletePost(person, id) {
-  const response = await fetch(`/api/deletePost?id=${id}&person=${person}`, {
+  const response = await fetch(`/api/posts?id=${id}&person=${person}`, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + token,
@@ -172,7 +172,7 @@ async function deletePost(person, id) {
 }
 
 async function getConfirmPosts() {
-  const response = await fetch("/api/getConfirmPost", {
+  const response = await fetch("/api/confirmPosts", {
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -376,7 +376,7 @@ function createNotification(notificationData) {
 }
 
 async function deleteNotification(data) {
-  const response = await fetch("/api/deletenotification", {
+  const response = await fetch("/api/notifications", {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + token,
@@ -457,7 +457,7 @@ async function createExistingPosts(postsData) {
 }
 
 async function updateConfirmPost(data) {
-  const response = await fetch(`/api/updateConfirmPost`, {
+  const response = await fetch(`/api/confirmPosts`, {
     method: "PUT",
     headers: {
       Authorization: "Bearer " + token,

@@ -5,7 +5,7 @@ getMatchCase();
 
 // show 3 latest cases
 async function getMatchCase() {
-  const response = await fetch("/api/getSuccessCase");
+  const response = await fetch("/api/successCases");
   const matchData = await response.json();
   createCase(matchData);
 }

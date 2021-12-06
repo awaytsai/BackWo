@@ -7,18 +7,18 @@ const multer = require("multer");
 
 // upload
 router
-  .route("/findowners/upload")
+  .route("/findowners/posts")
   .post(authMiddleware, uploadFindOwners, wrapAsync(Pets.uploadFindPost));
 
 router
-  .route("/findpets/upload")
+  .route("/findpets/posts")
   .post(authMiddleware, uploadFindPets, wrapAsync(Pets.uploadFindPost));
 
 // google map
-router.route("/getFindpostsGeoInfo").get(wrapAsync(Pets.getPetsGeoInfo));
+router.route("/findpostsGeoInfo").get(wrapAsync(Pets.getPetsGeoInfo));
 
 // posts
-router.route("/getFindPosts").get(wrapAsync(Pets.getFindPosts));
+router.route("/findposts").get(wrapAsync(Pets.getFindPosts));
 
 // detail
 router
@@ -27,32 +27,32 @@ router
 
 // edit post detail
 router
-  .route("/findpost/edit/detail")
+  .route("/findpost/editDetail")
   .get(authMiddleware, wrapAsync(Pets.getPostEditDetail));
 
 // update post data
 router
-  .route("/findowners/updatePostdata")
+  .route("/findowners/posts")
   .put(authMiddleware, multer().none(), wrapAsync(Pets.updatePostdata));
 router
-  .route("/findpets/updatePostdata")
+  .route("/findpets/posts")
   .put(authMiddleware, multer().none(), wrapAsync(Pets.updatePostdata));
 
 // update post with image
 router
-  .route("/findowners/updateWithImage")
+  .route("/findowners/imgPosts")
   .put(authMiddleware, uploadFindOwners, wrapAsync(Pets.updatePostdata));
 
 router
-  .route("/findpets/updateWithImage")
+  .route("/findpets/imgPosts")
   .put(authMiddleware, uploadFindPets, wrapAsync(Pets.updatePostdata));
 
 // get existing posts
 router
-  .route("/getAllPostsByUser")
+  .route("/usersPosts")
   .get(authMiddleware, wrapAsync(Pets.getExistingPostsByUser));
 
 // delete post
-router.route("/deletePost").delete(authMiddleware, wrapAsync(Pets.deletePost));
+router.route("/posts").delete(authMiddleware, wrapAsync(Pets.deletePost));
 
 module.exports = router;

@@ -26,7 +26,7 @@ applyBtn.addEventListener("click", (e) => {
 
 async function showPosts() {
   checkPerson(urlParam);
-  const response = await fetch(`/api/getFindPosts?tag=${person}`);
+  const response = await fetch(`/api/findposts?tag=${person}`);
   const findOwnersPostsData = await response.json();
   deleteElement();
   const result = createElement(findOwnersPostsData);
@@ -35,7 +35,7 @@ async function showPosts() {
 async function showFilterPosts(kind, county, district, date) {
   checkPerson(urlParam);
   const filterResponse = await fetch(
-    `/api/getFindPosts?tag=${person}&kind=${kind}&county=${county}&district=${district}&date=${date}`
+    `/api/findposts?tag=${person}&kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterData = await filterResponse.json();
   if (filterData.message == "wrong date format") {

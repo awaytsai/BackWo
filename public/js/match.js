@@ -198,7 +198,7 @@ async function storeMatchList(fpid) {
   const body = {
     thankmessage: thankmessage,
   };
-  const response = await fetch(`/api/storeMatchList?foid=${id}&fpid=${fpid}`, {
+  const response = await fetch(`/api/matchList?foid=${id}&fpid=${fpid}`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + token,

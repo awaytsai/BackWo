@@ -14,6 +14,6 @@ router.route("/member/signin").post(wrapAsync(User.signIn));
 router.route("/member/facebooksignin").post(wrapAsync(User.facebookSignIn));
 
 // render user data
-router.route("/getUserData").get(authMiddleware, wrapAsync(User.getUserData));
+router.route("/userData").get(authMiddleware, wrapAsync(User.getUserData));
 
 module.exports = router;

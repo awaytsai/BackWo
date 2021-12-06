@@ -9,7 +9,7 @@ let breedList;
 let person;
 
 async function loadBreedList() {
-  const response = await fetch("/api/getBreeds");
+  const response = await fetch("/api/breeds");
   breedList = await response.json();
   breedList.dog_breed.forEach((breed) => {
     addOptions(breed, breedSelect);
@@ -247,7 +247,7 @@ async function uploadPost() {
     } else {
       await alertLoading();
       checkPerson(urlParam);
-      const response = await fetch(`/api/${person}/upload`, {
+      const response = await fetch(`/api/${person}/posts`, {
         method: "POST",
         headers: {
           Authorization: "Bearer " + token,

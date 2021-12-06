@@ -11,7 +11,7 @@ const action = [];
 // render shelter
 loadShelter();
 async function loadShelter() {
-  const response = await fetch("/api/getShelters");
+  const response = await fetch("/api/shelters");
   shelters = await response.json();
   shelters.shelterNorth.forEach((shelter) => {
     addOptions(shelter);
@@ -55,7 +55,7 @@ getAdoptData(paging);
 let adoptData;
 async function getAdoptData() {
   try {
-    const response = await fetch(`/api/getAdoptData?paging=${paging}`);
+    const response = await fetch(`/api/adoptData?paging=${paging}`);
     adoptData = await response.json();
     createPost(adoptData.adoptData);
     action.pop();
@@ -80,8 +80,7 @@ function createPost(adoptData) {
       imgError(this);
     };
     if (!data.album_file) {
-      img.src =
-        "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
+      img.src = "/images/default.png";
       img.classList.add("default");
     }
     title.className = "post-title";
@@ -99,8 +98,7 @@ function createPost(adoptData) {
 }
 
 function imgError(image) {
-  image.src =
-    "https://www.lvh.com.au/wp-content/uploads/2019/06/lvh-logo-1.png";
+  image.src = "/images/default.png";
   image.classList = "default adopt-image";
   return;
 }
@@ -132,7 +130,7 @@ applyBtn.addEventListener("click", (e) => {
 let filterData;
 async function showFilterPosts(kind, region, shelter) {
   const response = await fetch(
-    `/api/getAdoptData?kind=${kind}&region=${region}&shelter=${shelter}&paging=${paging}`
+    `/api/adoptData?kind=${kind}&region=${region}&shelter=${shelter}&paging=${paging}`
   );
   filterData = await response.json();
   deleteElement();
@@ -179,7 +177,7 @@ regions.map((r) => {
 let regionData;
 async function getRegionData(kind, region, shelter) {
   const response = await fetch(
-    `/api/getAdoptData?kind=${kind}&region=${region}&shelter=${shelter}&paging=${paging}`
+    `/api/adoptData?kind=${kind}&region=${region}&shelter=${shelter}&paging=${paging}`
   );
   regionData = await response.json();
   deleteElement();

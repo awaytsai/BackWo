@@ -21,7 +21,7 @@ function checkPerson(urlParam) {
 
 loadBreedList();
 async function loadBreedList() {
-  const response = await fetch("/api/getBreeds");
+  const response = await fetch("/api/breeds");
   breedList = await response.json();
   breeds.push(breedList.dog_breed, breedList.cat_breed);
   breedList.dog_breed.forEach((breed) => {
@@ -32,7 +32,7 @@ async function loadBreedList() {
 
 async function getExistingPostData() {
   const response = await fetch(
-    `/api/findpost/edit/detail?id=${id}&tag=${person}`,
+    `/api/findpost/editDetail?id=${id}&tag=${person}`,
     {
       method: "GET",
       headers: {
@@ -264,16 +264,13 @@ uploadBtn.addEventListener("click", (e) => {
 const formData = document.querySelector(".uploadform");
 async function updatefield() {
   await alertLoading();
-  const response = await fetch(
-    `/api/${person}/updatePostdata?id=${id}&tag=${person}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      body: new FormData(formData),
-    }
-  );
+  const response = await fetch(`/api/${person}/posts?id=${id}&tag=${person}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    body: new FormData(formData),
+  });
   const result = await response.json();
   if (
     result.message == "請填寫所有欄位" ||
@@ -316,7 +313,7 @@ async function updatefield() {
 async function updateWithImage() {
   await alertLoading();
   const response = await fetch(
-    `/api/${person}/updateWithImage?id=${id}&tag=${person}`,
+    `/api/${person}/imgPosts?id=${id}&tag=${person}`,
     {
       method: "PUT",
       headers: {

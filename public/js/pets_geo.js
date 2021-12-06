@@ -37,9 +37,8 @@ applyBtn.addEventListener("click", (e) => {
 // add all markers
 async function addAllMarker() {
   checkPerson(urlParam);
-  const response = await fetch(`/api/getFindpostsGeoInfo?tag=${person}`);
+  const response = await fetch(`/api/findpostsGeoInfo?tag=${person}`);
   const findOwnersGeoData = await response.json();
-  console.log(findOwnersGeoData);
   addMarker(findOwnersGeoData);
 }
 
@@ -47,7 +46,7 @@ async function addAllMarker() {
 async function filterMapMarker(kind, county, district, date) {
   checkPerson(urlParam);
   const response = await fetch(
-    `/api/getFindpostsGeoInfo?tag=${person}&kind=${kind}&county=${county}&district=${district}&date=${date}`
+    `/api/findpostsGeoInfo?tag=${person}&kind=${kind}&county=${county}&district=${district}&date=${date}`
   );
   const filterGeoData = await response.json();
   if (filterGeoData.message == "wrong date format") {
@@ -65,7 +64,7 @@ async function filterMapMarker(kind, county, district, date) {
 async function addMarkerByBounds(ne, sw) {
   checkPerson(urlParam);
   const response = await fetch(
-    `/api/getFindpostsGeoInfo?tag=${person}&ne=${ne}&sw=${sw}`
+    `/api/findpostsGeoInfo?tag=${person}&ne=${ne}&sw=${sw}`
   );
   const findOwnersGeoData = await response.json();
   addMarker(findOwnersGeoData);
